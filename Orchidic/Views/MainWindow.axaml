@@ -3,18 +3,39 @@
         xmlns:vm="using:Orchidic.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
+        Width="1200" Height="800"
+        MinWidth="600" MinHeight="450"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
         x:Class="Orchidic.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
         Title="Orchidic">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+  <Window.Resources>
+    <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
+  </Window.Resources>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel />
+  </Design.DataContext>
+
+  <Grid RowDefinitions="Auto, *"
+        Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
+    <Grid Background="LightGray" Height="40"
+          PointerPressed="TitleBar_PointerPressed"
+          ColumnDefinitions="Auto, *, Auto, Auto, Auto">
+      <TextBlock VerticalAlignment="Center">Orchidic</TextBlock>
+      <Button Grid.Column="2" Click="MinButton_OnClick">最小化</Button>
+      <Button Grid.Column="3" Click="MaxButton_OnClick">放大</Button>
+      <Button Grid.Column="4" Click="CloseButton_OnClick">关闭</Button>
+    </Grid>
+    <Grid Grid.Row="1" Background="LightBlue"></Grid>
+  </Grid>
 
 </Window>
