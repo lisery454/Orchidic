@@ -7,7 +7,7 @@
         Width="1200" Height="800"
         MinWidth="600" MinHeight="450"
         WindowStartupLocation="CenterScreen"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="Orchidic.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -25,17 +25,220 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
-  <Grid RowDefinitions="Auto, *"
+  <Grid RowDefinitions="Auto, *" ColumnDefinitions="Auto, *"
         Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
-    <Grid Background="LightGray" Height="40"
-          PointerPressed="TitleBar_PointerPressed"
-          ColumnDefinitions="Auto, *, Auto, Auto, Auto">
-      <TextBlock VerticalAlignment="Center">Orchidic</TextBlock>
-      <Button Grid.Column="2" Click="MinButton_OnClick">最小化</Button>
-      <Button Grid.Column="3" Click="MaxButton_OnClick">放大</Button>
-      <Button Grid.Column="4" Click="CloseButton_OnClick">关闭</Button>
+    <!-- left menu bar -->
+    <Grid Grid.Row="0" Grid.Column="0" Width="224" Grid.RowSpan="2">
+      <Grid.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+          <GradientStop Color="#f4f4f4" Offset="0" />
+          <GradientStop Color="#fafafa" Offset="1" />
+        </LinearGradientBrush>
+      </Grid.Background>
+
+      <StackPanel>
+        <!-- title -->
+        <Grid Height="100">
+          <TextBlock
+            FontFamily="{StaticResource SourceHanSerif}"
+            HorizontalAlignment="Center"
+            FontSize="28"
+            Foreground="#1c4b56"
+            VerticalAlignment="Center"
+            FontWeight="Bold">
+            Orchidic
+          </TextBlock>
+        </Grid>
+
+
+        <!-- menu -->
+        <Canvas x:Name="MenuCanvas">
+
+          <Grid Width="{Binding Bounds.Width, ElementName=MenuCanvas}"
+                Height="{Binding Bounds.Height, ElementName=MenuCanvas}">
+            <StackPanel>
+              <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Background="#e8e8e8">
+                <Border Grid.Column="1" Background="#465a5f" Height="36" Width="36" CornerRadius="18"></Border>
+                <TextBlock Grid.Column="2"
+                           FontFamily="{StaticResource SourceHanSerif}"
+                           Margin="0,0,0,0"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="#1c4b56"
+                           FontSize="16">
+                  首页
+                </TextBlock>
+              </Grid>
+
+              <Grid ColumnDefinitions="30, Auto, *, 40" Height="60">
+                <Border Grid.Column="1" Background="#9ea8aa" Height="36" Width="36" CornerRadius="18"></Border>
+                <TextBlock Grid.Column="2"
+                           FontFamily="{StaticResource SourceHanSerif}"
+                           Margin="0,0,0,0"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="#555"
+                           FontSize="16">
+                  队列
+                </TextBlock>
+              </Grid>
+
+              <Grid ColumnDefinitions="30, Auto, *, 40" Height="60">
+                <Border Grid.Column="1" Background="#9ea8aa" Height="36" Width="36" CornerRadius="18"></Border>
+                <TextBlock Grid.Column="2"
+                           FontFamily="{StaticResource SourceHanSerif}"
+                           Margin="0,0,0,0"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="#555"
+                           FontSize="16">
+                  列表
+                </TextBlock>
+              </Grid>
+
+              <Grid ColumnDefinitions="30, Auto, *, 40" Height="60">
+                <Border Grid.Column="1" Background="#9ea8aa" Height="36" Width="36" CornerRadius="18"></Border>
+                <TextBlock Grid.Column="2"
+                           FontFamily="{StaticResource SourceHanSerif}"
+                           Margin="0,0,0,0"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="#555"
+                           FontSize="16">
+                  搜索
+                </TextBlock>
+              </Grid>
+
+              <Grid ColumnDefinitions="30, Auto, *, 40" Height="60">
+                <Border Grid.Column="1" Background="#9ea8aa" Height="36" Width="36" CornerRadius="18"></Border>
+                <TextBlock Grid.Column="2"
+                           FontFamily="{StaticResource SourceHanSerif}"
+                           Margin="0,0,0,0"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="#555"
+                           FontSize="16">
+                  统计
+                </TextBlock>
+              </Grid>
+
+              <Grid ColumnDefinitions="30, Auto, *, 40" Height="60">
+                <Border Grid.Column="1" Background="#9ea8aa" Height="36" Width="36" CornerRadius="18"></Border>
+                <TextBlock Grid.Column="2"
+                           FontFamily="{StaticResource SourceHanSerif}"
+                           Margin="0,0,0,0"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="#555"
+                           FontSize="16">
+                  工具
+                </TextBlock>
+              </Grid>
+            </StackPanel>
+
+          </Grid>
+
+          <Border x:Name="Indicator"
+                  Width="4" Height="60"
+                  Canvas.Right="0"
+                  Canvas.Top="0">
+            <Border.Background>
+              <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <!-- 0~10：透明 -->
+                <GradientStop Offset="0.0" Color="Transparent" />
+                <GradientStop Offset="0.1667" Color="Transparent" />
+
+                <!-- 10~50：465a5f -->
+                <GradientStop Offset="0.1667" Color="#465a5f" />
+                <GradientStop Offset="0.8333" Color="#465a5f" />
+
+                <!-- 50~60：透明 -->
+                <GradientStop Offset="0.8333" Color="Transparent" />
+                <GradientStop Offset="1.0" Color="Transparent" />
+              </LinearGradientBrush>
+            </Border.Background>
+            <Border.Transitions>
+              <Transitions>
+                <DoubleTransition Property="(Canvas.Top)" Duration="0:0:0.25" />
+              </Transitions>
+            </Border.Transitions>
+          </Border>
+        </Canvas>
+
+
+      </StackPanel>
     </Grid>
-    <Grid Grid.Row="1" Background="LightBlue"></Grid>
+
+    <!-- content -->
+    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#fafafa" />
+
+    <!-- title bar -->
+    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="50"
+          Background="Transparent"
+          PointerPressed="TitleBar_PointerPressed">
+      <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+        <Grid Height="50" Width="34" Margin="8,0,0,0">
+          <Button Click="CloseButton_OnClick" Width="20" Height="20" HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+            <Button.Template>
+              <ControlTemplate>
+                <Border Background="#e76363"
+                        CornerRadius="12"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}">
+                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+        </Grid>
+        <Grid Height="50" Width="34">
+          <Button Click="MaxButton_OnClick" Width="20" Height="20" HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+            <Button.Template>
+              <ControlTemplate>
+                <Border Background="#9fa9ac"
+                        CornerRadius="12"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}">
+                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+        </Grid>
+        <Grid Height="50" Width="34">
+          <Button Click="MinButton_OnClick" Width="20" Height="20" HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+            <Button.Template>
+              <ControlTemplate>
+                <Border Background="#9fa9ac"
+                        CornerRadius="12"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}">
+                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+        </Grid>
+      </StackPanel>
+
+    </Grid>
+
+
   </Grid>
 
 </Window>
