@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
+        xmlns:controls="clr-namespace:Orchidic.Controls"
         Width="1200" Height="800"
         MinWidth="600" MinHeight="450"
         WindowStartupLocation="CenterScreen"
@@ -189,50 +190,26 @@
           Background="Transparent"
           PointerPressed="TitleBar_PointerPressed">
       <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
-        <Grid Height="50" Width="34" Margin="8,0,0,0">
-          <Button Click="CloseButton_OnClick" Width="20" Height="20" HorizontalAlignment="Center"
-                  VerticalAlignment="Center">
-            <Button.Template>
-              <ControlTemplate>
-                <Border Background="#e76363"
-                        CornerRadius="12"
-                        Width="{TemplateBinding Width}"
-                        Height="{TemplateBinding Height}">
-                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-              </ControlTemplate>
-            </Button.Template>
-          </Button>
+        <Grid Height="50" Width="30" Margin="8,0,0,0">
+          <controls:WinCtrlButton Size="20"
+                                  Click="CloseButton_OnClick"
+                                  FillColor="#e76363"
+                                  HoverColor="#F67474"
+                                  PressedColor="#BE4646" />
         </Grid>
-        <Grid Height="50" Width="34">
-          <Button Click="MaxButton_OnClick" Width="20" Height="20" HorizontalAlignment="Center"
-                  VerticalAlignment="Center">
-            <Button.Template>
-              <ControlTemplate>
-                <Border Background="#9fa9ac"
-                        CornerRadius="12"
-                        Width="{TemplateBinding Width}"
-                        Height="{TemplateBinding Height}">
-                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-              </ControlTemplate>
-            </Button.Template>
-          </Button>
+        <Grid Height="50" Width="30">
+          <controls:WinCtrlButton Size="20"
+                                  Click="MaxButton_OnClick"
+                                  FillColor="#9fa9ac"
+                                  HoverColor="#B7BEC1"
+                                  PressedColor="#899092" />
         </Grid>
-        <Grid Height="50" Width="34">
-          <Button Click="MinButton_OnClick" Width="20" Height="20" HorizontalAlignment="Center"
-                  VerticalAlignment="Center">
-            <Button.Template>
-              <ControlTemplate>
-                <Border Background="#9fa9ac"
-                        CornerRadius="12"
-                        Width="{TemplateBinding Width}"
-                        Height="{TemplateBinding Height}">
-                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-              </ControlTemplate>
-            </Button.Template>
-          </Button>
+        <Grid Height="50" Width="30">
+          <controls:WinCtrlButton Size="20"
+                                  Click="MinButton_OnClick"
+                                  FillColor="#9fa9ac"
+                                  HoverColor="#B7BEC1"
+                                  PressedColor="#899092" />
         </Grid>
       </StackPanel>
 

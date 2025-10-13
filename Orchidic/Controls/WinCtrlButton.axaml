@@ -1,0 +1,46 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Orchidic.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
+             x:Class="Orchidic.Controls.WinCtrlButton">
+  <UserControl.Resources>
+    <converters:HalfValueConverter x:Key="HalfValueConverter" />
+  </UserControl.Resources>
+
+  <Button
+    HorizontalAlignment="Center"
+    VerticalAlignment="Center"
+    Width="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
+    Height="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
+    Background="{Binding FillColor, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
+    ClipToBounds="False"
+    Click="InnerButton_Click">
+    <Button.Styles>
+      <Style Selector="Button:pointerover > Border">
+        <Setter Property="Background"
+                Value="{Binding HoverColor , RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}">
+        </Setter>
+      </Style>
+      <Style Selector="Button:pressed > Border">
+        <Setter Property="Background"
+                Value="{Binding PressedColor , RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}">
+        </Setter>
+      </Style>
+    </Button.Styles>
+    <Button.Template>
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                CornerRadius="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}, Converter={StaticResource HalfValueConverter}}"
+                RenderTransformOrigin="0.5,0.5">
+          <Border.RenderTransform>
+            <ScaleTransform ScaleX="1" ScaleY="1" />
+          </Border.RenderTransform>
+          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+      </ControlTemplate>
+    </Button.Template>
+  </Button>
+</UserControl>
