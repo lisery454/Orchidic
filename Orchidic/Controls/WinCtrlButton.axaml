@@ -17,8 +17,18 @@
     Height="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
     Background="{Binding FillColor, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
     ClipToBounds="False"
+    Focusable="False"
     Click="InnerButton_Click">
     <Button.Styles>
+      <Style Selector="Button > Border">
+        <Setter Property="Transitions">
+          <Setter.Value>
+            <Transitions>
+              <BrushTransition Property="Background" Duration="0:0:0.15"></BrushTransition>
+            </Transitions>
+          </Setter.Value>
+        </Setter>
+      </Style>
       <Style Selector="Button:pointerover > Border">
         <Setter Property="Background"
                 Value="{Binding HoverColor , RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}">

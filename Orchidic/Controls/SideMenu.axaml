@@ -1,0 +1,104 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Orchidic.ViewModels"
+             xmlns:controls="clr-namespace:Orchidic.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:SideMenuViewModel"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             x:Class="Orchidic.Controls.SideMenu">
+
+  <Canvas
+    Width="{Binding Width, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}"
+    Height="{Binding Height, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}">
+    <Grid Width="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=Canvas}}"
+          Height="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Canvas}}">
+
+      <!-- 菜单列表 -->
+      <ItemsControl ItemsSource="{Binding SideMenuItems}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Vertical" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:SideMenuItemViewModel">
+            <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand"
+                  Classes.isSelected="{Binding IsSelected}">
+              <i:Interaction.Behaviors>
+                <EventTriggerBehavior EventName="PointerPressed">
+                  <EventTriggerBehavior.Actions>
+                    <InvokeCommandAction Command="{Binding  SelectItemCommand}"
+                                         CommandParameter="{Binding Type}">
+                    </InvokeCommandAction>
+                  </EventTriggerBehavior.Actions>
+                </EventTriggerBehavior>
+              </i:Interaction.Behaviors>
+
+              <Grid.Styles>
+                <Style Selector="Grid">
+                  <Setter Property="Background" Value="Transparent" />
+                  <Style Selector="^ > Border">
+                    <Setter Property="Background" Value="#9ea8aa" />
+                  </Style>
+                  <Style Selector="^ > TextBlock">
+                    <Setter Property="Foreground" Value="#555" />
+                  </Style>
+                </Style>
+                <Style Selector="Grid:pointerover">
+                  <Setter Property="Background" Value="#efefef" />
+                </Style>
+                <Style Selector="Grid.isSelected">
+                  <Setter Property="Background" Value="#e8e8e8" />
+                  <Style Selector="^ > Border">
+                    <Setter Property="Background" Value="#465a5f" />
+                  </Style>
+                  <Style Selector="^ > TextBlock">
+                    <Setter Property="Foreground" Value="#1c4b56" />
+                  </Style>
+                </Style>
+              </Grid.Styles>
+
+              <Border Grid.Column="1" Height="36" Width="36" CornerRadius="18" />
+              <TextBlock Grid.Column="2"
+                         FontFamily="{StaticResource SourceHanSerif}"
+                         Margin="0,0,0,0"
+                         FontWeight="Bold"
+                         HorizontalAlignment="Center"
+                         TextAlignment="Center"
+                         VerticalAlignment="Center"
+                         FontSize="16"
+                         Text="{Binding  Text}">
+              </TextBlock>
+            </Grid>
+
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Grid>
+
+    <!-- 指示条 -->
+    <!-- <Border x:Name="Indicator" -->
+    <!--         Width="4" -->
+    <!--         Height="60" -->
+    <!--         Canvas.Right="0" -->
+    <!--         Canvas.Top="{Binding SelectedIndex, Converter={StaticResource IndexToOffsetConverter}}"> -->
+    <!--   <Border.Background> -->
+    <!--     <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"> -->
+    <!--       <GradientStop Offset="0.0" Color="Transparent" /> -->
+    <!--       <GradientStop Offset="0.1667" Color="Transparent" /> -->
+    <!--       <GradientStop Offset="0.1667" Color="#465a5f" /> -->
+    <!--       <GradientStop Offset="0.8333" Color="#465a5f" /> -->
+    <!--       <GradientStop Offset="0.8333" Color="Transparent" /> -->
+    <!--       <GradientStop Offset="1.0" Color="Transparent" /> -->
+    <!--     </LinearGradientBrush> -->
+    <!--   </Border.Background> -->
+    <!--   <Border.Transitions> -->
+    <!--     <Transitions> -->
+    <!--       <DoubleTransition Property="(Canvas.Top)" Duration="0:0:0.25" /> -->
+    <!--     </Transitions> -->
+    <!--   </Border.Transitions> -->
+    <!-- </Border> -->
+  </Canvas>
+</UserControl>
