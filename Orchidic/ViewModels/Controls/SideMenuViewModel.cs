@@ -9,7 +9,7 @@ namespace Orchidic.ViewModels;
 public class SideMenuViewModel : ReactiveObject
 {
     private PageType _pageType = PageType.Playing;
-    private ObservableCollection<SideMenuItemViewModel> _sideMenuItems = [];
+    private ObservableCollection<PageType> _sideMenuItems = [];
 
     public PageType PageType
     {
@@ -17,36 +17,28 @@ public class SideMenuViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref _pageType, value);
     }
 
-    public ObservableCollection<SideMenuItemViewModel> SideMenuItems
+    public ObservableCollection<PageType> SideMenuItems
     {
         get => _sideMenuItems;
         set => this.RaiseAndSetIfChanged(ref _sideMenuItems, value);
     }
 
+    public ICommand SelectMenuCommand { get; }
+
 
     public SideMenuViewModel()
     {
-        var selectItemCommand = ReactiveCommand.Create<PageType>((PageType pageType) => { PageType = pageType; });
         SideMenuItems =
         [
-            new SideMenuItemViewModel("正在播放", PageType.Playing, selectItemCommand),
-            new SideMenuItemViewModel("播放队列", PageType.Queue, selectItemCommand),
-            new SideMenuItemViewModel("歌单", PageType.List, selectItemCommand),
-            new SideMenuItemViewModel("搜索", PageType.Search, selectItemCommand),
-            new SideMenuItemViewModel("统计", PageType.Statistics, selectItemCommand),
-            new SideMenuItemViewModel("工具", PageType.Tools, selectItemCommand),
-            new SideMenuItemViewModel("设置", PageType.Settings, selectItemCommand)
+            PageType.Playing,
+            PageType.Queue,
+            PageType.List,
+            PageType.Search,
+            PageType.Statistics,
+            PageType.Tools,
+            PageType.Settings,
         ];
 
-        this.WhenAnyValue(x => x.PageType)
-            .Subscribe(Observer.Create<PageType>(onNext: UpdateMenuSelection));
-
-        UpdateMenuSelection(PageType);
-    }
-
-    private void UpdateMenuSelection(PageType current)
-    {
-        foreach (var item in SideMenuItems)
-            item.IsSelected = item.Type == current;
+        SelectMenuCommand = ReactiveCommand.Create((PageType type) => { PageType = type; });
     }
 }

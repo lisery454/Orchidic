@@ -7,7 +7,14 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:SideMenuViewModel"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:models="clr-namespace:Orchidic.Models"
+             xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
              x:Class="Orchidic.Controls.SideMenu">
+
+  <UserControl.Resources>
+    <converters:IsSelectedConverter x:Key="IsSelectedConverter"></converters:IsSelectedConverter>
+    <converters:PageTitleConverter x:Key="PageTitleConverter"></converters:PageTitleConverter>
+  </UserControl.Resources>
 
   <Canvas
     Width="{Binding Width, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}"
@@ -23,14 +30,21 @@
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:SideMenuItemViewModel">
-            <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand"
-                  Classes.isSelected="{Binding IsSelected}">
+          <DataTemplate x:DataType="models:PageType">
+            <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand">
+              <Grid.Tag>
+                <MultiBinding Converter="{StaticResource IsSelectedConverter}">
+                  <Binding Path="."></Binding>
+                  <Binding Path="$parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).PageType"></Binding>
+                </MultiBinding>
+              </Grid.Tag>
+
               <i:Interaction.Behaviors>
                 <EventTriggerBehavior EventName="PointerPressed">
                   <EventTriggerBehavior.Actions>
-                    <InvokeCommandAction Command="{Binding  SelectItemCommand}"
-                                         CommandParameter="{Binding Type}">
+                    <InvokeCommandAction
+                      Command="{Binding $parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).SelectMenuCommand}"
+                      CommandParameter="{Binding}">
                     </InvokeCommandAction>
                   </EventTriggerBehavior.Actions>
                 </EventTriggerBehavior>
@@ -49,7 +63,7 @@
                 <Style Selector="Grid:pointerover">
                   <Setter Property="Background" Value="#efefef" />
                 </Style>
-                <Style Selector="Grid.isSelected">
+                <Style Selector="Grid[Tag=true]">
                   <Setter Property="Background" Value="#e8e8e8" />
                   <Style Selector="^ > Border">
                     <Setter Property="Background" Value="#465a5f" />
@@ -69,7 +83,7 @@
                          TextAlignment="Center"
                          VerticalAlignment="Center"
                          FontSize="16"
-                         Text="{Binding  Text}">
+                         Text="{Binding Path='.', Converter={StaticResource PageTitleConverter}}">
               </TextBlock>
             </Grid>
 
