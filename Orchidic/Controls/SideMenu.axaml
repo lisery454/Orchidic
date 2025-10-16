@@ -19,78 +19,98 @@
   <Canvas
     Width="{Binding Width, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}"
     Height="{Binding Height, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}">
-    <Grid Width="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=Canvas}}"
-          Height="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Canvas}}">
+    <!-- 菜单列表 -->
+    <ItemsControl ItemsSource="{Binding SideMenuItems}"
+                  Width="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=Canvas}}"
+                  Height="{Binding Bounds.Height, RelativeSource={RelativeSource AncestorType=Canvas}}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Vertical" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="models:PageType">
+          <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand">
+            <controls:SideMenu.IsItemSelected>
+              <MultiBinding Converter="{StaticResource IsSelectedConverter}">
+                <Binding Path="."></Binding>
+                <Binding Path="$parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).PageType"></Binding>
+              </MultiBinding>
+            </controls:SideMenu.IsItemSelected>
 
-      <!-- 菜单列表 -->
-      <ItemsControl ItemsSource="{Binding SideMenuItems}">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Vertical" />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="models:PageType">
-            <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand">
-              <Grid.Tag>
-                <MultiBinding Converter="{StaticResource IsSelectedConverter}">
-                  <Binding Path="."></Binding>
-                  <Binding Path="$parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).PageType"></Binding>
-                </MultiBinding>
-              </Grid.Tag>
+            <i:Interaction.Behaviors>
+              <EventTriggerBehavior EventName="PointerPressed">
+                <EventTriggerBehavior.Actions>
+                  <InvokeCommandAction
+                    Command="{Binding $parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).SelectMenuCommand}"
+                    CommandParameter="{Binding}">
+                  </InvokeCommandAction>
+                </EventTriggerBehavior.Actions>
+              </EventTriggerBehavior>
+            </i:Interaction.Behaviors>
 
-              <i:Interaction.Behaviors>
-                <EventTriggerBehavior EventName="PointerPressed">
-                  <EventTriggerBehavior.Actions>
-                    <InvokeCommandAction
-                      Command="{Binding $parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).SelectMenuCommand}"
-                      CommandParameter="{Binding}">
-                    </InvokeCommandAction>
-                  </EventTriggerBehavior.Actions>
-                </EventTriggerBehavior>
-              </i:Interaction.Behaviors>
-
-              <Grid.Styles>
-                <Style Selector="Grid">
-                  <Setter Property="Background" Value="Transparent" />
-                  <Style Selector="^ > Border">
-                    <Setter Property="Background" Value="#9ea8aa" />
-                  </Style>
-                  <Style Selector="^ > TextBlock">
-                    <Setter Property="Foreground" Value="#555" />
-                  </Style>
+            <Grid.Styles>
+              <Style Selector="Grid">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Transitions">
+                  <Setter.Value>
+                    <Transitions>
+                      <BrushTransition Property="Background" Duration="0:0:0.15"></BrushTransition>
+                    </Transitions>
+                  </Setter.Value>
+                </Setter>
+                <Style Selector="^ > Border">
+                  <Setter Property="Background" Value="#9ea8aa" />
+                  <Setter Property="Transitions">
+                    <Setter.Value>
+                      <Transitions>
+                        <BrushTransition Property="Background" Duration="0:0:0.15"></BrushTransition>
+                      </Transitions>
+                    </Setter.Value>
+                  </Setter>
                 </Style>
-                <Style Selector="Grid:pointerover">
-                  <Setter Property="Background" Value="#efefef" />
+                <Style Selector="^ > TextBlock">
+                  <Setter Property="Foreground" Value="#555" />
+                  <Setter Property="Transitions">
+                    <Setter.Value>
+                      <Transitions>
+                        <BrushTransition Property="Foreground" Duration="0:0:0.15"></BrushTransition>
+                      </Transitions>
+                    </Setter.Value>
+                  </Setter>
                 </Style>
-                <Style Selector="Grid[Tag=true]">
-                  <Setter Property="Background" Value="#e8e8e8" />
-                  <Style Selector="^ > Border">
-                    <Setter Property="Background" Value="#465a5f" />
-                  </Style>
-                  <Style Selector="^ > TextBlock">
-                    <Setter Property="Foreground" Value="#1c4b56" />
-                  </Style>
+              </Style>
+              <Style Selector="Grid:pointerover">
+                <Setter Property="Background" Value="#efefef" />
+              </Style>
+              <Style Selector="Grid[(controls|SideMenu.IsItemSelected)=True]">
+                <Setter Property="Background" Value="#e8e8e8" />
+                <Style Selector="^ > Border">
+                  <Setter Property="Background" Value="#465a5f" />
                 </Style>
-              </Grid.Styles>
+                <!-- <Style Selector="^ > TextBlock"> -->
+                <!--   <Setter Property="Foreground" Value="#1c4b56" /> -->
+                <!-- </Style> -->
+              </Style>
+            </Grid.Styles>
 
-              <Border Grid.Column="1" Height="36" Width="36" CornerRadius="18" />
-              <TextBlock Grid.Column="2"
-                         FontFamily="{StaticResource SourceHanSerif}"
-                         Margin="0,0,0,0"
-                         FontWeight="Bold"
-                         HorizontalAlignment="Center"
-                         TextAlignment="Center"
-                         VerticalAlignment="Center"
-                         FontSize="16"
-                         Text="{Binding Path='.', Converter={StaticResource PageTitleConverter}}">
-              </TextBlock>
-            </Grid>
+            <Border Grid.Column="1" Height="36" Width="36" CornerRadius="18" />
+            <TextBlock Grid.Column="2"
+                       FontFamily="{StaticResource SourceHanSerif}"
+                       Margin="0,0,0,0"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       UseLayoutRounding="True"
+                       Text="{Binding Path='.', Converter={StaticResource PageTitleConverter}}">
+            </TextBlock>
+          </Grid>
 
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </Grid>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
 
     <!-- 指示条 -->
     <!-- <Border x:Name="Indicator" -->
