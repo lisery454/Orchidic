@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Windows.Input;
 using Orchidic.Models;
 using ReactiveUI;
@@ -25,6 +26,9 @@ public class SideMenuViewModel : ReactiveObject
 
     public ICommand SelectMenuCommand { get; }
 
+    private readonly ObservableAsPropertyHelper<int> _selectIndex;
+    public int SelectIndex => _selectIndex.Value;
+
 
     public SideMenuViewModel()
     {
@@ -40,5 +44,10 @@ public class SideMenuViewModel : ReactiveObject
         ];
 
         SelectMenuCommand = ReactiveCommand.Create((PageType type) => { PageType = type; });
+
+        _selectIndex = this
+            .WhenAnyValue(vm => vm.PageType)
+            .Select(pt => SideMenuItems.IndexOf(pt))
+            .ToProperty(this, vm => vm.SelectIndex);
     }
 }

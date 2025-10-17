@@ -14,6 +14,7 @@
   <UserControl.Resources>
     <converters:IsSelectedConverter x:Key="IsSelectedConverter"></converters:IsSelectedConverter>
     <converters:PageTitleConverter x:Key="PageTitleConverter"></converters:PageTitleConverter>
+    <converters:IndexToOffsetConverter x:Key="IndexToOffsetConverter" />
   </UserControl.Resources>
 
   <Canvas
@@ -55,7 +56,7 @@
                 <Setter Property="Transitions">
                   <Setter.Value>
                     <Transitions>
-                      <BrushTransition Property="Background" Duration="0:0:0.15"></BrushTransition>
+                      <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut"></BrushTransition>
                     </Transitions>
                   </Setter.Value>
                 </Setter>
@@ -64,20 +65,13 @@
                   <Setter Property="Transitions">
                     <Setter.Value>
                       <Transitions>
-                        <BrushTransition Property="Background" Duration="0:0:0.15"></BrushTransition>
+                        <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut"></BrushTransition>
                       </Transitions>
                     </Setter.Value>
                   </Setter>
                 </Style>
                 <Style Selector="^ > TextBlock">
                   <Setter Property="Foreground" Value="#555" />
-                  <Setter Property="Transitions">
-                    <Setter.Value>
-                      <Transitions>
-                        <BrushTransition Property="Foreground" Duration="0:0:0.15"></BrushTransition>
-                      </Transitions>
-                    </Setter.Value>
-                  </Setter>
                 </Style>
               </Style>
               <Style Selector="Grid:pointerover">
@@ -88,9 +82,6 @@
                 <Style Selector="^ > Border">
                   <Setter Property="Background" Value="#465a5f" />
                 </Style>
-                <!-- <Style Selector="^ > TextBlock"> -->
-                <!--   <Setter Property="Foreground" Value="#1c4b56" /> -->
-                <!-- </Style> -->
               </Style>
             </Grid.Styles>
 
@@ -113,26 +104,20 @@
     </ItemsControl>
 
     <!-- 指示条 -->
-    <!-- <Border x:Name="Indicator" -->
-    <!--         Width="4" -->
-    <!--         Height="60" -->
-    <!--         Canvas.Right="0" -->
-    <!--         Canvas.Top="{Binding SelectedIndex, Converter={StaticResource IndexToOffsetConverter}}"> -->
-    <!--   <Border.Background> -->
-    <!--     <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%"> -->
-    <!--       <GradientStop Offset="0.0" Color="Transparent" /> -->
-    <!--       <GradientStop Offset="0.1667" Color="Transparent" /> -->
-    <!--       <GradientStop Offset="0.1667" Color="#465a5f" /> -->
-    <!--       <GradientStop Offset="0.8333" Color="#465a5f" /> -->
-    <!--       <GradientStop Offset="0.8333" Color="Transparent" /> -->
-    <!--       <GradientStop Offset="1.0" Color="Transparent" /> -->
-    <!--     </LinearGradientBrush> -->
-    <!--   </Border.Background> -->
-    <!--   <Border.Transitions> -->
-    <!--     <Transitions> -->
-    <!--       <DoubleTransition Property="(Canvas.Top)" Duration="0:0:0.25" /> -->
-    <!--     </Transitions> -->
-    <!--   </Border.Transitions> -->
-    <!-- </Border> -->
+    <Border x:Name="Indicator"
+            Width="4"
+            Height="60"
+            Canvas.Right="0"
+            Canvas.Top="{Binding SelectIndex, Converter={StaticResource IndexToOffsetConverter}}">
+      <Border Width="4"
+              Height="40" CornerRadius="2" Background="#465a5f">
+      </Border>
+
+      <Border.Transitions>
+        <Transitions>
+          <DoubleTransition Property="(Canvas.Top)" Duration="0:0:0.15" Easing="QuadraticEaseInOut" />
+        </Transitions>
+      </Border.Transitions>
+    </Border>
   </Canvas>
 </UserControl>
