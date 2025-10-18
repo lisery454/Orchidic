@@ -23,4 +23,48 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.0"/>
         <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.0" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <Compile Update="Window\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\PlayingPage.axaml.cs">
+        <DependentUpon>PlayingPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\SideMenu.axaml.cs">
+        <DependentUpon>SideMenu.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="View\WinCtrlButton.axaml.cs">
+        <DependentUpon>WinCtrlButton.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\ListPage.axaml.cs">
+        <DependentUpon>ListPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\SearchPage.axaml.cs">
+        <DependentUpon>SearchPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\SettingsPage.axaml.cs">
+        <DependentUpon>SettingsPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\StatisticsPage.axaml.cs">
+        <DependentUpon>StatisticsPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\ToolsPage.axaml.cs">
+        <DependentUpon>ToolsPage.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

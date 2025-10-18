@@ -3,21 +3,49 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Orchidic.ViewModels"
-             xmlns:controls="clr-namespace:Orchidic.Controls"
+             xmlns:views="clr-namespace:Orchidic.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:SideMenuViewModel"
              xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
              xmlns:models="clr-namespace:Orchidic.Models"
-             xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
-             x:Class="Orchidic.Controls.SideMenu">
-
-  <UserControl.Resources>
-    <converters:PageTitleConverter x:Key="PageTitleConverter"></converters:PageTitleConverter>
-  </UserControl.Resources>
-
+             x:Class="Orchidic.Views.SideMenu">
+  <UserControl.Styles>
+    <Style Selector="Grid.menuItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Transitions">
+        <Setter.Value>
+          <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut"></BrushTransition>
+          </Transitions>
+        </Setter.Value>
+      </Setter>
+      <Style Selector="^ > Border">
+        <Setter Property="Background" Value="#9ea8aa" />
+        <Setter Property="Transitions">
+          <Setter.Value>
+            <Transitions>
+              <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut"></BrushTransition>
+            </Transitions>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style Selector="^ > TextBlock">
+        <Setter Property="Foreground" Value="#555" />
+      </Style>
+    </Style>
+    <Style Selector="Grid.menuItem:pointerover">
+      <Setter Property="Background" Value="#efefef" />
+    </Style>
+    <Style Selector="Grid.menuItem[(views|SideMenu.IsItemSelected)=True]">
+      <Setter Property="Background" Value="#e8e8e8" />
+      <Style Selector="^ > Border">
+        <Setter Property="Background" Value="#465a5f" />
+      </Style>
+    </Style>
+  </UserControl.Styles>
   <Canvas
-    Width="{Binding Width, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}"
-    Height="{Binding Height, RelativeSource={RelativeSource AncestorType=controls:SideMenu}}">
+    Width="{Binding Width, RelativeSource={RelativeSource AncestorType=views:SideMenu}}"
+    Height="{Binding Height, RelativeSource={RelativeSource AncestorType=views:SideMenu}}">
     <!-- 菜单列表 -->
     <ItemsControl ItemsSource="{Binding SideMenuItems}"
                   Width="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=Canvas}}"
@@ -29,59 +57,24 @@
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>
         <DataTemplate x:DataType="models:PageType">
-          <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand">
-            <controls:SideMenu.IsItemSelected>
-              <MultiBinding Converter="{x:Static controls:SideMenu.IsSelectedConverterIns}">
+          <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand" Classes="menuItem">
+            <views:SideMenu.IsItemSelected>
+              <MultiBinding Converter="{x:Static views:SideMenu.IsSelectedConverterIns}">
                 <Binding Path="."></Binding>
-                <Binding Path="$parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).PageType"></Binding>
+                <Binding Path="$parent[views:SideMenu].((vm:SideMenuViewModel)DataContext).PageType"></Binding>
               </MultiBinding>
-            </controls:SideMenu.IsItemSelected>
+            </views:SideMenu.IsItemSelected>
 
             <i:Interaction.Behaviors>
               <EventTriggerBehavior EventName="PointerPressed">
                 <EventTriggerBehavior.Actions>
                   <InvokeCommandAction
-                    Command="{Binding $parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).SelectMenuCommand}"
+                    Command="{Binding $parent[views:SideMenu].((vm:SideMenuViewModel)DataContext).SelectMenuCommand}"
                     CommandParameter="{Binding}">
                   </InvokeCommandAction>
                 </EventTriggerBehavior.Actions>
               </EventTriggerBehavior>
             </i:Interaction.Behaviors>
-
-            <Grid.Styles>
-              <Style Selector="Grid">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Transitions">
-                  <Setter.Value>
-                    <Transitions>
-                      <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut"></BrushTransition>
-                    </Transitions>
-                  </Setter.Value>
-                </Setter>
-                <Style Selector="^ > Border">
-                  <Setter Property="Background" Value="#9ea8aa" />
-                  <Setter Property="Transitions">
-                    <Setter.Value>
-                      <Transitions>
-                        <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut"></BrushTransition>
-                      </Transitions>
-                    </Setter.Value>
-                  </Setter>
-                </Style>
-                <Style Selector="^ > TextBlock">
-                  <Setter Property="Foreground" Value="#555" />
-                </Style>
-              </Style>
-              <Style Selector="Grid:pointerover">
-                <Setter Property="Background" Value="#efefef" />
-              </Style>
-              <Style Selector="Grid[(controls|SideMenu.IsItemSelected)=True]">
-                <Setter Property="Background" Value="#e8e8e8" />
-                <Style Selector="^ > Border">
-                  <Setter Property="Background" Value="#465a5f" />
-                </Style>
-              </Style>
-            </Grid.Styles>
 
             <Border Grid.Column="1" Height="36" Width="36" CornerRadius="18" />
             <TextBlock Grid.Column="2"
@@ -106,7 +99,7 @@
             Width="4"
             Height="60"
             Canvas.Right="0"
-            Canvas.Top="{Binding SelectIndex, Converter={x:Static controls:SideMenu.IndexToOffsetConverterIns}}">
+            Canvas.Top="{Binding SelectIndex, Converter={x:Static views:SideMenu.IndexToOffsetConverterIns}}">
       <Border Width="4"
               Height="40" CornerRadius="2" Background="#465a5f">
       </Border>

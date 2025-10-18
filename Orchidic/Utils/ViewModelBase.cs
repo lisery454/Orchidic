@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Orchidic.ViewModels;
+namespace Orchidic.Utils;
 
 public class ViewModelBase : ReactiveObject
 {

@@ -3,8 +3,7 @@
         xmlns:vm="using:Orchidic.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
-        xmlns:controls="clr-namespace:Orchidic.Controls"
+        xmlns:views="clr-namespace:Orchidic.Views"
         Width="1200" Height="800"
         MinWidth="600" MinHeight="450"
         WindowStartupLocation="CenterScreen"
@@ -17,13 +16,9 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         Title="Orchidic">
 
-  <Window.Resources>
-    <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
-  </Window.Resources>
-
   <Window.Styles>
     <Style Selector="Grid.menuBackground">
-      <Setter Property="Width" Value="224"></Setter>
+      <Setter Property="Width" Value="244"></Setter>
       <Setter Property="Background">
         <Setter.Value>
           <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
@@ -65,14 +60,16 @@
             Orchidic
           </TextBlock>
         </Grid>
-        
+
         <!-- menu -->
-        <controls:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></controls:SideMenu>
+        <views:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></views:SideMenu>
       </Grid>
     </Grid>
 
     <!-- content -->
-    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#fafafa" />
+    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#fafafa">
+      <ContentControl Content="{Binding CurrentPageViewModel}" />
+    </Grid>
 
     <!-- title bar -->
     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="50"
@@ -80,25 +77,25 @@
           PointerPressed="TitleBar_PointerPressed">
       <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
         <Grid Height="50" Width="30" Margin="8,0,0,0">
-          <controls:WinCtrlButton Size="20"
-                                  Click="CloseButton_OnClick"
-                                  FillColor="#e76363"
-                                  HoverColor="#F67474"
-                                  PressedColor="#BE4646" />
+          <views:WinCtrlButton Size="20"
+                               Click="CloseButton_OnClick"
+                               FillColor="#e76363"
+                               HoverColor="#F67474"
+                               PressedColor="#BE4646" />
         </Grid>
         <Grid Height="50" Width="30">
-          <controls:WinCtrlButton Size="20"
-                                  Click="MaxButton_OnClick"
-                                  FillColor="#9fa9ac"
-                                  HoverColor="#B7BEC1"
-                                  PressedColor="#899092" />
+          <views:WinCtrlButton Size="20"
+                               Click="MaxButton_OnClick"
+                               FillColor="#9fa9ac"
+                               HoverColor="#B7BEC1"
+                               PressedColor="#899092" />
         </Grid>
         <Grid Height="50" Width="30">
-          <controls:WinCtrlButton Size="20"
-                                  Click="MinButton_OnClick"
-                                  FillColor="#9fa9ac"
-                                  HoverColor="#B7BEC1"
-                                  PressedColor="#899092" />
+          <views:WinCtrlButton Size="20"
+                               Click="MinButton_OnClick"
+                               FillColor="#9fa9ac"
+                               HoverColor="#B7BEC1"
+                               PressedColor="#899092" />
         </Grid>
       </StackPanel>
 

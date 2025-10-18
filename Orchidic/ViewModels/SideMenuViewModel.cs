@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Reactive;
+﻿using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using System.Windows.Input;
-using Avalonia.Data;
-using Avalonia.Data.Converters;
 using Orchidic.Models;
+using Orchidic.Utils;
 using ReactiveUI;
 
 namespace Orchidic.ViewModels;
 
-public class SideMenuViewModel : ReactiveObject
+public class SideMenuViewModel : ViewModelBase
 {
     private PageType _pageType = PageType.Playing;
     private ObservableCollection<PageType> _sideMenuItems = [];

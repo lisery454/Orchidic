@@ -2,20 +2,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls="clr-namespace:Orchidic.Controls"
+             xmlns:views="clr-namespace:Orchidic.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
-             x:Class="Orchidic.Controls.WinCtrlButton">
-  <UserControl.Resources>
-    <converters:HalfCornerRadiusConverter x:Key="HalfCornerRadiusConverter" />
-  </UserControl.Resources>
+             x:Class="Orchidic.Views.WinCtrlButton">
 
   <Button
     HorizontalAlignment="Center"
     VerticalAlignment="Center"
-    Width="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
-    Height="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
-    Background="{Binding FillColor, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}"
+    Width="{Binding Size, RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}"
+    Height="{Binding Size, RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}"
+    Background="{Binding FillColor, RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}"
     ClipToBounds="False"
     Focusable="False"
     Click="InnerButton_Click">
@@ -31,19 +27,19 @@
       </Style>
       <Style Selector="Button:pointerover > Border">
         <Setter Property="Background"
-                Value="{Binding HoverColor , RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}">
+                Value="{Binding HoverColor , RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}">
         </Setter>
       </Style>
       <Style Selector="Button:pressed > Border">
         <Setter Property="Background"
-                Value="{Binding PressedColor , RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}}">
+                Value="{Binding PressedColor , RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}">
         </Setter>
       </Style>
     </Button.Styles>
     <Button.Template>
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
-                CornerRadius="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}, Converter={StaticResource HalfCornerRadiusConverter}}"
+                CornerRadius="{Binding Size, RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}, Converter={StaticResource HalfCornerRadiusConverter}}"
                 RenderTransformOrigin="0.5,0.5">
           <Border.RenderTransform>
             <ScaleTransform ScaleX="1" ScaleY="1" />

@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
-namespace Orchidic.Controls;
+namespace Orchidic.Views;
 
 public partial class WinCtrlButton : UserControl
 {
