@@ -1,7 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Orchidic.Models;
 using ReactiveUI;
 

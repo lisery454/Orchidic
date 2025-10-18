@@ -12,9 +12,7 @@
              x:Class="Orchidic.Controls.SideMenu">
 
   <UserControl.Resources>
-    <converters:IsSelectedConverter x:Key="IsSelectedConverter"></converters:IsSelectedConverter>
     <converters:PageTitleConverter x:Key="PageTitleConverter"></converters:PageTitleConverter>
-    <converters:IndexToOffsetConverter x:Key="IndexToOffsetConverter" />
   </UserControl.Resources>
 
   <Canvas
@@ -33,7 +31,7 @@
         <DataTemplate x:DataType="models:PageType">
           <Grid ColumnDefinitions="30, Auto, *, 40" Height="60" Cursor="Hand">
             <controls:SideMenu.IsItemSelected>
-              <MultiBinding Converter="{StaticResource IsSelectedConverter}">
+              <MultiBinding Converter="{x:Static controls:SideMenu.IsSelectedConverterIns}">
                 <Binding Path="."></Binding>
                 <Binding Path="$parent[controls:SideMenu].((vm:SideMenuViewModel)DataContext).PageType"></Binding>
               </MultiBinding>
@@ -108,7 +106,7 @@
             Width="4"
             Height="60"
             Canvas.Right="0"
-            Canvas.Top="{Binding SelectIndex, Converter={StaticResource IndexToOffsetConverter}}">
+            Canvas.Top="{Binding SelectIndex, Converter={x:Static controls:SideMenu.IndexToOffsetConverterIns}}">
       <Border Width="4"
               Height="40" CornerRadius="2" Background="#465a5f">
       </Border>

@@ -1,22 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Orchidic.Models;
 
 namespace Orchidic.Utils.Converters;
-
-public class IsSelectedConverter : IMultiValueConverter
-{
-    public object Convert(IList<object?> values, Type targetType, object? parameter,
-        CultureInfo culture)
-    {
-        var item = values[0];
-        var selected = values[1];
-        return Equals(item, selected);
-    }
-}
 
 public class PageTitleConverter : IValueConverter
 {

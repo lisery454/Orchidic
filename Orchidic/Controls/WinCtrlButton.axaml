@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:Orchidic.Utils.Converters"
              x:Class="Orchidic.Controls.WinCtrlButton">
   <UserControl.Resources>
-    <converters:HalfValueConverter x:Key="HalfValueConverter" />
+    <converters:HalfCornerRadiusConverter x:Key="HalfCornerRadiusConverter" />
   </UserControl.Resources>
 
   <Button
@@ -43,7 +43,7 @@
     <Button.Template>
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}"
-                CornerRadius="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}, Converter={StaticResource HalfValueConverter}}"
+                CornerRadius="{Binding Size, RelativeSource={RelativeSource AncestorType=controls:WinCtrlButton}, Converter={StaticResource HalfCornerRadiusConverter}}"
                 RenderTransformOrigin="0.5,0.5">
           <Border.RenderTransform>
             <ScaleTransform ScaleX="1" ScaleY="1" />
