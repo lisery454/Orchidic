@@ -11,7 +11,8 @@
   </Application.DataTemplates>
 
   <Application.Resources>
-    <FontFamily x:Key="SourceHanSerif">avares://Orchidic/Assets/Fonts#Source Han Serif SC</FontFamily>
+    <!-- <FontFamily x:Key="SourceHanSerif">avares://Orchidic/Assets/Fonts#Source Han Serif SC</FontFamily> -->
+    <FontFamily x:Key="MiSans">avares://Orchidic/Assets/Fonts#MiSans</FontFamily>
 
 
     <converters:PageTitleConverter x:Key="PageTitleConverter" />
@@ -22,5 +23,9 @@
 
   <Application.Styles>
     <FluentTheme />
+    <Style Selector="TextBlock">
+      <Setter Property="FontFamily" Value="{StaticResource MiSans}"></Setter>
+      <Setter Property="FontWeight" Value="Normal"></Setter>
+    </Style>
   </Application.Styles>
 </Application>

@@ -33,7 +33,6 @@
     </Style>
     <Style Selector="Grid.title > TextBlock">
       <Setter Property="FontSize" Value="28"></Setter>
-      <Setter Property="FontFamily" Value="{StaticResource SourceHanSerif}"></Setter>
       <Setter Property="HorizontalAlignment" Value="Center"></Setter>
       <Setter Property="Foreground" Value="#1c4b56"></Setter>
       <Setter Property="VerticalAlignment" Value="Center"></Setter>
