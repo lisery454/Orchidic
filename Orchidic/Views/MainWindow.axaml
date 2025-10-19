@@ -14,7 +14,11 @@
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#bbfafafa"
+        xmlns:avaControls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
         Title="Orchidic">
+
 
   <Window.Styles>
     <Style Selector="Grid.menuBackground">
@@ -22,8 +26,8 @@
       <Setter Property="Background">
         <Setter.Value>
           <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-            <GradientStop Color="#f4f4f4" Offset="0" />
-            <GradientStop Color="#fafafa" Offset="1" />
+            <GradientStop Color="#44f4f4f4" Offset="0" />
+            <GradientStop Color="#00fafafa" Offset="1" />
           </LinearGradientBrush>
         </Setter.Value>
       </Setter>
@@ -66,8 +70,12 @@
     </Grid>
 
     <!-- content -->
-    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="#fafafa">
-      <ContentControl Content="{Binding CurrentPageViewModel}" />
+    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" >
+      <avaControls:TransitioningContentControl  Content="{Binding CurrentPageViewModel}">
+        <avaControls:TransitioningContentControl.PageTransition>
+          <CrossFade Duration="0:0:0.15"></CrossFade>
+        </avaControls:TransitioningContentControl.PageTransition>
+      </avaControls:TransitioningContentControl>
     </Grid>
 
     <!-- title bar -->
