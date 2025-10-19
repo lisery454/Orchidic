@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:Orchidic.Views"
+             xmlns:utils="clr-namespace:Orchidic.Utils"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Orchidic.Views.WinCtrlButton">
 
@@ -16,36 +17,31 @@
     Focusable="False"
     Click="InnerButton_Click">
     <Button.Styles>
-      <Style Selector="Button > Border">
+      <Style Selector="Button > utils|SuperellipseBorder">
         <Setter Property="Transitions">
           <Setter.Value>
             <Transitions>
-              <BrushTransition Property="Background" Duration="0:0:0.15"></BrushTransition>
+              <BrushTransition Property="Fill" Duration="0:0:0.15"></BrushTransition>
             </Transitions>
           </Setter.Value>
         </Setter>
       </Style>
-      <Style Selector="Button:pointerover > Border">
-        <Setter Property="Background"
+      <Style Selector="Button:pointerover > utils|SuperellipseBorder">
+        <Setter Property="Fill"
                 Value="{Binding HoverColor , RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}">
         </Setter>
       </Style>
-      <Style Selector="Button:pressed > Border">
-        <Setter Property="Background"
+      <Style Selector="Button:pressed > utils|SuperellipseBorder">
+        <Setter Property="Fill"
                 Value="{Binding PressedColor , RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}}">
         </Setter>
       </Style>
     </Button.Styles>
     <Button.Template>
       <ControlTemplate>
-        <Border Background="{TemplateBinding Background}"
-                CornerRadius="{Binding Size, RelativeSource={RelativeSource AncestorType=views:WinCtrlButton}, Converter={StaticResource HalfCornerRadiusConverter}}"
-                RenderTransformOrigin="0.5,0.5">
-          <Border.RenderTransform>
-            <ScaleTransform ScaleX="1" ScaleY="1" />
-          </Border.RenderTransform>
+        <utils:SuperellipseBorder Fill="{TemplateBinding Background}" Power="4" CornerRadius="8">
           <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Border>
+        </utils:SuperellipseBorder>
       </ControlTemplate>
     </Button.Template>
   </Button>

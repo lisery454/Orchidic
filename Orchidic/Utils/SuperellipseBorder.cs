@@ -24,6 +24,15 @@ public class SuperellipseBorder : Decorator
 
     private StreamGeometry? _clipGeometry;
 
+    public SuperellipseBorder()
+    {
+        this.GetObservable(FillProperty).Subscribe(_ => InvalidateVisual());
+        this.GetObservable(PowerProperty).Subscribe(_ => InvalidateVisual());
+        this.GetObservable(StrokeThicknessProperty).Subscribe(_ => InvalidateVisual());
+        this.GetObservable(CornerRadiusProperty).Subscribe(_ => InvalidateVisual());
+        this.GetObservable(StrokeProperty).Subscribe(_ => InvalidateVisual());
+    }
+
     public float CornerRadius
     {
         get => GetValue(CornerRadiusProperty);

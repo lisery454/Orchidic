@@ -25,6 +25,16 @@
       </utils:SuperellipseBorder>
     </Grid>
 
-    <Grid Grid.Row="1" Height="260" Background="Transparent"></Grid>
+    <Grid Grid.Row="1" Height="260" Background="Transparent">
+
+      <Grid Height="50">
+        <Grid.Effect>
+          <DropShadowEffect OffsetX="4" OffsetY="4" Opacity="0.3" BlurRadius="30" Color="#ff000000"></DropShadowEffect>
+        </Grid.Effect>
+
+        <!-- <icons:PlayIcon HorizontalAlignment="Center" VerticalAlignment="Center" Color="#9ea8ab" HoverColor="red"/> -->
+      </Grid>
+
+    </Grid>
   </Grid>
 </UserControl>
