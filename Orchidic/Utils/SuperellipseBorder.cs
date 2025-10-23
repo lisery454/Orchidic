@@ -7,39 +7,25 @@ using System;
 
 public class SuperellipseBorder : Decorator
 {
-    public static readonly StyledProperty<float> CornerRadiusProperty =
-        AvaloniaProperty.Register<SuperellipseBorder, float>(nameof(CornerRadius), 16);
+    #region Fields
 
-    public static readonly StyledProperty<float> PowerProperty =
-        AvaloniaProperty.Register<SuperellipseBorder, float>(nameof(CornerRadius), 10);
+    public static readonly StyledProperty<double> CornerRadiusProperty =
+        AvaloniaProperty.Register<SuperellipseBorder, double>(nameof(CornerRadius), 16);
+
+    public static readonly StyledProperty<double> PowerProperty =
+        AvaloniaProperty.Register<SuperellipseBorder, double>(nameof(CornerRadius), 10);
 
     public static readonly StyledProperty<IBrush?> FillProperty =
         AvaloniaProperty.Register<SuperellipseBorder, IBrush?>(nameof(Fill));
 
-    public static readonly StyledProperty<IBrush?> StrokeProperty =
-        AvaloniaProperty.Register<SuperellipseBorder, IBrush?>(nameof(Stroke));
 
-    public static readonly StyledProperty<double> StrokeThicknessProperty =
-        AvaloniaProperty.Register<SuperellipseBorder, double>(nameof(StrokeThickness), 1.0);
-
-    private StreamGeometry? _clipGeometry;
-
-    public SuperellipseBorder()
-    {
-        this.GetObservable(FillProperty).Subscribe(_ => InvalidateVisual());
-        this.GetObservable(PowerProperty).Subscribe(_ => InvalidateVisual());
-        this.GetObservable(StrokeThicknessProperty).Subscribe(_ => InvalidateVisual());
-        this.GetObservable(CornerRadiusProperty).Subscribe(_ => InvalidateVisual());
-        this.GetObservable(StrokeProperty).Subscribe(_ => InvalidateVisual());
-    }
-
-    public float CornerRadius
+    public double CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
     }
 
-    public float Power
+    public double Power
     {
         get => GetValue(PowerProperty);
         set => SetValue(PowerProperty, value);
@@ -51,17 +37,18 @@ public class SuperellipseBorder : Decorator
         set => SetValue(FillProperty, value);
     }
 
-    public IBrush? Stroke
+    #endregion
+
+
+    private StreamGeometry? _clipGeometry;
+
+    public SuperellipseBorder()
     {
-        get => GetValue(StrokeProperty);
-        set => SetValue(StrokeProperty, value);
+        this.GetObservable(FillProperty).Subscribe(_ => InvalidateVisual());
+        this.GetObservable(PowerProperty).Subscribe(_ => InvalidateVisual());
+        this.GetObservable(CornerRadiusProperty).Subscribe(_ => InvalidateVisual());
     }
 
-    public double StrokeThickness
-    {
-        get => GetValue(StrokeThicknessProperty);
-        set => SetValue(StrokeThicknessProperty, value);
-    }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
@@ -74,17 +61,13 @@ public class SuperellipseBorder : Decorator
 
     public override void Render(DrawingContext context)
     {
-        if (_clipGeometry == null)
-            _clipGeometry = CreateSuperellipseGeometry(new Rect(Bounds.Size), CornerRadius, Power);
+        _clipGeometry ??= CreateSuperellipseGeometry(new Rect(Bounds.Size), CornerRadius, Power);
 
         if (Fill != null)
             context.DrawGeometry(Fill, null, _clipGeometry);
-
-        if (Stroke != null && StrokeThickness > 0)
-            context.DrawGeometry(null, new Pen(Stroke, StrokeThickness), _clipGeometry);
     }
 
-    private static StreamGeometry CreateSuperellipseGeometry(Rect rect, double radius, float power)
+    private static StreamGeometry CreateSuperellipseGeometry(Rect rect, double radius, double power)
     {
         // 让 radius 影响 n：当 radius 小时更圆，当 radius 大时更方
         const double halfPi = Math.PI / 2;
@@ -94,8 +77,6 @@ public class SuperellipseBorder : Decorator
 
         var w = rect.Width;
         var h = rect.Height;
-        var halfW = w / 2;
-        var halfH = h / 2;
         const int steps = 30;
 
         // x = r ~ W - r; y = 0 直线

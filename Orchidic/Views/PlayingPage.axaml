@@ -6,26 +6,99 @@
              xmlns:vm="clr-namespace:Orchidic.ViewModels"
              x:DataType="vm:PlayingPageViewModel"
              xmlns:utils="clr-namespace:Orchidic.Utils"
+             xmlns:views="clr-namespace:Orchidic.Views"
              x:Class="Orchidic.Views.PlayingPage">
-  <Grid RowDefinitions="*, Auto">
+  <UserControl.Resources>
+    <views:CoverSizeConverter x:Key="CoverSizeConverter" />
+    <views:CoverCornerRadiusConverter x:Key="CoverCornerRadiusConverter" />
+    <views:PanelHeightConverter x:Key="PanelHeightConverter" />
+    <views:BlurRadiusConverter x:Key="BlurRadiusConverter" />
+  </UserControl.Resources>
+
+  <Grid RowDefinitions="*, Auto" x:Name="Page">
     <!-- 背景 -->
     <Grid Grid.Row="0">
-      <Border Width="400" Height="400">
-        <Image Source="avares://Orchidic/Assets/test.png" Stretch="UniformToFill">
-          <Image.Effect>
-            <BlurEffect Radius="400"></BlurEffect>
-          </Image.Effect>
-        </Image>
+      <Border>
+        <Border.Width>
+          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+            <Binding Path="Bounds.Width" ElementName="CoverParent" />
+            <Binding Path="Bounds.Height" ElementName="CoverParent" />
+          </MultiBinding>
+        </Border.Width>
+
+        <Border.Height>
+          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+            <Binding Path="Bounds.Width" ElementName="CoverParent" />
+            <Binding Path="Bounds.Height" ElementName="CoverParent" />
+          </MultiBinding>
+        </Border.Height>
+
+        <Grid>
+          <Image Source="avares://Orchidic/Assets/test.png" Stretch="UniformToFill" />
+          <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
+          <Rectangle Fill="#20000000" IsHitTestVisible="False" />
+
+          <Grid.Effect>
+            <BlurEffect>
+              <BlurEffect.Radius>
+                <MultiBinding Converter="{StaticResource BlurRadiusConverter}">
+                  <Binding Path="Bounds.Width" ElementName="CoverParent" />
+                  <Binding Path="Bounds.Height" ElementName="CoverParent" />
+                </MultiBinding>
+              </BlurEffect.Radius>
+            </BlurEffect>
+          </Grid.Effect>
+        </Grid>
       </Border>
     </Grid>
     <!-- cover -->
-    <Grid Grid.Row="0">
-      <utils:SuperellipseBorder Fill="Transparent" Width="340" Height="340" Power="8" CornerRadius="300">
-        <Image Source="avares://Orchidic/Assets/test.png" Stretch="UniformToFill" />
+    <Grid Grid.Row="0" x:Name="CoverParent">
+      <utils:SuperellipseBorder Fill="Transparent"
+                                Power="8">
+        <utils:SuperellipseBorder.Width>
+          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+            <Binding Path="Bounds.Width" ElementName="CoverParent" />
+            <Binding Path="Bounds.Height" ElementName="CoverParent" />
+          </MultiBinding>
+        </utils:SuperellipseBorder.Width>
+
+        <utils:SuperellipseBorder.Height>
+          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+            <Binding Path="Bounds.Width" ElementName="CoverParent" />
+            <Binding Path="Bounds.Height" ElementName="CoverParent" />
+          </MultiBinding>
+        </utils:SuperellipseBorder.Height>
+
+        <utils:SuperellipseBorder.CornerRadius>
+          <MultiBinding Converter="{StaticResource CoverCornerRadiusConverter}">
+            <Binding Path="Bounds.Width" ElementName="CoverParent" />
+            <Binding Path="Bounds.Height" ElementName="CoverParent" />
+          </MultiBinding>
+        </utils:SuperellipseBorder.CornerRadius>
+
+        <Grid>
+          <Image Source="avares://Orchidic/Assets/test.png" Stretch="UniformToFill" />
+          <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
+          <Rectangle IsHitTestVisible="False">
+            <Rectangle.Fill>
+              <RadialGradientBrush Center="50%,50%"
+                                   GradientOrigin="50%,50%">
+                <!-- 中心透明 -->
+                <GradientStop Offset="0.0" Color="#00000000" />
+                <!-- 边缘渐暗 -->
+                <GradientStop Offset="1.0" Color="#20000000" />
+              </RadialGradientBrush>
+            </Rectangle.Fill>
+          </Rectangle>
+        </Grid>
+
       </utils:SuperellipseBorder>
     </Grid>
 
-    <Grid Grid.Row="1" Height="260" Background="Transparent">
+    <!-- below -->
+    <Grid Grid.Row="1"
+          Height="{Binding  Bounds.Height, ElementName=Page, Converter={StaticResource PanelHeightConverter}}"
+          Background="Transparent">
 
       <Grid Height="50">
         <Grid.Effect>

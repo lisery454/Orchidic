@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Orchidic.Views"
         Width="1200" Height="800"
-        MinWidth="600" MinHeight="450"
+        MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="Orchidic.Views.MainWindow"
@@ -18,19 +18,13 @@
         Background="#bbfafafa"
         xmlns:avaControls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
         Title="Orchidic">
-
+  <Window.Resources>
+    <views:MenuWidthConverter x:Key="MenuWidthConverter" />
+  </Window.Resources>
 
   <Window.Styles>
     <Style Selector="Grid.menuBackground">
-      <Setter Property="Width" Value="244"></Setter>
-      <Setter Property="Background">
-        <Setter.Value>
-          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-            <GradientStop Color="#44f4f4f4" Offset="0" />
-            <GradientStop Color="#00fafafa" Offset="1" />
-          </LinearGradientBrush>
-        </Setter.Value>
-      </Setter>
+      <Setter Property="Background" Value="#44f4f4f4" />
     </Style>
     <Style Selector="Grid.title">
       <Setter Property="Height" Value="100"></Setter>
@@ -52,30 +46,26 @@
 
   <Grid RowDefinitions="Auto, *" ColumnDefinitions="Auto, *"
         Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
-    <!-- left menu bar -->
-    <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-          Classes="menuBackground">
-
-      <Grid RowDefinitions="Auto, *">
-        <!-- title -->
-        <Grid Classes="title">
-          <TextBlock>
-            Orchidic
-          </TextBlock>
-        </Grid>
-
-        <!-- menu -->
-        <views:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></views:SideMenu>
-      </Grid>
-    </Grid>
 
     <!-- content -->
-    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" >
-      <avaControls:TransitioningContentControl  Content="{Binding CurrentPageViewModel}">
+    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+      <avaControls:TransitioningContentControl Content="{Binding CurrentPageViewModel}">
         <avaControls:TransitioningContentControl.PageTransition>
           <CrossFade Duration="0:0:0.15"></CrossFade>
         </avaControls:TransitioningContentControl.PageTransition>
       </avaControls:TransitioningContentControl>
+
+      <!-- 阴影层 -->
+      <Border
+        IsHitTestVisible="False">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Offset="0.0" Color="#04000000" />
+            <GradientStop Offset="0.05" Color="#00000000" />
+            <GradientStop Offset="1.0" Color="#00000000" />
+          </LinearGradientBrush>
+        </Border.Background>
+      </Border>
     </Grid>
 
     <!-- title bar -->
@@ -105,6 +95,26 @@
                                PressedColor="#899092" />
         </Grid>
       </StackPanel>
+
+    </Grid>
+
+    <!-- left menu bar -->
+    <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+          Classes="menuBackground"
+          Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource MenuWidthConverter}}">
+
+      <Grid RowDefinitions="Auto, *">
+        <!-- title -->
+        <Grid Classes="title">
+          <TextBlock>
+            Orchidic
+          </TextBlock>
+        </Grid>
+
+        <!-- menu -->
+        <views:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></views:SideMenu>
+      </Grid>
+
 
     </Grid>
 
