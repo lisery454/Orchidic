@@ -17,95 +17,118 @@
 
   <Grid RowDefinitions="*, Auto" x:Name="Page">
     <!-- 背景 -->
-    <Grid Grid.Row="0">
-      <Border>
-        <Border.Width>
-          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
-            <Binding Path="Bounds.Width" ElementName="CoverParent" />
-            <Binding Path="Bounds.Height" ElementName="CoverParent" />
-          </MultiBinding>
-        </Border.Width>
-
-        <Border.Height>
-          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
-            <Binding Path="Bounds.Width" ElementName="CoverParent" />
-            <Binding Path="Bounds.Height" ElementName="CoverParent" />
-          </MultiBinding>
-        </Border.Height>
-
-        <Grid>
-          <Image Source="avares://Orchidic/Assets/test.png" Stretch="UniformToFill" />
-          <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
-          <Rectangle Fill="#20000000" IsHitTestVisible="False" />
-
-          <Grid.Effect>
-            <BlurEffect>
-              <BlurEffect.Radius>
-                <MultiBinding Converter="{StaticResource BlurRadiusConverter}">
-                  <Binding Path="Bounds.Width" ElementName="CoverParent" />
-                  <Binding Path="Bounds.Height" ElementName="CoverParent" />
-                </MultiBinding>
-              </BlurEffect.Radius>
-            </BlurEffect>
-          </Grid.Effect>
-        </Grid>
-      </Border>
-    </Grid>
+    <Grid Grid.Row="0" x:Name="CoverParentBg" />
     <!-- cover -->
-    <Grid Grid.Row="0" x:Name="CoverParent">
-      <utils:SuperellipseBorder Fill="Transparent"
-                                Power="8">
-        <utils:SuperellipseBorder.Width>
-          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
-            <Binding Path="Bounds.Width" ElementName="CoverParent" />
-            <Binding Path="Bounds.Height" ElementName="CoverParent" />
-          </MultiBinding>
-        </utils:SuperellipseBorder.Width>
+    <Grid Grid.Row="0" x:Name="CoverParent" ClipToBounds="True">
+      <Button HorizontalAlignment="Center" VerticalAlignment="Center"
+              ClipToBounds="False"
+              RenderTransformOrigin="50%,50%">
+        <Button.Transitions>
+          <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="QuadraticEaseInOut" />
+          </Transitions>
+        </Button.Transitions>
 
-        <utils:SuperellipseBorder.Height>
-          <MultiBinding Converter="{StaticResource CoverSizeConverter}">
-            <Binding Path="Bounds.Width" ElementName="CoverParent" />
-            <Binding Path="Bounds.Height" ElementName="CoverParent" />
-          </MultiBinding>
-        </utils:SuperellipseBorder.Height>
+        <Button.Styles>
+          <!-- 悬浮放大 -->
+          <Style Selector="Button:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.01)" />
+          </Style>
 
-        <utils:SuperellipseBorder.CornerRadius>
-          <MultiBinding Converter="{StaticResource CoverCornerRadiusConverter}">
-            <Binding Path="Bounds.Width" ElementName="CoverParent" />
-            <Binding Path="Bounds.Height" ElementName="CoverParent" />
-          </MultiBinding>
-        </utils:SuperellipseBorder.CornerRadius>
+          <!-- 按下缩小 -->
+          <Style Selector="Button:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.99)" />
+          </Style>
+        </Button.Styles>
 
-        <Grid>
-          <Image Source="avares://Orchidic/Assets/test.png" Stretch="UniformToFill" />
-          <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
-          <Rectangle IsHitTestVisible="False">
-            <Rectangle.Fill>
-              <RadialGradientBrush Center="50%,50%"
-                                   GradientOrigin="50%,50%">
-                <!-- 中心透明 -->
-                <GradientStop Offset="0.0" Color="#00000000" />
-                <!-- 边缘渐暗 -->
-                <GradientStop Offset="1.0" Color="#20000000" />
-              </RadialGradientBrush>
-            </Rectangle.Fill>
-          </Rectangle>
-        </Grid>
+        <Button.Template>
+          <ControlTemplate TargetType="Button">
+            <Grid>
+              <utils:SuperellipseBorder Fill="Transparent" ClipToBounds="true"
+                                        Power="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <utils:SuperellipseBorder.Width>
+                  <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+                    <Binding Path="Bounds.Width" ElementName="CoverParent" />
+                    <Binding Path="Bounds.Height" ElementName="CoverParent" />
+                  </MultiBinding>
+                </utils:SuperellipseBorder.Width>
 
-      </utils:SuperellipseBorder>
+                <utils:SuperellipseBorder.Height>
+                  <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+                    <Binding Path="Bounds.Width" ElementName="CoverParent" />
+                    <Binding Path="Bounds.Height" ElementName="CoverParent" />
+                  </MultiBinding>
+                </utils:SuperellipseBorder.Height>
+
+                <utils:SuperellipseBorder.CornerRadius>
+                  <MultiBinding Converter="{StaticResource CoverCornerRadiusConverter}">
+                    <Binding Path="Bounds.Width" ElementName="CoverParent" />
+                    <Binding Path="Bounds.Height" ElementName="CoverParent" />
+                  </MultiBinding>
+                </utils:SuperellipseBorder.CornerRadius>
+
+                <Grid>
+                  <Image
+                    Source="{Binding Bitmap, RelativeSource={RelativeSource AncestorType=views:PlayingPage, Mode=FindAncestor}}"
+                    Stretch="UniformToFill" />
+                  <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
+                  <Rectangle IsHitTestVisible="False">
+                    <Rectangle.Fill>
+                      <RadialGradientBrush Center="50%,50%"
+                                           GradientOrigin="50%,50%">
+                        <!-- 中心透明 -->
+                        <GradientStop Offset="0.0" Color="#00000000" />
+                        <!-- 边缘渐暗 -->
+                        <GradientStop Offset="1.0" Color="#30000000" />
+                      </RadialGradientBrush>
+                    </Rectangle.Fill>
+                  </Rectangle>
+                </Grid>
+
+              </utils:SuperellipseBorder>
+            </Grid>
+
+          </ControlTemplate>
+        </Button.Template>
+      </Button>
+
     </Grid>
 
     <!-- below -->
     <Grid Grid.Row="1"
           Height="{Binding  Bounds.Height, ElementName=Page, Converter={StaticResource PanelHeightConverter}}"
-          Background="Transparent">
+          Background="Transparent" RowDefinitions="Auto, Auto">
 
-      <Grid Height="50">
-        <Grid.Effect>
-          <DropShadowEffect OffsetX="4" OffsetY="4" Opacity="0.3" BlurRadius="30" Color="#ff000000"></DropShadowEffect>
-        </Grid.Effect>
+      <!-- progress bar -->
+      <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Height="50">
+        <Grid Grid.Column="0" Width="160">
+          <TextBlock Text="1:03" Foreground="#45595e" FontSize="16"
+                     Margin="0,0,30,0" HorizontalAlignment="Right"
+                     VerticalAlignment="Center">
+          </TextBlock>
+        </Grid>
+        <Grid Grid.Column="1">
+          <Border Background="#9ea8ab" Height="5" CornerRadius="4"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+          <Border Background="#45595e" Height="5" Width="150" CornerRadius="4"
+                  HorizontalAlignment="Left" VerticalAlignment="Center" />
+        </Grid>
+        <Grid Grid.Column="2" Width="160">
+          <TextBlock Text="3:32" Foreground="#45595e" FontSize="16"
+                     Margin="30,0,0,0" HorizontalAlignment="Left"
+                     VerticalAlignment="Center">
+          </TextBlock>
+        </Grid>
+      </Grid>
 
-        <!-- <icons:PlayIcon HorizontalAlignment="Center" VerticalAlignment="Center" Color="#9ea8ab" HoverColor="red"/> -->
+      <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,20,0,0">
+        <StackPanel Orientation="Horizontal" Spacing="34">
+          <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
+          <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
+          <utils:SuperellipseBorder Height="44" Width="44" CornerRadius="20" Power="8" Fill="#9ea8ab" />
+          <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
+          <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
+        </StackPanel>
       </Grid>
 
     </Grid>

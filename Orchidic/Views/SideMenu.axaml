@@ -52,13 +52,9 @@
             Width="{Binding Bounds.Width, RelativeSource={RelativeSource AncestorType=Canvas}}"
             Height="60"
             Canvas.Left="0"
-            Canvas.Top="{Binding SelectIndex, Converter={x:Static views:SideMenu.IndexToOffsetConverterIns}}">
-      <Border.Background>
-        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-          <GradientStop Color="#aae8e8e8" Offset="0.0" />
-          <GradientStop Color="#aae4e4e4" Offset="1.0" />
-        </LinearGradientBrush>
-      </Border.Background>
+            Canvas.Top="{Binding SelectIndex, Converter={x:Static views:SideMenu.IndexToOffsetConverterIns}}"
+            Background="#aafafafa">
+
 
       <Border.Transitions>
         <Transitions>

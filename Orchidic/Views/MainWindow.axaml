@@ -15,7 +15,7 @@
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         TransparencyLevelHint="AcrylicBlur"
-        Background="#bbfafafa"
+        Background="#ddfafafa"
         xmlns:avaControls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
         Title="Orchidic">
   <Window.Resources>
