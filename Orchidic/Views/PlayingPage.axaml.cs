@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Animation;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Styling;
 using SkiaSharp;
 
 namespace Orchidic.Views;
@@ -20,6 +25,8 @@ public partial class PlayingPage : UserControl
 
     public Bitmap Bitmap => _bitmap;
 
+    private CancellationTokenSource _imageFadeInCts = new();
+
     public PlayingPage()
     {
         var uri = new Uri("avares://Orchidic/Assets/test.png");
@@ -27,19 +34,19 @@ public partial class PlayingPage : UserControl
         _bitmap = new Bitmap(stream);
         InitializeComponent();
 
-        AttachedToVisualTree += (_, __) => AddBlurBackground();
+        AttachedToVisualTree += (_, _) => AddBlurBackground();
     }
 
-    private void AddBlurBackground()
+    private async void AddBlurBackground()
     {
         // 背景图片
         var backgroundImage = new Image
         {
-            Source = CreateBlurredBitmap(_bitmap, 200),
+            Source = await CreateBlurredBitmapAsync(_bitmap, 400),
             Stretch = Stretch.UniformToFill,
             Height = 200,
             Width = 200,
-            Opacity = 0.5
+            Opacity = 0
         };
 
         // 创建绑定
@@ -70,103 +77,122 @@ public partial class PlayingPage : UserControl
             CoverParentBg.Children.Insert(0, backgroundImage);
         else
             CoverParentBg.Children.Add(backgroundImage);
+
+        // 🔥 添加淡入动画
+        var fadeIn = new Animation
+        {
+            Duration = TimeSpan.FromMilliseconds(500), // 持续时间
+            Easing = new QuadraticEaseInOut(),
+            FillMode = FillMode.Forward,
+            Children =
+            {
+                new KeyFrame
+                {
+                    Cue = new Cue(0d),
+                    Setters = { new Setter(OpacityProperty, 0.0) }
+                },
+                new KeyFrame
+                {
+                    Cue = new Cue(1d),
+                    Setters = { new Setter(OpacityProperty, 0.6) }
+                }
+            }
+        };
+
+        _imageFadeInCts = new CancellationTokenSource();
+        await fadeIn.RunAsync(backgroundImage, _imageFadeInCts.Token);
     }
 
     private static Bitmap CreateBlurredBitmap(Bitmap source, float blurRadius)
     {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
         // 1. Avalonia Bitmap -> SKBitmap
         using var stream = new MemoryStream();
         source.Save(stream);
         stream.Position = 0;
         using var skBitmap = SKBitmap.Decode(stream);
 
-        int W = skBitmap.Width;
-        int H = skBitmap.Height;
-        int r = (int)Math.Ceiling(blurRadius); // 向上取整，保证空间足够
+        var width = skBitmap.Width;
+        // var height = skBitmap.Height; // width应该和height是一致的
+        var r = (int)Math.Ceiling(blurRadius); // 向上取整
 
-        // 2. 创建输出 Surface，比原图大 2*r，以容纳模糊边缘
-        using var surface = SKSurface.Create(new SKImageInfo(W + 2 * r, H + 2 * r));
+        const int scaledSize = 10;
+        var scaledBlurRadius = r * scaledSize / width;
+
+        var scaledBitmap = new SKBitmap(scaledSize, scaledSize);
+        skBitmap.ScalePixels(scaledBitmap, SKFilterQuality.Low);
+
+        // 2. 构建“圆形卷积核”
+        var kernelRadius = Math.Max(1, scaledBlurRadius);
+        var size = kernelRadius * 2 + 1;
+        var kernel = new float[size, size];
+        var sum = 0f;
+
+        for (var y = 0; y < size; y++)
+        {
+            for (var x = 0; x < size; x++)
+            {
+                float dx = x - kernelRadius;
+                float dy = y - kernelRadius;
+                if (!(Math.Sqrt(dx * dx + dy * dy) <= kernelRadius)) continue;
+                kernel[y, x] = 1f;
+                sum += 1f;
+            }
+        }
+
+        // 归一化
+        for (var y = 0; y < size; y++)
+        {
+            for (var x = 0; x < size; x++)
+            {
+                kernel[y, x] /= sum;
+            }
+        }
+
+        var kernelFlat = kernel.Cast<float>().ToArray();
+
+        // 3. 创建卷积滤镜
+        var filter = SKImageFilter.CreateMatrixConvolution(
+            new SKSizeI(size, size),
+            kernelFlat,
+            1.0f, // scale
+            0.0f, // bias
+            new SKPointI(kernelRadius, kernelRadius),
+            SKShaderTileMode.Clamp,
+            true, // convolveAlpha
+            null // input
+        );
+
+        // 4. 创建输出 Surface
+        using var surface =
+            SKSurface.Create(new SKImageInfo(scaledSize + 2 * scaledBlurRadius, scaledSize + 2 * scaledBlurRadius));
         var canvas = surface.Canvas;
         canvas.Clear(SKColors.Transparent);
 
-        // 3. 设置模糊滤镜
-        using var paint = new SKPaint
-        {
-            ImageFilter = SKImageFilter.CreateBlur(blurRadius, blurRadius)
-        };
+        using var paint = new SKPaint();
+        paint.ImageFilter = filter;
 
-        // 4. 绘制原图到 Surface 中心
-        canvas.DrawBitmap(skBitmap, r, r, paint);
+        // 5. 绘制到中心
+        canvas.DrawBitmap(scaledBitmap, scaledBlurRadius, scaledBlurRadius, paint);
         canvas.Flush();
 
-        // 5. 输出 Avalonia Bitmap
+        // 6. 输出 Avalonia Bitmap
         using var image = surface.Snapshot();
-        using var imageData = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var imageData = image.Encode(SKEncodedImageFormat.Png, 0);
         using var outputStream = new MemoryStream();
         imageData.SaveTo(outputStream);
         outputStream.Position = 0;
+
+        stopwatch.Stop();
+        Console.WriteLine(stopwatch.ElapsedMilliseconds);
 
         return new Bitmap(outputStream);
     }
 
-    private static Bitmap CreateBallBlurredBitmap(Bitmap source, float blurRadius, float scaleFactor = 0.25f)
+    private static async Task<Bitmap> CreateBlurredBitmapAsync(Bitmap source, float blurRadius)
     {
-        // 1. Avalonia Bitmap -> SKBitmap
-        using var stream = new MemoryStream();
-        source.Save(stream);
-        stream.Position = 0;
-        using var skBitmapOriginal = SKBitmap.Decode(stream);
-
-        int W = skBitmapOriginal.Width;
-        int H = skBitmapOriginal.Height;
-        int r = (int)Math.Ceiling(blurRadius);
-
-        // 2. 缩小 Bitmap，降低计算量
-        int smallW = Math.Max(1, (int)(W * scaleFactor));
-        int smallH = Math.Max(1, (int)(H * scaleFactor));
-
-        using var skBitmapSmall = skBitmapOriginal.Resize(new SKImageInfo(smallW, smallH), SKFilterQuality.Medium);
-
-        // 3. 创建输出 Surface，比原图大 2*r，以容纳模糊边缘
-        using var surface = SKSurface.Create(new SKImageInfo(W + 2 * r, H + 2 * r));
-        var canvas = surface.Canvas;
-        canvas.Clear(SKColors.Transparent);
-
-        // 4. Morphology 膨胀 + 高斯模糊
-        using (var paint = new SKPaint
-               {
-                   // 注意：半径也要缩放
-                   ImageFilter = SKImageFilter.CreateDilate(r * scaleFactor, r * scaleFactor)
-               })
-        {
-            // 把缩小后的图片放到输出 surface 中间
-            float scaleX = (float)W / smallW;
-            float scaleY = (float)H / smallH;
-            var destRect = new SKRect(r, r, r + smallW * scaleX, r + smallH * scaleY);
-            canvas.DrawBitmap(skBitmapSmall, destRect, paint);
-        }
-
-        using (var paintBlur = new SKPaint
-               {
-                   ImageFilter = SKImageFilter.CreateBlur(blurRadius / 2f, blurRadius / 2f)
-               })
-        {
-            float scaleX = (float)W / smallW;
-            float scaleY = (float)H / smallH;
-            var destRect = new SKRect(r, r, r + smallW * scaleX, r + smallH * scaleY);
-            canvas.DrawBitmap(skBitmapSmall, destRect, paintBlur);
-        }
-
-        canvas.Flush();
-
-        // 5. 输出 Avalonia Bitmap
-        using var image = surface.Snapshot();
-        using var imageData = image.Encode(SKEncodedImageFormat.Png, 100);
-        using var outputStream = new MemoryStream();
-        imageData.SaveTo(outputStream);
-        outputStream.Position = 0;
-
-        return new Bitmap(outputStream);
+        return await Task.Run(() => CreateBlurredBitmap(source, blurRadius));
     }
 }
 

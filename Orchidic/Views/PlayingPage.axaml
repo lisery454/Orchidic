@@ -12,7 +12,6 @@
     <views:CoverSizeConverter x:Key="CoverSizeConverter" />
     <views:CoverCornerRadiusConverter x:Key="CoverCornerRadiusConverter" />
     <views:PanelHeightConverter x:Key="PanelHeightConverter" />
-    <views:BlurRadiusConverter x:Key="BlurRadiusConverter" />
   </UserControl.Resources>
 
   <Grid RowDefinitions="*, Auto" x:Name="Page">
@@ -22,6 +21,7 @@
     <Grid Grid.Row="0" x:Name="CoverParent" ClipToBounds="True">
       <Button HorizontalAlignment="Center" VerticalAlignment="Center"
               ClipToBounds="False"
+              Cursor="Hand"
               RenderTransformOrigin="50%,50%">
         <Button.Transitions>
           <Transitions>
@@ -45,7 +45,7 @@
           <ControlTemplate TargetType="Button">
             <Grid>
               <utils:SuperellipseBorder Fill="Transparent" ClipToBounds="true"
-                                        Power="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        Power="5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <utils:SuperellipseBorder.Width>
                   <MultiBinding Converter="{StaticResource CoverSizeConverter}">
                     <Binding Path="Bounds.Width" ElementName="CoverParent" />
