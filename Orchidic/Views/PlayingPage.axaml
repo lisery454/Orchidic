@@ -25,6 +25,7 @@
       <Button HorizontalAlignment="Center" VerticalAlignment="Center"
               ClipToBounds="False"
               Cursor="Hand"
+              Command="{Binding PlayOrPauseCommand}"
               RenderTransformOrigin="50%,50%">
         <Button.Transitions>
           <Transitions>
@@ -35,7 +36,7 @@
         <Button.Styles>
           <!-- 悬浮放大 -->
           <Style Selector="Button:pointerover">
-            <Setter Property="RenderTransform" Value="scale(1.01)" />
+            <Setter Property="RenderTransform" Value="scale(1.005)" />
           </Style>
 
           <!-- 按下缩小 -->
@@ -46,8 +47,8 @@
 
         <Button.Template>
           <ControlTemplate TargetType="Button">
-            <Grid>
-              <utils:SuperellipseBorder Fill="Transparent" ClipToBounds="true"
+            <Grid Background="Transparent" IsHitTestVisible="True">
+              <utils:SuperellipseBorder Fill="Transparent" ClipToBounds="true" IsHitTestVisible="True"
                                         Power="5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <utils:SuperellipseBorder.Width>
                   <MultiBinding Converter="{StaticResource CoverSizeConverter}">

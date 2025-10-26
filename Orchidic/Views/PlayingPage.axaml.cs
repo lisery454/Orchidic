@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Orchidic.ViewModels;
@@ -27,7 +28,7 @@ public partial class PlayingPage : UserControl
 
         AttachedToVisualTree += (_, _) => AddBlurBackground();
 
-        ProgressBarBg.GetObservable(Visual.BoundsProperty)
+        ProgressBarBg.GetObservable(BoundsProperty)
             .Subscribe(bounds => { ProgressBarWidth = bounds.Width; });
     }
 
@@ -98,15 +99,14 @@ public partial class PlayingPage : UserControl
         await fadeIn.RunAsync(backgroundImage, _imageFadeInCts.Token);
     }
 
-    private bool _isDragging = false;
-    private Point _lastPosition;
+    private bool _isDragging;
 
     private void ProgressBar_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             _isDragging = true;
-            _lastPosition = e.GetPosition(this);
+
             (DataContext as PlayingPageViewModel)!.Progress = e.GetPosition(sender as Border).X / ProgressBarWidth;
             e.Pointer.Capture((IInputElement)sender!); // 捕获鼠标
         }
@@ -125,10 +125,7 @@ public partial class PlayingPage : UserControl
     {
         if (_isDragging)
         {
-            var current = e.GetPosition(this);
             (DataContext as PlayingPageViewModel)!.Progress = e.GetPosition(sender as Border).X / ProgressBarWidth;
-
-            _lastPosition = current;
         }
     }
 }
@@ -165,7 +162,7 @@ public class CoverCornerRadiusConverter : IMultiValueConverter
 
         var width = (double)(values[0] ?? 320);
         var height = (double)(values[1] ?? 320);
-        return Math.Min(500, Math.Min(width, height) * 0.6 * 0.5);
+        return Math.Min(500, Math.Min(width, height) * 0.6 * 0.2);
     }
 }
 

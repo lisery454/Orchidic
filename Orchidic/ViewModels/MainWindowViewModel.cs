@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Orchidic.Models;
 using Orchidic.Utils;
 using ReactiveUI;
@@ -21,14 +22,14 @@ public class MainWindowViewModel : ViewModelBase
             {
                 return x switch
                 {
-                    PageType.Playing => new PlayingPageViewModel(),
-                    PageType.Queue => new QueuePageViewModel(),
-                    PageType.List => new ListPageViewModel(),
-                    PageType.Search => new SearchPageViewModel(),
-                    PageType.Statistics => new StatisticsPageViewModel(),
-                    PageType.Tools => new ToolsPageViewModel(),
-                    PageType.Settings => new SettingsPageViewModel(),
-                    _ => new PlayingPageViewModel()
+                    PageType.Playing => App.Services.GetRequiredService<PlayingPageViewModel>(),
+                    PageType.Queue => App.Services.GetRequiredService<QueuePageViewModel>(),
+                    PageType.List => App.Services.GetRequiredService<ListPageViewModel>(),
+                    PageType.Search => App.Services.GetRequiredService<SearchPageViewModel>(),
+                    PageType.Statistics => App.Services.GetRequiredService<StatisticsPageViewModel>(),
+                    PageType.Tools => App.Services.GetRequiredService<ToolsPageViewModel>(),
+                    PageType.Settings => App.Services.GetRequiredService<SettingsPageViewModel>(),
+                    _ => App.Services.GetRequiredService<PlayingPageViewModel>()
                 };
             }).ToProperty(this, x => x.CurrentPageViewModel);
     }
