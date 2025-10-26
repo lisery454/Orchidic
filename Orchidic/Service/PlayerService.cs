@@ -1,28 +1,63 @@
 ﻿using System;
 using NAudio.Wave;
+using Orchidic.Models;
 
 namespace Orchidic.Service;
 
 public class PlayerService : IPlayerService, IDisposable
 {
     private readonly WaveOutEvent _device = new();
-    private AudioFileReader? _audioFile;
+    private AudioFileReader? _currentAudioFileReader;
+    private readonly AudioQueue _audioQueue;
 
-    public void LoadFile(string path)
+    public PlayerService()
     {
-        _audioFile = new AudioFileReader(path);
-        _device.Init(_audioFile);
-        _device.Volume = 0.3f;
+        _audioQueue = new AudioQueue();
+
+        LoadFile(_audioQueue.CurrentAudioFile);
+    }
+
+    public AudioFile? GetCurrentAudioFile()
+    {
+        return _audioQueue.CurrentAudioFile;
+    }
+
+    public void LoadFile(AudioFile? file)
+    {
+        if (file == null)
+        {
+            _device.Stop();
+            _currentAudioFileReader?.Dispose();
+            _currentAudioFileReader = null;
+        }
+        else
+        {
+            _currentAudioFileReader = new AudioFileReader(file.path);
+            _device.Init(_currentAudioFileReader);
+            _device.Volume = 0.3f;
+        }
+    }
+
+    public void Next()
+    {
+        _audioQueue.CurrentIndex += 1;
+        LoadFile(_audioQueue.CurrentAudioFile);
+    }
+
+    public void Prev()
+    {
+        _audioQueue.CurrentIndex -= 1;
+        LoadFile(_audioQueue.CurrentAudioFile);
     }
 
     public TimeSpan GetTotalTime()
     {
-        return _audioFile?.TotalTime ?? TimeSpan.Zero;
+        return _currentAudioFileReader?.TotalTime ?? TimeSpan.Zero;
     }
 
     public TimeSpan GetCurrentTime()
     {
-        return _audioFile?.CurrentTime ?? TimeSpan.Zero;
+        return _currentAudioFileReader?.CurrentTime ?? TimeSpan.Zero;
     }
 
     public void Play()
@@ -37,12 +72,12 @@ public class PlayerService : IPlayerService, IDisposable
 
     public void Seek(TimeSpan targetTime)
     {
-        if (_audioFile == null) return;
+        if (_currentAudioFileReader == null) return;
 
         if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
-        if (targetTime > _audioFile.TotalTime) targetTime = _audioFile.TotalTime;
+        if (targetTime > _currentAudioFileReader.TotalTime) targetTime = _currentAudioFileReader.TotalTime;
 
-        _audioFile.CurrentTime = targetTime;
+        _currentAudioFileReader.CurrentTime = targetTime;
     }
 
     public bool IsPlaying()
@@ -52,7 +87,8 @@ public class PlayerService : IPlayerService, IDisposable
 
     public void Dispose()
     {
+        _device.Stop();
         _device.Dispose();
-        _audioFile?.Dispose();
+        _currentAudioFileReader?.Dispose();
     }
 }

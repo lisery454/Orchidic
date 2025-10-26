@@ -1,10 +1,14 @@
 ﻿using System;
+using Orchidic.Models;
 
 namespace Orchidic.Service;
 
 public interface IPlayerService
 {
-    void LoadFile(string path);
+    AudioFile? GetCurrentAudioFile();
+    void LoadFile(AudioFile? file);
+    void Next();
+    void Prev();
     TimeSpan GetTotalTime();
     TimeSpan GetCurrentTime();
     void Play();

@@ -33,6 +33,8 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     }
 
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromSeconds(0.2) };
+    public ICommand NextAudioCommand { get; set; }
+    public ICommand PrevAudioCommand { get; set; }
     public ICommand PlayOrPauseCommand { get; set; }
     private TimeSpan _totalTime;
 
@@ -73,7 +75,7 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     {
         _playerService = playerService;
         _fileInfoService = fileInfoService;
-        
+
         _cover = _fileInfoService.GetDefaultCover();
         _blurredCover = CreateBlurredBitmapAsync(Cover, 400);
         CurrentTime = TimeSpan.Zero;
@@ -97,10 +99,30 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
                 _playerService.Play();
             }
         });
+        NextAudioCommand = ReactiveCommand.Create(() =>
+        {
+            _playerService.Next();
+            var path = _playerService.GetCurrentAudioFile()?.path;
+            if (path != null)
+                Cover = _fileInfoService.GetCoverFromAudio(path);
+            CurrentTime = playerService.GetCurrentTime();
+            TotalTime = playerService.GetTotalTime();
+            RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
+        });
+        PrevAudioCommand = ReactiveCommand.Create(() =>
+        {
+            _playerService.Prev();
+            var path = _playerService.GetCurrentAudioFile()?.path;
+            if (path != null)
+                Cover = _fileInfoService.GetCoverFromAudio(path);
+            CurrentTime = playerService.GetCurrentTime();
+            TotalTime = playerService.GetTotalTime();
+            RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
+        });
 
-        // _playerService.LoadFile(@"D:\Music\やなぎなぎ - over  and over.mp3");
-        // Cover = _fileInfoService.GetCoverFromAudio(@"D:\Music\やなぎなぎ - over  and over.mp3");
-        // _playerService.Play();
+        var path = _playerService.GetCurrentAudioFile()?.path;
+        if (path != null)
+            Cover = _fileInfoService.GetCoverFromAudio(path);
     }
 
     private static async Task<Bitmap> CreateBlurredBitmapAsync(Bitmap source, float blurRadius)
