@@ -38,7 +38,7 @@ public partial class PlayingPage : UserControl
         // 背景图片
         var backgroundImage = new Image
         {
-            Source = await model!.BlurredBitmap,
+            Source = await model!.BlurredCover,
             Stretch = Stretch.UniformToFill,
             Height = 200,
             Width = 200,

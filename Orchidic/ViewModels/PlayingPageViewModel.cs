@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using Orchidic.Service;
 using Orchidic.Utils;
@@ -13,14 +12,28 @@ namespace Orchidic.ViewModels;
 public class PlayingPageViewModel : ViewModelBase, IDisposable
 {
     private IPlayerService _playerService;
-    public Bitmap Bitmap { get; }
+    private IFileInfoService _fileInfoService;
+    private Bitmap _cover;
+    private Task<Bitmap> _blurredCover;
 
-    public Task<Bitmap> BlurredBitmap { get; }
+    public Bitmap Cover
+    {
+        get => _cover;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _cover, value);
+            BlurredCover = CreateBlurredBitmapAsync(Cover, 400);
+        }
+    }
+
+    public Task<Bitmap> BlurredCover
+    {
+        get => _blurredCover;
+        private set => this.RaiseAndSetIfChanged(ref _blurredCover, value);
+    }
 
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromSeconds(0.2) };
-
     public ICommand PlayOrPauseCommand { get; set; }
-
     private TimeSpan _totalTime;
 
     public TimeSpan TotalTime
@@ -56,14 +69,13 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         this.RaiseAndSetIfChanged(ref _progress, Math.Clamp(value, 0, 1), nameof(Progress));
     }
 
-    public PlayingPageViewModel(IPlayerService playerService)
+    public PlayingPageViewModel(IPlayerService playerService, IFileInfoService fileInfoService)
     {
         _playerService = playerService;
-
-        var uri = new Uri("avares://Orchidic/Assets/test4.png");
-        using var stream = AssetLoader.Open(uri);
-        Bitmap = new Bitmap(stream);
-        BlurredBitmap = CreateBlurredBitmapAsync(Bitmap, 400);
+        _fileInfoService = fileInfoService;
+        
+        _cover = _fileInfoService.GetDefaultCover();
+        _blurredCover = CreateBlurredBitmapAsync(Cover, 400);
         CurrentTime = TimeSpan.Zero;
         TotalTime = TimeSpan.Zero;
         Progress = 0;
@@ -86,8 +98,9 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
             }
         });
 
-        _playerService.LoadFile(@"D:\Music\やなぎなぎ - over  and over.mp3");
-        _playerService.Play();
+        // _playerService.LoadFile(@"D:\Music\やなぎなぎ - over  and over.mp3");
+        // Cover = _fileInfoService.GetCoverFromAudio(@"D:\Music\やなぎなぎ - over  and over.mp3");
+        // _playerService.Play();
     }
 
     private static async Task<Bitmap> CreateBlurredBitmapAsync(Bitmap source, float blurRadius)
@@ -97,8 +110,8 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
-        Bitmap.Dispose();
-        BlurredBitmap.Dispose();
+        Cover.Dispose();
+        BlurredCover.Dispose();
         updateTimer.Stop();
     }
 }

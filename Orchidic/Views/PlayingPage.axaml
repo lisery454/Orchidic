@@ -73,7 +73,7 @@
 
                 <Grid>
                   <Image
-                    Source="{Binding Bitmap}"
+                    Source="{Binding Cover}"
                     Stretch="UniformToFill" />
                   <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
                   <Rectangle IsHitTestVisible="False">

@@ -69,7 +69,6 @@ public class SuperellipseBorder : Decorator
 
     private static StreamGeometry CreateSuperellipseGeometry(Rect rect, double radius, double power)
     {
-        // 让 radius 影响 n：当 radius 小时更圆，当 radius 大时更方
         const double halfPi = Math.PI / 2;
 
         var geo = new StreamGeometry();

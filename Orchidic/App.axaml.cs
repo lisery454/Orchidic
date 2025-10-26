@@ -32,6 +32,7 @@ public partial class App : Application
         services.AddTransient<SettingsPageViewModel>();
 
         services.AddSingleton<IPlayerService, PlayerService>();
+        services.AddSingleton<IFileInfoService, FileInfoService>();
 
         Services = services.BuildServiceProvider();
 
