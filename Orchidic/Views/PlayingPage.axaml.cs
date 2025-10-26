@@ -1,48 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
+using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Styling;
-using SkiaSharp;
+using Orchidic.ViewModels;
 
 namespace Orchidic.Views;
 
 public partial class PlayingPage : UserControl
 {
-    private readonly Bitmap _bitmap;
-
-    public Bitmap Bitmap => _bitmap;
-
     private CancellationTokenSource _imageFadeInCts = new();
+
+    private double ProgressBarWidth { get; set; }
 
     public PlayingPage()
     {
-        var uri = new Uri("avares://Orchidic/Assets/test.png");
-        using var stream = AssetLoader.Open(uri);
-        _bitmap = new Bitmap(stream);
         InitializeComponent();
 
         AttachedToVisualTree += (_, _) => AddBlurBackground();
+
+        ProgressBarBg.GetObservable(Visual.BoundsProperty)
+            .Subscribe(bounds => { ProgressBarWidth = bounds.Width; });
     }
 
     private async void AddBlurBackground()
     {
+        var model = DataContext as PlayingPageViewModel;
         // 背景图片
         var backgroundImage = new Image
         {
-            Source = await CreateBlurredBitmapAsync(_bitmap, 400),
+            Source = await model!.BlurredBitmap,
             Stretch = Stretch.UniformToFill,
             Height = 200,
             Width = 200,
@@ -69,8 +64,8 @@ public partial class PlayingPage : UserControl
                 }
             }
         };
-        backgroundImage.Bind(Image.WidthProperty, multiBinding);
-        backgroundImage.Bind(Image.HeightProperty, multiBinding);
+        backgroundImage.Bind(WidthProperty, multiBinding);
+        backgroundImage.Bind(HeightProperty, multiBinding);
 
         // 插入到背景层
         if (CoverParentBg.Children.Count > 0)
@@ -103,96 +98,38 @@ public partial class PlayingPage : UserControl
         await fadeIn.RunAsync(backgroundImage, _imageFadeInCts.Token);
     }
 
-    private static Bitmap CreateBlurredBitmap(Bitmap source, float blurRadius)
+    private bool _isDragging = false;
+    private Point _lastPosition;
+
+    private void ProgressBar_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
-        // 1. Avalonia Bitmap -> SKBitmap
-        using var stream = new MemoryStream();
-        source.Save(stream);
-        stream.Position = 0;
-        using var skBitmap = SKBitmap.Decode(stream);
-
-        var width = skBitmap.Width;
-        // var height = skBitmap.Height; // width应该和height是一致的
-        var r = (int)Math.Ceiling(blurRadius); // 向上取整
-
-        const int scaledSize = 10;
-        var scaledBlurRadius = r * scaledSize / width;
-
-        var scaledBitmap = new SKBitmap(scaledSize, scaledSize);
-        skBitmap.ScalePixels(scaledBitmap, SKFilterQuality.Low);
-
-        // 2. 构建“圆形卷积核”
-        var kernelRadius = Math.Max(1, scaledBlurRadius);
-        var size = kernelRadius * 2 + 1;
-        var kernel = new float[size, size];
-        var sum = 0f;
-
-        for (var y = 0; y < size; y++)
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
-            for (var x = 0; x < size; x++)
-            {
-                float dx = x - kernelRadius;
-                float dy = y - kernelRadius;
-                if (!(Math.Sqrt(dx * dx + dy * dy) <= kernelRadius)) continue;
-                kernel[y, x] = 1f;
-                sum += 1f;
-            }
+            _isDragging = true;
+            _lastPosition = e.GetPosition(this);
+            (DataContext as PlayingPageViewModel)!.Progress = e.GetPosition(sender as Border).X / ProgressBarWidth;
+            e.Pointer.Capture((IInputElement)sender!); // 捕获鼠标
         }
-
-        // 归一化
-        for (var y = 0; y < size; y++)
-        {
-            for (var x = 0; x < size; x++)
-            {
-                kernel[y, x] /= sum;
-            }
-        }
-
-        var kernelFlat = kernel.Cast<float>().ToArray();
-
-        // 3. 创建卷积滤镜
-        var filter = SKImageFilter.CreateMatrixConvolution(
-            new SKSizeI(size, size),
-            kernelFlat,
-            1.0f, // scale
-            0.0f, // bias
-            new SKPointI(kernelRadius, kernelRadius),
-            SKShaderTileMode.Clamp,
-            true, // convolveAlpha
-            null // input
-        );
-
-        // 4. 创建输出 Surface
-        using var surface =
-            SKSurface.Create(new SKImageInfo(scaledSize + 2 * scaledBlurRadius, scaledSize + 2 * scaledBlurRadius));
-        var canvas = surface.Canvas;
-        canvas.Clear(SKColors.Transparent);
-
-        using var paint = new SKPaint();
-        paint.ImageFilter = filter;
-
-        // 5. 绘制到中心
-        canvas.DrawBitmap(scaledBitmap, scaledBlurRadius, scaledBlurRadius, paint);
-        canvas.Flush();
-
-        // 6. 输出 Avalonia Bitmap
-        using var image = surface.Snapshot();
-        using var imageData = image.Encode(SKEncodedImageFormat.Png, 0);
-        using var outputStream = new MemoryStream();
-        imageData.SaveTo(outputStream);
-        outputStream.Position = 0;
-
-        stopwatch.Stop();
-        Console.WriteLine(stopwatch.ElapsedMilliseconds);
-
-        return new Bitmap(outputStream);
     }
 
-    private static async Task<Bitmap> CreateBlurredBitmapAsync(Bitmap source, float blurRadius)
+    private void ProgressBar_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
-        return await Task.Run(() => CreateBlurredBitmap(source, blurRadius));
+        if (_isDragging)
+        {
+            _isDragging = false;
+            e.Pointer.Capture(null); // 释放捕获
+        }
+    }
+
+    private void ProgressBar_OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (_isDragging)
+        {
+            var current = e.GetPosition(this);
+            (DataContext as PlayingPageViewModel)!.Progress = e.GetPosition(sender as Border).X / ProgressBarWidth;
+
+            _lastPosition = current;
+        }
     }
 }
 
@@ -254,5 +191,46 @@ public class PanelHeightConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return BindingOperations.DoNothing;
+    }
+}
+
+public class TimeSpanToStringConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is not TimeSpan timeSpan)
+            return "";
+
+        var format = parameter as string ?? @"mm\:ss";
+        if (timeSpan.TotalHours > 1)
+        {
+            format = parameter as string ?? @"hh\:mm\:ss";
+        }
+
+        return timeSpan.ToString(format);
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return BindingOperations.DoNothing;
+    }
+}
+
+public class ProgressToWidthConverter : IMultiValueConverter
+{
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (values.Count < 2)
+            return 0;
+
+        if (values[0] is not double totalWidth || double.IsNaN(totalWidth))
+            return 0;
+
+        if (values[1] is not double progress)
+            return 0;
+
+        // 进度一般在 [0,1]
+        progress = Math.Clamp(progress, 0, 1);
+        return totalWidth * progress;
     }
 }

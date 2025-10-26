@@ -12,7 +12,10 @@
     <views:CoverSizeConverter x:Key="CoverSizeConverter" />
     <views:CoverCornerRadiusConverter x:Key="CoverCornerRadiusConverter" />
     <views:PanelHeightConverter x:Key="PanelHeightConverter" />
+    <views:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+    <views:ProgressToWidthConverter x:Key="ProgressToWidthConverter" />
   </UserControl.Resources>
+
 
   <Grid RowDefinitions="*, Auto" x:Name="Page">
     <!-- 背景 -->
@@ -69,7 +72,7 @@
 
                 <Grid>
                   <Image
-                    Source="{Binding Bitmap, RelativeSource={RelativeSource AncestorType=views:PlayingPage, Mode=FindAncestor}}"
+                    Source="{Binding Bitmap}"
                     Stretch="UniformToFill" />
                   <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
                   <Rectangle IsHitTestVisible="False">
@@ -91,7 +94,6 @@
           </ControlTemplate>
         </Button.Template>
       </Button>
-
     </Grid>
 
     <!-- below -->
@@ -102,19 +104,33 @@
       <!-- progress bar -->
       <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Height="50">
         <Grid Grid.Column="0" Width="160">
-          <TextBlock Text="1:03" Foreground="#45595e" FontSize="16"
+          <TextBlock Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"
+                     Foreground="#45595e" FontSize="16"
                      Margin="0,0,30,0" HorizontalAlignment="Right"
                      VerticalAlignment="Center">
           </TextBlock>
         </Grid>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" x:Name="ProgressBarBg">
+          <Border Background="Transparent" Height="10" Cursor="Hand"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                  PointerPressed="ProgressBar_OnPointerPressed"
+                  PointerReleased="ProgressBar_OnPointerReleased"
+                  PointerMoved="ProgressBar_OnPointerMoved" />
           <Border Background="#9ea8ab" Height="5" CornerRadius="4"
-                  HorizontalAlignment="Stretch" VerticalAlignment="Center" />
-          <Border Background="#45595e" Height="5" Width="150" CornerRadius="4"
-                  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                  HorizontalAlignment="Stretch" VerticalAlignment="Center" IsHitTestVisible="False" />
+          <Border Background="#45595e" Height="5" CornerRadius="4"
+                  HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False">
+            <Border.Width>
+              <MultiBinding Converter="{StaticResource  ProgressToWidthConverter}">
+                <Binding Path="Bounds.Width" ElementName="ProgressBarBg" />
+                <Binding Path="Progress" />
+              </MultiBinding>
+            </Border.Width>
+          </Border>
         </Grid>
         <Grid Grid.Column="2" Width="160">
-          <TextBlock Text="3:32" Foreground="#45595e" FontSize="16"
+          <TextBlock Text="{Binding TotalTime, Converter={StaticResource TimeSpanToStringConverter}}"
+                     Foreground="#45595e" FontSize="16"
                      Margin="30,0,0,0" HorizontalAlignment="Left"
                      VerticalAlignment="Center">
           </TextBlock>
