@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
@@ -11,25 +10,15 @@ namespace Orchidic.ViewModels;
 
 public class PlayingPageViewModel : ViewModelBase, IDisposable
 {
-    private IPlayerService _playerService;
-    private IFileInfoService _fileInfoService;
+    private readonly IPlayerService _playerService;
+    // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+    private readonly IFileInfoService _fileInfoService;
     private Bitmap _cover;
-    private Task<Bitmap> _blurredCover;
 
     public Bitmap Cover
     {
         get => _cover;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _cover, value);
-            BlurredCover = CreateBlurredBitmapAsync(Cover, 400);
-        }
-    }
-
-    public Task<Bitmap> BlurredCover
-    {
-        get => _blurredCover;
-        private set => this.RaiseAndSetIfChanged(ref _blurredCover, value);
+        set => this.RaiseAndSetIfChanged(ref _cover, value);
     }
 
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromSeconds(0.2) };
@@ -77,11 +66,10 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         _fileInfoService = fileInfoService;
 
         _cover = _fileInfoService.GetDefaultCover();
-        _blurredCover = CreateBlurredBitmapAsync(Cover, 400);
-        CurrentTime = TimeSpan.Zero;
-        TotalTime = TimeSpan.Zero;
-        Progress = 0;
-        updateTimer.Tick += (s, e) =>
+        CurrentTime = playerService.GetCurrentTime();
+        TotalTime = playerService.GetTotalTime();
+        RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
+        updateTimer.Tick += (_, _) =>
         {
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
@@ -125,15 +113,9 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
             Cover = _fileInfoService.GetCoverFromAudio(path);
     }
 
-    private static async Task<Bitmap> CreateBlurredBitmapAsync(Bitmap source, float blurRadius)
-    {
-        return await Task.Run(() => source.CreateBlurredBitmap(blurRadius));
-    }
-
     public void Dispose()
     {
         Cover.Dispose();
-        BlurredCover.Dispose();
         updateTimer.Stop();
     }
 }

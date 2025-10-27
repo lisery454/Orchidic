@@ -26,11 +26,11 @@ public class AudioQueue
         set
         {
             if (_currentIndex == value) return;
-            if (_currentIndex >= AudioFiles.Count)
+            if (value >= AudioFiles.Count)
             {
                 _currentIndex = 0;
             }
-            else if (_currentIndex < 0)
+            else if (value < 0)
             {
                 _currentIndex = AudioFiles.Count - 1;
             }

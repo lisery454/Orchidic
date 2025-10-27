@@ -1,102 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using Avalonia;
-using Avalonia.Animation;
-using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.Media;
-using Avalonia.Styling;
 using Orchidic.ViewModels;
 
 namespace Orchidic.Views;
 
 public partial class PlayingPage : UserControl
 {
-    private CancellationTokenSource _imageFadeInCts = new();
-
     private double ProgressBarWidth { get; set; }
 
     public PlayingPage()
     {
         InitializeComponent();
 
-        AttachedToVisualTree += (_, _) => AddBlurBackground();
+        // AttachedToVisualTree += (_, _) => AddBlurBackground();
 
         ProgressBarBg.GetObservable(BoundsProperty)
             .Subscribe(bounds => { ProgressBarWidth = bounds.Width; });
-    }
-
-    private async void AddBlurBackground()
-    {
-        var model = DataContext as PlayingPageViewModel;
-        // 背景图片
-        var backgroundImage = new Image
-        {
-            Source = await model!.BlurredCover,
-            Stretch = Stretch.UniformToFill,
-            Height = 200,
-            Width = 200,
-            Opacity = 0
-        };
-
-        // 创建绑定
-        var multiBinding = new MultiBinding
-        {
-            Converter = new CoverBgSizeConverter(),
-            Bindings =
-            {
-                new Binding
-                {
-                    Path = "Bounds.Width",
-                    Source = CoverParentBg,
-                    Mode = BindingMode.OneWay
-                },
-                new Binding
-                {
-                    Path = "Bounds.Height",
-                    Source = CoverParentBg,
-                    Mode = BindingMode.OneWay
-                }
-            }
-        };
-        backgroundImage.Bind(WidthProperty, multiBinding);
-        backgroundImage.Bind(HeightProperty, multiBinding);
-
-        // 插入到背景层
-        if (CoverParentBg.Children.Count > 0)
-            CoverParentBg.Children.Insert(0, backgroundImage);
-        else
-            CoverParentBg.Children.Add(backgroundImage);
-
-        // 🔥 添加淡入动画
-        var fadeIn = new Animation
-        {
-            Duration = TimeSpan.FromMilliseconds(500), // 持续时间
-            Easing = new QuadraticEaseInOut(),
-            FillMode = FillMode.Forward,
-            Children =
-            {
-                new KeyFrame
-                {
-                    Cue = new Cue(0d),
-                    Setters = { new Setter(OpacityProperty, 0.0) }
-                },
-                new KeyFrame
-                {
-                    Cue = new Cue(1d),
-                    Setters = { new Setter(OpacityProperty, 0.6) }
-                }
-            }
-        };
-
-        _imageFadeInCts = new CancellationTokenSource();
-        await fadeIn.RunAsync(backgroundImage, _imageFadeInCts.Token);
     }
 
     private bool _isDragging;

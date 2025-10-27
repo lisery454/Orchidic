@@ -11,16 +11,15 @@ public static class BlurBitmapHelper
 {
     public static Bitmap CreateBlurredBitmap(this Bitmap source, float blurRadius)
     {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
         // 1. Avalonia Bitmap -> SKBitmap
+        using var squareBitMap = ToSquareBitmap(source);
         using var stream = new MemoryStream();
-        source.Save(stream);
+        squareBitMap.Save(stream);
         stream.Position = 0;
         using var skBitmap = SKBitmap.Decode(stream);
 
         var width = skBitmap.Width;
-        // var height = skBitmap.Height; // width应该和height是一致的
+        
         var r = (int)Math.Ceiling(blurRadius); // 向上取整
 
         const int scaledSize = 10;
@@ -90,7 +89,40 @@ public static class BlurBitmapHelper
         imageData.SaveTo(outputStream);
         outputStream.Position = 0;
 
-        stopwatch.Stop();
+
+        return new Bitmap(outputStream);
+    }
+
+    public static Bitmap ToSquareBitmap(Bitmap source)
+    {
+        using var stream = new MemoryStream();
+        source.Save(stream);
+        stream.Position = 0;
+
+        using var skBitmap = SKBitmap.Decode(stream);
+
+        int width = skBitmap.Width;
+        int height = skBitmap.Height;
+        int size = Math.Min(width, height);
+
+        int offsetX = (width - size) / 2;
+        int offsetY = (height - size) / 2;
+
+        var square = new SKBitmap(size, size);
+        using (var canvas = new SKCanvas(square))
+        {
+            canvas.Clear(SKColors.Transparent);
+            canvas.DrawBitmap(skBitmap,
+                new SKRect(offsetX, offsetY, offsetX + size, offsetY + size),
+                new SKRect(0, 0, size, size));
+        }
+
+        // 输出 Avalonia Bitmap
+        using var image = SKImage.FromBitmap(square);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var outputStream = new MemoryStream();
+        data.SaveTo(outputStream);
+        outputStream.Position = 0;
 
         return new Bitmap(outputStream);
     }

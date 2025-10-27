@@ -24,30 +24,30 @@ public class PlayerService : IPlayerService, IDisposable
 
     public void LoadFile(AudioFile? file)
     {
-        if (file == null)
-        {
-            _device.Stop();
-            _currentAudioFileReader?.Dispose();
-            _currentAudioFileReader = null;
-        }
-        else
-        {
-            _currentAudioFileReader = new AudioFileReader(file.path);
-            _device.Init(_currentAudioFileReader);
-            _device.Volume = 0.3f;
-        }
+        _device.Stop();
+        _currentAudioFileReader?.Dispose();
+        _currentAudioFileReader = null;
+
+        if (file == null) return;
+        
+        _currentAudioFileReader = new AudioFileReader(file.path);
+        _device.Init(_currentAudioFileReader);
+        _device.Volume = 0.3f;
     }
 
     public void Next()
     {
         _audioQueue.CurrentIndex += 1;
+        _device.Stop();
         LoadFile(_audioQueue.CurrentAudioFile);
+        Play();
     }
 
     public void Prev()
     {
         _audioQueue.CurrentIndex -= 1;
         LoadFile(_audioQueue.CurrentAudioFile);
+        Play();
     }
 
     public TimeSpan GetTotalTime()

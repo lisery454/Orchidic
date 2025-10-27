@@ -71,6 +71,7 @@
             <DependentUpon>ToolsPage.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Remove="Utils\SmoothImage.cs" />
     </ItemGroup>
 
 
