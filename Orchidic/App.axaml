@@ -18,7 +18,6 @@
     <converters:PageTitleConverter x:Key="PageTitleConverter" />
     <converters:HalfCornerRadiusConverter x:Key="HalfCornerRadiusConverter" />
     <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
-
   </Application.Resources>
 
   <Application.Styles>
@@ -27,5 +26,6 @@
       <Setter Property="FontFamily" Value="{StaticResource MiSans}"></Setter>
       <Setter Property="FontWeight" Value="Normal"></Setter>
     </Style>
+    <StyleInclude Source="avares://Orchidic/Styles/AnimatedButton.axaml"/>
   </Application.Styles>
 </Application>

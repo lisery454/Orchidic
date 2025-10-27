@@ -6,7 +6,7 @@ namespace Orchidic.Service;
 
 public class PlayerService : IPlayerService, IDisposable
 {
-    private readonly WaveOutEvent _device = new();
+    private readonly WaveOutEvent _device;
     private AudioFileReader? _currentAudioFileReader;
     private readonly AudioQueue _audioQueue;
 
@@ -14,7 +14,30 @@ public class PlayerService : IPlayerService, IDisposable
     {
         _audioQueue = new AudioQueue();
 
+        _device = new WaveOutEvent();
+
+        _device.PlaybackStopped += OnPlaybackStopped;
+
         LoadFile(_audioQueue.CurrentAudioFile);
+    }
+
+
+    private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
+    {
+        if (_currentAudioFileReader != null)
+        {
+            _currentAudioFileReader.Dispose();
+            _currentAudioFileReader = null;
+        }
+
+        if (e.Exception == null)
+        {
+            Next();
+        }
+        else
+        {
+            Console.WriteLine("播放错误: " + e.Exception.Message);
+        }
     }
 
     public AudioFile? GetCurrentAudioFile()
@@ -29,7 +52,7 @@ public class PlayerService : IPlayerService, IDisposable
         _currentAudioFileReader = null;
 
         if (file == null) return;
-        
+
         _currentAudioFileReader = new AudioFileReader(file.path);
         _device.Init(_currentAudioFileReader);
         _device.Volume = 0.3f;
@@ -38,7 +61,6 @@ public class PlayerService : IPlayerService, IDisposable
     public void Next()
     {
         _audioQueue.CurrentIndex += 1;
-        _device.Stop();
         LoadFile(_audioQueue.CurrentAudioFile);
         Play();
     }

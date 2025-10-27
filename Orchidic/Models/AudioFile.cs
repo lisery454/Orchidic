@@ -1,6 +1,6 @@
 ﻿namespace Orchidic.Models;
 
-public class AudioFile(string path)
+public class AudioFile(string? path)
 {
-    public string path = path;
+    public string? path = path;
 }

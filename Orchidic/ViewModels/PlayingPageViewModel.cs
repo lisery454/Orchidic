@@ -11,6 +11,7 @@ namespace Orchidic.ViewModels;
 public class PlayingPageViewModel : ViewModelBase, IDisposable
 {
     private readonly IPlayerService _playerService;
+
     // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
     private readonly IFileInfoService _fileInfoService;
     private Bitmap _cover;
@@ -18,8 +19,16 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     public Bitmap Cover
     {
         get => _cover;
-        set => this.RaiseAndSetIfChanged(ref _cover, value);
+        set
+        {
+            if (value == _cover) return;
+            var old = _cover;
+            this.RaiseAndSetIfChanged(ref _cover, value);
+            old.Dispose();
+        }
     }
+
+    private string? currAudioPath { get; set; }
 
     private readonly DispatcherTimer updateTimer = new() { Interval = TimeSpan.FromSeconds(0.2) };
     public ICommand NextAudioCommand { get; set; }
@@ -64,13 +73,14 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     {
         _playerService = playerService;
         _fileInfoService = fileInfoService;
-
+        currAudioPath = null;
         _cover = _fileInfoService.GetDefaultCover();
         CurrentTime = playerService.GetCurrentTime();
         TotalTime = playerService.GetTotalTime();
         RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
         updateTimer.Tick += (_, _) =>
         {
+            UpdateCover();
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
             RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
@@ -90,9 +100,7 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         NextAudioCommand = ReactiveCommand.Create(() =>
         {
             _playerService.Next();
-            var path = _playerService.GetCurrentAudioFile()?.path;
-            if (path != null)
-                Cover = _fileInfoService.GetCoverFromAudio(path);
+            UpdateCover();
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
             RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
@@ -100,17 +108,21 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         PrevAudioCommand = ReactiveCommand.Create(() =>
         {
             _playerService.Prev();
-            var path = _playerService.GetCurrentAudioFile()?.path;
-            if (path != null)
-                Cover = _fileInfoService.GetCoverFromAudio(path);
+            UpdateCover();
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
             RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
         });
 
+        UpdateCover();
+    }
+
+    private void UpdateCover()
+    {
         var path = _playerService.GetCurrentAudioFile()?.path;
-        if (path != null)
-            Cover = _fileInfoService.GetCoverFromAudio(path);
+        if (currAudioPath == path) return;
+        Cover = path != null ? _fileInfoService.GetCoverFromAudio(path) : _fileInfoService.GetDefaultCover();
+        currAudioPath = path;
     }
 
     public void Dispose()
