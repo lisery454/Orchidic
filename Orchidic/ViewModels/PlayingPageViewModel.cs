@@ -34,6 +34,15 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     public ICommand NextAudioCommand { get; set; }
     public ICommand PrevAudioCommand { get; set; }
     public ICommand PlayOrPauseCommand { get; set; }
+
+    private string _title;
+
+    public string Title
+    {
+        get => _title;
+        set => this.RaiseAndSetIfChanged(ref _title, value);
+    }
+
     private TimeSpan _totalTime;
 
     public TimeSpan TotalTime
@@ -77,10 +86,11 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         _cover = _fileInfoService.GetDefaultCover();
         CurrentTime = playerService.GetCurrentTime();
         TotalTime = playerService.GetTotalTime();
+        _title = _fileInfoService.GetDefaultTitle();
         RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
         updateTimer.Tick += (_, _) =>
         {
-            UpdateCover();
+            UpdateCurrAudioPath();
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
             RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
@@ -100,7 +110,7 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         NextAudioCommand = ReactiveCommand.Create(() =>
         {
             _playerService.Next();
-            UpdateCover();
+            UpdateCurrAudioPath();
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
             RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
@@ -108,20 +118,21 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         PrevAudioCommand = ReactiveCommand.Create(() =>
         {
             _playerService.Prev();
-            UpdateCover();
+            UpdateCurrAudioPath();
             CurrentTime = playerService.GetCurrentTime();
             TotalTime = playerService.GetTotalTime();
             RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
         });
 
-        UpdateCover();
+        UpdateCurrAudioPath();
     }
 
-    private void UpdateCover()
+    private void UpdateCurrAudioPath()
     {
         var path = _playerService.GetCurrentAudioFile()?.path;
         if (currAudioPath == path) return;
         Cover = path != null ? _fileInfoService.GetCoverFromAudio(path) : _fileInfoService.GetDefaultCover();
+        Title = path != null ? _fileInfoService.GetTitleFromAudio(path) : _fileInfoService.GetDefaultTitle();
         currAudioPath = path;
     }
 

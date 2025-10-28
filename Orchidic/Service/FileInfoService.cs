@@ -41,4 +41,31 @@ public class FileInfoService : IFileInfoService
         ctx.FillRectangle(brush, new Rect(0, 0, 100, 100));
         return rtb;
     }
+
+    public string GetTitleFromAudio(string path)
+    {
+        try
+        {
+            var file = TagLib.File.Create(path);
+
+            // 优先读取音频标签里的标题
+            var title = file.Tag.Title;
+
+            // 如果标签里没有标题，则使用文件名
+            if (string.IsNullOrWhiteSpace(title))
+                title = Path.GetFileNameWithoutExtension(path);
+
+            return title;
+        }
+        catch
+        {
+            // 如果文件无法读取或格式不支持，仍返回文件名
+            return Path.GetFileNameWithoutExtension(path);
+        }
+    }
+
+    public string GetDefaultTitle()
+    {
+        return "No Audio Playing";
+    }
 }

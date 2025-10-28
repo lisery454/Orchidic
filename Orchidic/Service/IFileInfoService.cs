@@ -7,4 +7,8 @@ public interface IFileInfoService
     Bitmap GetCoverFromAudio(string path);
     
     Bitmap GetDefaultCover();
+    
+    string GetTitleFromAudio(string path);
+    
+    string GetDefaultTitle();
 }

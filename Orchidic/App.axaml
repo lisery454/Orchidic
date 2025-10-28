@@ -13,6 +13,8 @@
   <Application.Resources>
     <!-- <FontFamily x:Key="SourceHanSerif">avares://Orchidic/Assets/Fonts#Source Han Serif SC</FontFamily> -->
     <FontFamily x:Key="MiSans">avares://Orchidic/Assets/Fonts#MiSans</FontFamily>
+    <FontFamily x:Key="SpaceMono">avares://Orchidic/Assets/Fonts#Space Mono</FontFamily>
+    <FontFamily x:Key="NotoSansMono">avares://Orchidic/Assets/Fonts#Noto Sans Mono</FontFamily>
 
 
     <converters:PageTitleConverter x:Key="PageTitleConverter" />
