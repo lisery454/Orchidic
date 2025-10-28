@@ -24,19 +24,23 @@ public class PlayerService : IPlayerService, IDisposable
 
     private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
-        if (_currentAudioFileReader != null)
+        // 如果是播放到末尾的停止
+        if ((GetTotalTime() - GetCurrentTime()).Duration() < TimeSpan.FromSeconds(1))
         {
-            _currentAudioFileReader.Dispose();
-            _currentAudioFileReader = null;
-        }
+            if (_currentAudioFileReader != null)
+            {
+                _currentAudioFileReader.Dispose();
+                _currentAudioFileReader = null;
+            }
 
-        if (e.Exception == null)
-        {
-            Next();
-        }
-        else
-        {
-            Console.WriteLine("播放错误: " + e.Exception.Message);
+            if (e.Exception == null)
+            {
+                Next();
+            }
+            else
+            {
+                Console.WriteLine("play error: " + e.Exception.Message);
+            }
         }
     }
 
