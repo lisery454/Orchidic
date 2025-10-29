@@ -9,14 +9,32 @@ public class PlayerService : IPlayerService, IDisposable
     private readonly WaveOutEvent _device;
     private AudioFileReader? _currentAudioFileReader;
     private readonly AudioQueue _audioQueue;
+    private float _currentVolume;
+    private readonly object _deviceLock = new();
+    private bool _isPlaying;
+
+    private AudioFileReader? CurrentAudioFileReader
+    {
+        get => _currentAudioFileReader;
+        set
+        {
+            if (value == _currentAudioFileReader) return;
+
+            _currentAudioFileReader?.Dispose();
+            _currentAudioFileReader = value;
+        }
+    }
 
     public PlayerService()
     {
         _audioQueue = new AudioQueue();
 
         _device = new WaveOutEvent();
+        _currentVolume = 0.3f;
+        _device.Volume = _currentVolume;
 
         _device.PlaybackStopped += OnPlaybackStopped;
+        _isPlaying = false;
 
         LoadFile(_audioQueue.CurrentAudioFile);
     }
@@ -27,10 +45,13 @@ public class PlayerService : IPlayerService, IDisposable
         // 如果是播放到末尾的停止
         if ((GetTotalTime() - GetCurrentTime()).Duration() < TimeSpan.FromSeconds(1))
         {
-            if (_currentAudioFileReader != null)
+            lock (_deviceLock)
             {
-                _currentAudioFileReader.Dispose();
-                _currentAudioFileReader = null;
+                if (CurrentAudioFileReader != null)
+                {
+                    CurrentAudioFileReader = null;
+                    _isPlaying = false;
+                }
             }
 
             if (e.Exception == null)
@@ -51,15 +72,17 @@ public class PlayerService : IPlayerService, IDisposable
 
     public void LoadFile(AudioFile? file)
     {
-        _device.Stop();
-        _currentAudioFileReader?.Dispose();
-        _currentAudioFileReader = null;
+        lock (_deviceLock)
+        {
+            _device.Stop();
+            CurrentAudioFileReader = null;
+            _isPlaying = false;
 
-        if (file == null) return;
+            if (file == null) return;
 
-        _currentAudioFileReader = new AudioFileReader(file.path);
-        _device.Init(_currentAudioFileReader);
-        _device.Volume = 0.3f;
+            CurrentAudioFileReader = new AudioFileReader(file.path);
+            _device.Init(CurrentAudioFileReader);
+        }
     }
 
     public void Next()
@@ -78,43 +101,66 @@ public class PlayerService : IPlayerService, IDisposable
 
     public TimeSpan GetTotalTime()
     {
-        return _currentAudioFileReader?.TotalTime ?? TimeSpan.Zero;
+        return CurrentAudioFileReader?.TotalTime ?? TimeSpan.Zero;
     }
 
     public TimeSpan GetCurrentTime()
     {
-        return _currentAudioFileReader?.CurrentTime ?? TimeSpan.Zero;
+        return CurrentAudioFileReader?.CurrentTime ?? TimeSpan.Zero;
     }
 
     public void Play()
     {
+        _isPlaying = true;
+        lock (_deviceLock)
+        {
+            _device.Stop(); // 清除缓存
+            _device.Init(CurrentAudioFileReader);
+        }
+
         _device.Play();
     }
 
     public void Pause()
     {
+        _isPlaying = false;
         _device.Pause();
     }
 
+
     public void Seek(TimeSpan targetTime)
     {
-        if (_currentAudioFileReader == null) return;
+        lock (_deviceLock)
+        {
+            if (CurrentAudioFileReader == null) return;
 
-        if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
-        if (targetTime > _currentAudioFileReader.TotalTime) targetTime = _currentAudioFileReader.TotalTime;
+            if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
+            if (targetTime > CurrentAudioFileReader.TotalTime) targetTime = CurrentAudioFileReader.TotalTime;
 
-        _currentAudioFileReader.CurrentTime = targetTime;
+            CurrentAudioFileReader.CurrentTime = targetTime;
+        }
     }
 
     public bool IsPlaying()
     {
-        return _device.PlaybackState == PlaybackState.Playing;
+        return _isPlaying;
+    }
+
+    public float GetVolume()
+    {
+        return _currentVolume;
+    }
+
+    public void SetVolume(float volume)
+    {
+        _currentVolume = volume;
+        _device.Volume = _currentVolume;
     }
 
     public void Dispose()
     {
         _device.Stop();
         _device.Dispose();
-        _currentAudioFileReader?.Dispose();
+        CurrentAudioFileReader = null;
     }
 }

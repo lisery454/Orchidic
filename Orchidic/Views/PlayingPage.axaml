@@ -7,12 +7,12 @@
              x:DataType="vm:PlayingPageViewModel"
              xmlns:utils="clr-namespace:Orchidic.Utils"
              xmlns:views="clr-namespace:Orchidic.Views"
+             xmlns:components="clr-namespace:Orchidic.Views.Components"
              x:Class="Orchidic.Views.PlayingPage">
   <UserControl.Resources>
     <views:CoverSizeConverter x:Key="CoverSizeConverter" />
     <views:PanelHeightConverter x:Key="PanelHeightConverter" />
     <views:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
-    <views:ProgressToWidthConverter x:Key="ProgressToWidthConverter" />
   </UserControl.Resources>
 
 
@@ -112,23 +112,10 @@
                        VerticalAlignment="Center">
             </TextBlock>
           </Grid>
-          <Grid Grid.Column="1" x:Name="ProgressBarBg">
-            <Border Background="Transparent" Height="10" Cursor="Hand"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                    PointerPressed="ProgressBar_OnPointerPressed"
-                    PointerReleased="ProgressBar_OnPointerReleased"
-                    PointerMoved="ProgressBar_OnPointerMoved" />
-            <Border Background="#9ea8ab" Height="5" CornerRadius="4"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Center" IsHitTestVisible="False" />
-            <Border Background="#45595e" Height="5" CornerRadius="4"
-                    HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False">
-              <Border.Width>
-                <MultiBinding Converter="{StaticResource  ProgressToWidthConverter}">
-                  <Binding Path="Bounds.Width" ElementName="ProgressBarBg" />
-                  <Binding Path="Progress" />
-                </MultiBinding>
-              </Border.Width>
-            </Border>
+          <Grid Grid.Column="1">
+            <components:SelfSlider x:Name="ProgressSlider" Progress="{Binding Progress}"
+                                   CancelDragRequested="{Binding IsCancelDragRequested}">
+            </components:SelfSlider>
           </Grid>
           <Grid Grid.Column="2" Width="160">
             <TextBlock Text="{Binding TotalTime, Converter={StaticResource TimeSpanToStringConverter}}"
@@ -144,9 +131,7 @@
         <!-- button -->
         <Grid Grid.Row="2" HorizontalAlignment="Center" Margin="0,20,0,0">
           <StackPanel Orientation="Horizontal" Spacing="34">
-            <Button Classes="AnimatedButtonStyle" Command="{Binding PrevAudioCommand}">
-              <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
-            </Button>
+            <Grid Width="100" />
             <Button Classes="AnimatedButtonStyle" Command="{Binding PrevAudioCommand}">
               <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
             </Button>
@@ -156,9 +141,9 @@
             <Button Classes="AnimatedButtonStyle" Command="{Binding NextAudioCommand}">
               <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
             </Button>
-            <Button Classes="AnimatedButtonStyle" Command="{Binding NextAudioCommand}">
-              <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="20" Power="8" Fill="#9ea8ab" />
-            </Button>
+            <Grid Width="100">
+              <components:SelfSlider Progress="{Binding Volume}"></components:SelfSlider>
+            </Grid>
           </StackPanel>
         </Grid>
 

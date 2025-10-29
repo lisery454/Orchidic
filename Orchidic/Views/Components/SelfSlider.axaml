@@ -1,0 +1,29 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:components="clr-namespace:Orchidic.Views.Components"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Orchidic.Views.Components.SelfSlider">
+  <UserControl.Resources>
+    <components:ProgressToWidthConverter x:Key="ProgressToWidthConverter" />
+  </UserControl.Resources>
+  <Grid x:Name="ProgressBarBg">
+    <Border Background="Transparent" Height="10" Cursor="Hand"
+            HorizontalAlignment="Stretch" VerticalAlignment="Center"
+            PointerPressed="ProgressBar_OnPointerPressed"
+            PointerReleased="ProgressBar_OnPointerReleased"
+            PointerMoved="ProgressBar_OnPointerMoved" />
+    <Border Background="#9ea8ab" Height="5" CornerRadius="4"
+            HorizontalAlignment="Stretch" VerticalAlignment="Center" IsHitTestVisible="False" />
+    <Border Background="#45595e" Height="5" CornerRadius="4"
+            HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False">
+      <Border.Width>
+        <MultiBinding Converter="{StaticResource  ProgressToWidthConverter}">
+          <Binding Path="Bounds.Width" ElementName="ProgressBarBg" />
+          <Binding Path="Progress" RelativeSource="{RelativeSource AncestorType=components:SelfSlider}" />
+        </MultiBinding>
+      </Border.Width>
+    </Border>
+  </Grid>
+</UserControl>

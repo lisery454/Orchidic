@@ -15,4 +15,6 @@ public interface IPlayerService
     void Pause();
     void Seek(TimeSpan targetTime);
     bool IsPlaying();
+    float GetVolume();
+    void SetVolume(float volume);
 }

@@ -43,6 +43,19 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         set => this.RaiseAndSetIfChanged(ref _title, value);
     }
 
+    private double _volume;
+
+    public double Volume
+    {
+        get => _volume;
+        set
+        {
+            var newValue = Math.Clamp(value, 0, 1);
+            _playerService.SetVolume((float)newValue);
+            this.RaiseAndSetIfChanged(ref _volume, newValue);
+        }
+    }
+
     private TimeSpan _totalTime;
 
     public TimeSpan TotalTime
@@ -78,11 +91,20 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         this.RaiseAndSetIfChanged(ref _progress, Math.Clamp(value, 0, 1), nameof(Progress));
     }
 
+    private bool _isCancelDragRequested;
+
+    public bool IsCancelDragRequested
+    {
+        get => _isCancelDragRequested;
+        set => this.RaiseAndSetIfChanged(ref _isCancelDragRequested, value);
+    }
+
     public PlayingPageViewModel(IPlayerService playerService, IFileInfoService fileInfoService)
     {
         _playerService = playerService;
         _fileInfoService = fileInfoService;
         currAudioPath = null;
+        _volume = _playerService.GetVolume();
         _cover = _fileInfoService.GetDefaultCover();
         CurrentTime = playerService.GetCurrentTime();
         TotalTime = playerService.GetTotalTime();
@@ -131,6 +153,7 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     {
         var path = _playerService.GetCurrentAudioFile()?.path;
         if (currAudioPath == path) return;
+        IsCancelDragRequested = true;
         Cover = path != null ? _fileInfoService.GetCoverFromAudio(path) : _fileInfoService.GetDefaultCover();
         Title = path != null ? _fileInfoService.GetTitleFromAudio(path) : _fileInfoService.GetDefaultTitle();
         currAudioPath = path;
