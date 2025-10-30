@@ -21,6 +21,18 @@ public class AudioQueue
             new AudioFile(@"D:\Music\【BOFU2016】Chronomia  Lime.mp3"),
             new AudioFile(@"D:\Music\【G2R2018】 R.I.P..mp3"),
             new AudioFile(@"D:\Music\【HD】 六兆年と一夜物語 【IAオリジナル曲・PV付】- KEMU VOXX.mp3"),
+            new AudioFile(@"D:\Music\Aiobahn  宙でおやすみ feat 長瀬有花 .mp3"),
+            new AudioFile(@"D:\Music\Aiobahn +81 feat. ななひら & P丸様。- 天天天国地獄国 (Official Music Video).mp3"),
+            new AudioFile(@"D:\Music\Aiobahn feat KOTOKO  INTERNET YAMERO .mp3"),
+            new AudioFile(@"D:\Music\Akira Complex - Ether Strike.mp3"),
+            new AudioFile(@"D:\Music\anoスマイルあげない.mp3"),
+            new AudioFile(@"D:\Music\AOTQ 長瀬有花  ホライゾン.mp3"),
+            new AudioFile(@"D:\Music\conflict  siromaru  cranky.mp3"),
+            new AudioFile(@"D:\Music\DECO27  ゴーストルール feat 初音ミク.mp3"),
+            new AudioFile(@"D:\Music\eufonius - メグメル (Mag mell) (Cuckool mix 2007).mp3"),
+            new AudioFile(@"D:\Music\inside me.mp3"),
+            new AudioFile(@"D:\Music\Muse Dash OST  Lights of Muse .mp3"),
+            new AudioFile(@"D:\Music\Neru  ロストワンの号哭Lost Ones Weeping feat Kagamine Rin.mp3"),
             new AudioFile(@"D:\Music\#G2R2018  Destr0yer (feat. Nikki Simmons).mp3")
         ];
     }

@@ -11,7 +11,7 @@ public class FileInfoService : IFileInfoService
     {
         try
         {
-            var file = TagLib.File.Create(path);
+            using var file = TagLib.File.Create(path);
             if (file.Tag.Pictures is { Length: > 0 })
             {
                 var pic = file.Tag.Pictures[0];
@@ -46,7 +46,7 @@ public class FileInfoService : IFileInfoService
     {
         try
         {
-            var file = TagLib.File.Create(path);
+            using var file = TagLib.File.Create(path);
 
             // 优先读取音频标签里的标题
             var title = file.Tag.Title;

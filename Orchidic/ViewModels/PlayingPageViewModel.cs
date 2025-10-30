@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows.Input;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Orchidic.Service;
 using Orchidic.Utils;
 using ReactiveUI;
+using SkiaSharp;
 
 namespace Orchidic.ViewModels;
 
@@ -21,7 +23,8 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         get => _cover;
         set
         {
-            if (value == _cover) return;
+            if (ReferenceEquals(value, _cover))
+                return;
             var old = _cover;
             this.RaiseAndSetIfChanged(ref _cover, value);
             old.Dispose();
@@ -111,12 +114,13 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         _title = _fileInfoService.GetDefaultTitle();
         RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
         updateTimer.Tick += (_, _) =>
-        {
-            UpdateCurrAudioPath();
-            CurrentTime = playerService.GetCurrentTime();
-            TotalTime = playerService.GetTotalTime();
-            RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-        };
+            updateTimer.Tick += (_, _) =>
+            {
+                UpdateCurrAudioPath();
+                CurrentTime = playerService.GetCurrentTime();
+                TotalTime = playerService.GetTotalTime();
+                RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
+            };
         updateTimer.Start();
         PlayOrPauseCommand = ReactiveCommand.Create(() =>
         {
