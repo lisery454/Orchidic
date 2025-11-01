@@ -14,9 +14,9 @@
             PointerPressed="ProgressBar_OnPointerPressed"
             PointerReleased="ProgressBar_OnPointerReleased"
             PointerMoved="ProgressBar_OnPointerMoved" />
-    <Border Background="#9ea8ab" Height="5" CornerRadius="4"
+    <Border Background="{DynamicResource SecondaryBrush}" Height="5" CornerRadius="4"
             HorizontalAlignment="Stretch" VerticalAlignment="Center" IsHitTestVisible="False" />
-    <Border Background="#45595e" Height="5" CornerRadius="4"
+    <Border Background="{DynamicResource PrimaryBrush}" Height="5" CornerRadius="4"
             HorizontalAlignment="Left" VerticalAlignment="Center" IsHitTestVisible="False">
       <Border.Width>
         <MultiBinding Converter="{StaticResource  ProgressToWidthConverter}">

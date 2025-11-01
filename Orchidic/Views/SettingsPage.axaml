@@ -6,5 +6,7 @@
              xmlns:vm="clr-namespace:Orchidic.ViewModels"
              x:DataType="vm:SettingsPageViewModel"
              x:Class="Orchidic.Views.SettingsPage">
-  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Settings</TextBlock>
+  <Grid HorizontalAlignment="Center" Margin="0,100,0,100" Width="400" VerticalAlignment="Stretch">
+    <Button Command="{Binding ToggleThemeCommand}">切换主题</Button>
+  </Grid>
 </UserControl>

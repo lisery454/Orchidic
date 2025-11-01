@@ -11,23 +11,43 @@
   </Application.DataTemplates>
 
   <Application.Resources>
-    <!-- <FontFamily x:Key="SourceHanSerif">avares://Orchidic/Assets/Fonts#Source Han Serif SC</FontFamily> -->
-    <FontFamily x:Key="MiSans">avares://Orchidic/Assets/Fonts#MiSans</FontFamily>
-    <FontFamily x:Key="SpaceMono">avares://Orchidic/Assets/Fonts#Space Mono</FontFamily>
-    <FontFamily x:Key="NotoSansMono">avares://Orchidic/Assets/Fonts#Noto Sans Mono</FontFamily>
+    <ResourceDictionary>
+      <!-- <FontFamily x:Key="SourceHanSerif">avares://Orchidic/Assets/Fonts#Source Han Serif SC</FontFamily> -->
+      <FontFamily x:Key="MiSans">avares://Orchidic/Assets/Fonts#MiSans</FontFamily>
+      <FontFamily x:Key="SpaceMono">avares://Orchidic/Assets/Fonts#Space Mono</FontFamily>
+      <FontFamily x:Key="NotoSansMono">avares://Orchidic/Assets/Fonts#Noto Sans Mono</FontFamily>
 
 
-    <converters:PageTitleConverter x:Key="PageTitleConverter" />
-    <converters:HalfCornerRadiusConverter x:Key="HalfCornerRadiusConverter" />
-    <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
+      <converters:PageTitleConverter x:Key="PageTitleConverter" />
+      <converters:HalfCornerRadiusConverter x:Key="HalfCornerRadiusConverter" />
+      <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
+
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Styles/Colors.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
   </Application.Resources>
 
   <Application.Styles>
     <FluentTheme />
+
+    <StyleInclude Source="avares://Orchidic/Styles/AnimatedButton.axaml" />
+
+    <Style Selector="Grid">
+      <Setter Property="Transitions">
+        <Setter.Value>
+          <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.15" Easing="QuadraticEaseInOut" />
+          </Transitions>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
     <Style Selector="TextBlock">
       <Setter Property="FontFamily" Value="{StaticResource MiSans}"></Setter>
       <Setter Property="FontWeight" Value="Normal"></Setter>
+      <Setter Property="Foreground" Value="{DynamicResource FontBrush}"></Setter>
     </Style>
-    <StyleInclude Source="avares://Orchidic/Styles/AnimatedButton.axaml"/>
+
   </Application.Styles>
 </Application>

@@ -20,7 +20,7 @@
         </Setter.Value>
       </Setter>
       <Style Selector="^ > utils|SuperellipseBorder">
-        <Setter Property="Fill" Value="#9ea8aa" />
+        <Setter Property="Fill" Value="{DynamicResource SecondaryBrush}" />
         <Setter Property="Transitions">
           <Setter.Value>
             <Transitions>
@@ -30,7 +30,7 @@
         </Setter>
       </Style>
       <Style Selector="^ > TextBlock">
-        <Setter Property="Foreground" Value="#555" />
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}" />
       </Style>
     </Style>
     <Style Selector="Grid.menuItem:pointerover">
@@ -39,7 +39,7 @@
     <Style Selector="Grid.menuItem[(views|SideMenu.IsItemSelected)=True]">
       <Setter Property="Background" Value="Transparent" />
       <Style Selector="^ > utils|SuperellipseBorder">
-        <Setter Property="Fill" Value="#465a5f" />
+        <Setter Property="Fill" Value="{DynamicResource PrimaryBrush}" />
       </Style>
     </Style>
   </UserControl.Styles>
@@ -53,7 +53,7 @@
             Height="60"
             Canvas.Left="0"
             Canvas.Top="{Binding SelectIndex, Converter={x:Static views:SideMenu.IndexToOffsetConverterIns}}"
-            Background="#aafafafa">
+            Background="{DynamicResource MenuItemIndicatorBrush}">
 
 
       <Border.Transitions>

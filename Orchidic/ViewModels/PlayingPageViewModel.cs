@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Windows.Input;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Orchidic.Service;
 using Orchidic.Utils;
 using ReactiveUI;
-using SkiaSharp;
 
 namespace Orchidic.ViewModels;
 
@@ -37,6 +35,14 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     public ICommand NextAudioCommand { get; set; }
     public ICommand PrevAudioCommand { get; set; }
     public ICommand PlayOrPauseCommand { get; set; }
+
+    private bool _audioOperationCommandEnable;
+
+    private bool AudioOperationCommandEnable
+    {
+        get => _audioOperationCommandEnable;
+        set => this.RaiseAndSetIfChanged(ref _audioOperationCommandEnable, value);
+    }
 
     private string _title;
 
@@ -82,6 +88,7 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         get => _progress;
         set
         {
+            Console.WriteLine(value);
             RawUpdateProgress(value);
             var newCurrentTime = new TimeSpan(0, 0, 0, (int)(_progress * TotalTime.TotalSeconds));
             _playerService.Seek(newCurrentTime);
@@ -112,43 +119,31 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         CurrentTime = playerService.GetCurrentTime();
         TotalTime = playerService.GetTotalTime();
         _title = _fileInfoService.GetDefaultTitle();
+        _audioOperationCommandEnable = false;
         RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-        updateTimer.Tick += (_, _) =>
-            updateTimer.Tick += (_, _) =>
-            {
-                UpdateCurrAudioPath();
-                CurrentTime = playerService.GetCurrentTime();
-                TotalTime = playerService.GetTotalTime();
-                RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-            };
+        updateTimer.Tick += (_, _) => { UpdateCurrAudioPath(); };
         updateTimer.Start();
         PlayOrPauseCommand = ReactiveCommand.Create(() =>
         {
+            AudioOperationCommandEnable = false;
             if (_playerService.IsPlaying())
-            {
                 _playerService.Pause();
-            }
             else
-            {
                 _playerService.Play();
-            }
-        });
+            UpdateCurrAudioPath();
+        }, this.WhenAnyValue(x => x.AudioOperationCommandEnable));
         NextAudioCommand = ReactiveCommand.Create(() =>
         {
+            AudioOperationCommandEnable = false;
             _playerService.Next();
             UpdateCurrAudioPath();
-            CurrentTime = playerService.GetCurrentTime();
-            TotalTime = playerService.GetTotalTime();
-            RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-        });
+        }, this.WhenAnyValue(x => x.AudioOperationCommandEnable));
         PrevAudioCommand = ReactiveCommand.Create(() =>
         {
+            AudioOperationCommandEnable = false;
             _playerService.Prev();
             UpdateCurrAudioPath();
-            CurrentTime = playerService.GetCurrentTime();
-            TotalTime = playerService.GetTotalTime();
-            RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-        });
+        }, this.WhenAnyValue(x => x.AudioOperationCommandEnable));
 
         UpdateCurrAudioPath();
     }
@@ -156,11 +151,20 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
     private void UpdateCurrAudioPath()
     {
         var path = _playerService.GetCurrentAudioFile()?.path;
-        if (currAudioPath == path) return;
-        IsCancelDragRequested = true;
-        Cover = path != null ? _fileInfoService.GetCoverFromAudio(path) : _fileInfoService.GetDefaultCover();
-        Title = path != null ? _fileInfoService.GetTitleFromAudio(path) : _fileInfoService.GetDefaultTitle();
-        currAudioPath = path;
+        
+        AudioOperationCommandEnable = path != null;
+        
+        if (currAudioPath != path)
+        {
+            IsCancelDragRequested = true;
+            Cover = path != null ? _fileInfoService.GetCoverFromAudio(path) : _fileInfoService.GetDefaultCover();
+            Title = path != null ? _fileInfoService.GetTitleFromAudio(path) : _fileInfoService.GetDefaultTitle();
+            currAudioPath = path;
+        }
+        
+        CurrentTime = _playerService.GetCurrentTime();
+        TotalTime = _playerService.GetTotalTime();
+        RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
     }
 
     public void Dispose()

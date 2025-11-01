@@ -15,7 +15,7 @@
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         TransparencyLevelHint="AcrylicBlur"
-        Background="#ddfafafa"
+        Background="Transparent"
         xmlns:avaControls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
         Title="Orchidic">
   <Window.Resources>
@@ -24,7 +24,7 @@
 
   <Window.Styles>
     <Style Selector="Grid.menuBackground">
-      <Setter Property="Background" Value="#44f4f4f4" />
+      <Setter Property="Background" Value="{DynamicResource MenuBGBrush}" />
     </Style>
     <Style Selector="Grid.title">
       <Setter Property="Height" Value="100"></Setter>
@@ -32,7 +32,7 @@
     <Style Selector="Grid.title > TextBlock">
       <Setter Property="FontSize" Value="28"></Setter>
       <Setter Property="HorizontalAlignment" Value="Center"></Setter>
-      <Setter Property="Foreground" Value="#1c4b56"></Setter>
+      <Setter Property="Foreground" Value="{DynamicResource TitleBrush}"></Setter>
       <Setter Property="VerticalAlignment" Value="Center"></Setter>
       <Setter Property="FontWeight" Value="Bold"></Setter>
     </Style>
@@ -44,8 +44,10 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
-  <Grid RowDefinitions="Auto, *" ColumnDefinitions="Auto, *"
-        Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
+  <Grid
+    Background="{DynamicResource BGBrush}"
+    RowDefinitions="Auto, *" ColumnDefinitions="Auto, *"
+    Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
 
     <!-- content -->
     <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
@@ -54,18 +56,6 @@
           <CrossFade Duration="0:0:0.15"></CrossFade>
         </avaControls:TransitioningContentControl.PageTransition>
       </avaControls:TransitioningContentControl>
-
-      <!-- 阴影层 -->
-      <Border
-        IsHitTestVisible="False">
-        <Border.Background>
-          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-            <GradientStop Offset="0.0" Color="#04000000" />
-            <GradientStop Offset="0.05" Color="#00000000" />
-            <GradientStop Offset="1.0" Color="#00000000" />
-          </LinearGradientBrush>
-        </Border.Background>
-      </Border>
     </Grid>
 
     <!-- title bar -->
@@ -76,23 +66,23 @@
         <Grid Height="50" Width="30" Margin="8,0,0,0">
           <views:WinCtrlButton Size="20"
                                Click="CloseButton_OnClick"
-                               FillColor="#e76363"
-                               HoverColor="#F67474"
-                               PressedColor="#BE4646" />
+                               FillColor="{DynamicResource WindowCloseBtnFillBrush}"
+                               HoverColor="{DynamicResource WindowCloseBtnHoverBrush}"
+                               PressedColor="{DynamicResource WindowCloseBtnPressedBrush}" />
         </Grid>
         <Grid Height="50" Width="30">
           <views:WinCtrlButton Size="20"
                                Click="MaxButton_OnClick"
-                               FillColor="#9fa9ac"
-                               HoverColor="#B7BEC1"
-                               PressedColor="#899092" />
+                               FillColor="{DynamicResource WindowCtrlBtnFillBrush}"
+                               HoverColor="{DynamicResource WindowCtrlBtnHoverBrush}"
+                               PressedColor="{DynamicResource WindowCtrlBtnPressedBrush}" />
         </Grid>
         <Grid Height="50" Width="30">
           <views:WinCtrlButton Size="20"
                                Click="MinButton_OnClick"
-                               FillColor="#9fa9ac"
-                               HoverColor="#B7BEC1"
-                               PressedColor="#899092" />
+                               FillColor="{DynamicResource WindowCtrlBtnFillBrush}"
+                               HoverColor="{DynamicResource WindowCtrlBtnHoverBrush}"
+                               PressedColor="{DynamicResource WindowCtrlBtnPressedBrush}" />
         </Grid>
       </StackPanel>
 
