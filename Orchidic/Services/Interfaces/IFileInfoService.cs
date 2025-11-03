@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 
-namespace Orchidic.Service;
+namespace Orchidic.Services.Interfaces;
 
 public interface IFileInfoService
 {

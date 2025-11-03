@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using Orchidic.Service;
+using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
 using ReactiveUI;
 
@@ -88,7 +88,6 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
         get => _progress;
         set
         {
-            Console.WriteLine(value);
             RawUpdateProgress(value);
             var newCurrentTime = new TimeSpan(0, 0, 0, (int)(_progress * TotalTime.TotalSeconds));
             _playerService.Seek(newCurrentTime);
@@ -150,7 +149,7 @@ public class PlayingPageViewModel : ViewModelBase, IDisposable
 
     private void UpdateCurrAudioPath()
     {
-        var path = _playerService.GetCurrentAudioFile()?.path;
+        var path = _playerService.GetCurrentAudioFile()?.FilePath;
         
         AudioOperationCommandEnable = path != null;
         

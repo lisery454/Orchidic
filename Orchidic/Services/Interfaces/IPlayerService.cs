@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchidic.Models;
 
-namespace Orchidic.Service;
+namespace Orchidic.Services.Interfaces;
 
 public interface IPlayerService
 {
     AudioFile? GetCurrentAudioFile();
-    void LoadFile(AudioFile? file);
+    IObservable<IReadOnlyCollection<AudioFile>> GetAllAudioFiles();
     void Next();
     void Prev();
     TimeSpan GetTotalTime();

@@ -27,15 +27,15 @@
                 RenderTransformOrigin="50%,50%">
           <Button.Transitions>
             <Transitions>
-              <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.10" Easing="QuadraticEaseInOut" />
+              <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.10" Easing="QuadraticEaseOut" />
             </Transitions>
           </Button.Transitions>
 
           <Button.Styles>
             <!-- 悬浮放大 -->
-            <Style Selector="Button:pointerover">
-              <Setter Property="RenderTransform" Value="scale(1.01)" />
-            </Style>
+            <!-- <Style Selector="Button:pointerover"> -->
+            <!--   <Setter Property="RenderTransform" Value="scale(1.01)" /> -->
+            <!-- </Style> -->
 
             <!-- 按下缩小 -->
             <Style Selector="Button:pressed">

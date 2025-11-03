@@ -16,18 +16,17 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.3.7"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.7"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7"/>
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7"/>
+        <PackageReference Include="Avalonia" Version="11.3.8"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.3.8"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8"/>
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.7"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.7"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.8"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10"/>
         <PackageReference Include="NAudio" Version="2.2.1" />
-        <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.6.2"/>
         <PackageReference Include="TagLibSharp" Version="2.3.0" />
-        <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.6.5"/>
+        <PackageReference Include="Xaml.Behaviors.Avalonia" Version="11.3.6.6" />
     </ItemGroup>
 
 
@@ -72,11 +71,6 @@
             <DependentUpon>ToolsPage.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
-        <Compile Remove="Utils\SmoothImage.cs" />
     </ItemGroup>
 
-
-    <ItemGroup>
-      <None Remove="bass.dll" />
-    </ItemGroup>
 </Project>

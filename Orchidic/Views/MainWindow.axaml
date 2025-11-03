@@ -51,9 +51,10 @@
 
     <!-- content -->
     <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+      <!-- <ContentControl Content="{Binding CurrentPageViewModel}"></ContentControl> -->
       <avaControls:TransitioningContentControl Content="{Binding CurrentPageViewModel}">
         <avaControls:TransitioningContentControl.PageTransition>
-          <CrossFade Duration="0:0:0.15"></CrossFade>
+          <CrossFade Duration="0:0:0.150"></CrossFade>
         </avaControls:TransitioningContentControl.PageTransition>
       </avaControls:TransitioningContentControl>
     </Grid>

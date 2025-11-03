@@ -16,17 +16,30 @@ public class ViewLocator : IDataTemplate
         // Lisery.ViewModels.AAAViewModel -> Lisery.Views.AAAView
         if (type != null)
         {
+            var view = App.Services.GetService(type);
+            if (view is Control control)
+            {
+                return control;
+            }
+
             return (Control)Activator.CreateInstance(type)!;
         }
-        
+
+
         // Lisery.Views.AAAView -> Lisery.Views.AAA
         var name2 = string.Empty;
         if (name.EndsWith("View"))
         {
-            name2 = name![..^4];
+            name2 = name[..^4];
             var type2 = Type.GetType(name2);
             if (type2 != null)
             {
+                var view = App.Services.GetService(type2);
+                if (view is Control control)
+                {
+                    return control;
+                }
+
                 return (Control)Activator.CreateInstance(type2)!;
             }
         }

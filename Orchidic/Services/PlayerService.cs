@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using NAudio.Wave;
 using Orchidic.Models;
+using Orchidic.Services.Interfaces;
 
-namespace Orchidic.Service;
+namespace Orchidic.Services;
 
 public class PlayerService : IPlayerService, IDisposable
 {
@@ -70,6 +72,11 @@ public class PlayerService : IPlayerService, IDisposable
         return _audioQueue.CurrentAudioFile;
     }
 
+    public IObservable<IReadOnlyCollection<AudioFile>> GetAllAudioFiles()
+    {
+        return _audioQueue.AudioFilesObservable;
+    }
+
     public void LoadFile(AudioFile? file)
     {
         lock (_deviceLock)
@@ -80,7 +87,7 @@ public class PlayerService : IPlayerService, IDisposable
 
             if (file == null) return;
 
-            CurrentAudioFileReader = new AudioFileReader(file.path);
+            CurrentAudioFileReader = new AudioFileReader(file.FilePath);
             _device.Init(CurrentAudioFileReader);
         }
     }

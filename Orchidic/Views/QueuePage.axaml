@@ -6,5 +6,27 @@
              xmlns:vm="clr-namespace:Orchidic.ViewModels"
              x:DataType="vm:QueuePageViewModel"
              x:Class="Orchidic.Views.QueuePage">
-  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Queue</TextBlock>
+  <Grid>
+    <Grid Margin="0,100,0,100" RowDefinitions="*, Auto" x:Name="Page" MaxWidth="1000" HorizontalAlignment="Stretch">
+      <ListBox
+        ItemsSource="{Binding  AudioFiles}"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch">
+
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <VirtualizingStackPanel Orientation="Vertical"></VirtualizingStackPanel>
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Border Margin="6" Padding="10" CornerRadius="6" Background="#f0f0f0">
+              <TextBlock Text="{Binding FilePath}" FontSize="22" />
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Grid>
+  </Grid>
 </UserControl>

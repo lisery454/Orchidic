@@ -2,5 +2,5 @@
 
 public class AudioFile(string? path)
 {
-    public string? path = path;
+    public string FilePath => path ?? "";
 }

@@ -2,8 +2,9 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Orchidic.Services.Interfaces;
 
-namespace Orchidic.Service;
+namespace Orchidic.Services;
 
 public class FileInfoService : IFileInfoService
 {
