@@ -1,0 +1,14 @@
+﻿global using System;
+global using System.Collections.Generic;
+global using System.Windows;
+global using System.Text;
+global using System.Globalization;
+global using System.Windows.Data;
+global using System.Diagnostics;
+global using System.Threading;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Runtime.InteropServices;
+global using System.Windows.Interop;
+global using System.Reflection;
+global using System.Security.Cryptography;
+global using ReactiveUI;
