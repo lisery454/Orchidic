@@ -12,10 +12,10 @@
 
   <Application.Resources>
     <ResourceDictionary>
-      <!-- <FontFamily x:Key="SourceHanSerif">avares://Orchidic/Assets/Fonts#Source Han Serif SC</FontFamily> -->
-      <FontFamily x:Key="MiSans">avares://Orchidic/Assets/Fonts#MiSans</FontFamily>
-      <FontFamily x:Key="SpaceMono">avares://Orchidic/Assets/Fonts#Space Mono</FontFamily>
-      <FontFamily x:Key="NotoSansMono">avares://Orchidic/Assets/Fonts#Noto Sans Mono</FontFamily>
+      <!-- <FontFamily x:Key="SourceHanSerif">avares://OrchidicAvalonia/Assets/Fonts#Source Han Serif SC</FontFamily> -->
+      <FontFamily x:Key="MiSans">avares://OrchidicAvalonia/Assets/Fonts#MiSans</FontFamily>
+      <FontFamily x:Key="SpaceMono">avares://OrchidicAvalonia/Assets/Fonts#Space Mono</FontFamily>
+      <FontFamily x:Key="NotoSansMono">avares://OrchidicAvalonia/Assets/Fonts#Noto Sans Mono</FontFamily>
 
 
       <converters:PageTitleConverter x:Key="PageTitleConverter" />
@@ -31,7 +31,7 @@
   <Application.Styles>
     <FluentTheme />
 
-    <StyleInclude Source="avares://Orchidic/Styles/AnimatedButton.axaml" />
+    <StyleInclude Source="avares://OrchidicAvalonia/Styles/AnimatedButton.axaml" />
 
     <Style Selector="Grid">
       <Setter Property="Transitions">

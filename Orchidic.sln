@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchidic", "Orchidic\Orchidic.csproj", "{BC354D4A-71CA-40C9-B1D4-BD823C46831C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrchidicAvalonia", "OrchidicAvalonia\OrchidicAvalonia.csproj", "{BC354D4A-71CA-40C9-B1D4-BD823C46831C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,6 +8,12 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <HotReloadEnabled>true</HotReloadEnabled>
         <ApplicationIcon>Assets\avalonia-logo.ico</ApplicationIcon>
+        <AssemblyName>OrchidicAvalonia</AssemblyName>
+        <RootNamespace>OrchidicAvalonia</RootNamespace>
+        <PackageId>OrchidicAvalonia</PackageId>
+        <Authors>OrchidicAvalonia</Authors>
+        <Company>OrchidicAvalonia</Company>
+        <Product>OrchidicAvalonia</Product>
     </PropertyGroup>
 
     <ItemGroup>
