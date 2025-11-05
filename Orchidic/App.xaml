@@ -6,14 +6,15 @@
              Startup="Application_Startup">
   <Application.Resources>
     <ResourceDictionary>
-      <FontFamily x:Key="MiSans">pack://application:,,,/Assets/Fonts/#MiSans</FontFamily>
-      <FontFamily x:Key="SpaceMono">pack://application:,,,/Assets/Fonts/#Space Mono</FontFamily>
-      <FontFamily x:Key="NotoSansMono">pack://application:,,,/Assets/Fonts/#Noto Sans Mono</FontFamily>
+
       <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
 
       <ResourceDictionary.MergedDictionaries>
         <!-- 默认加载亮色主题 -->
-        <ResourceDictionary Source="/Styles/ThemeLight.xaml" />
+        <ResourceDictionary Source="Styles/ThemeLight.xaml" />
+        <ResourceDictionary Source="Styles/Fonts.xaml" />
+        <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
+        <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>

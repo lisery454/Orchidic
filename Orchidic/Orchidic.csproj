@@ -70,4 +70,8 @@
         <PackageReference Include="ReactiveUI.WPF" Version="22.2.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Views\Components\" />
+    </ItemGroup>
+
 </Project>

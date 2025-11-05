@@ -1,6 +1,7 @@
 ﻿using Orchidic.Utils;
 using Orchidic.Utils.ThemeManager;
 using Orchidic.ViewModels;
+using Orchidic.Views;
 
 namespace Orchidic;
 

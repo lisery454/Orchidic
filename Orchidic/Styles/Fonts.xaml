@@ -1,0 +1,6 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <FontFamily x:Key="MiSans">pack://application:,,,/Assets/Fonts/#MiSans</FontFamily>
+  <FontFamily x:Key="SpaceMono">pack://application:,,,/Assets/Fonts/#Space Mono</FontFamily>
+  <FontFamily x:Key="NotoSansMono">pack://application:,,,/Assets/Fonts/#Noto Sans Mono</FontFamily>
+</ResourceDictionary>
