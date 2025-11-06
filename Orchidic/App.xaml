@@ -8,6 +8,7 @@
     <ResourceDictionary>
       <converters:PageTitleConverter x:Key="PageTitleConverter" />
       <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
+      <converters:ViewModelToViewConverter x:Key="ViewModelToViewConverter" />
 
       <ResourceDictionary.MergedDictionaries>
         <!-- 默认加载亮色主题 -->

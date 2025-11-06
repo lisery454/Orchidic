@@ -2,6 +2,7 @@
 using Orchidic.Utils.ThemeManager;
 using Orchidic.ViewModels;
 using Orchidic.Views;
+using Splat;
 
 namespace Orchidic;
 
@@ -21,16 +22,86 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddSingleton<IThemeManager, ThemeManager>();
 
-
         services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<PlayingPageViewModel>();
+        services.AddSingleton<QueuePageViewModel>();
+        services.AddSingleton<ListPageViewModel>();
+        services.AddSingleton<SearchPageViewModel>();
+        services.AddSingleton<StatisticsPageViewModel>();
+        services.AddSingleton<ToolsPageViewModel>();
+        services.AddSingleton<SettingsPageViewModel>();
+
         services.AddSingleton<MainWindow>(sp =>
         {
-            var mainWindowViewModel = sp.GetService<MainWindowViewModel>()!;
-            var mainWindow = new MainWindow
+            var vm = sp.GetRequiredService<MainWindowViewModel>();
+            var view = new MainWindow
             {
-                DataContext = mainWindowViewModel
+                DataContext = vm
             };
-            return mainWindow;
+            return view;
+        });
+        services.AddSingleton<PlayingPage>(sp =>
+        {
+            var vm = sp.GetRequiredService<PlayingPageViewModel>();
+            var view = new PlayingPage
+            {
+                DataContext = vm
+            };
+            return view;
+        });
+        services.AddSingleton<QueuePage>(sp =>
+        {
+            var vm = sp.GetRequiredService<QueuePageViewModel>();
+            var view = new QueuePage
+            {
+                DataContext = vm
+            };
+            return view;
+        });
+        services.AddSingleton<ListPage>(sp =>
+        {
+            var vm = sp.GetRequiredService<ListPageViewModel>();
+            var view = new ListPage
+            {
+                DataContext = vm
+            };
+            return view;
+        });
+        services.AddSingleton<SearchPage>(sp =>
+        {
+            var vm = sp.GetRequiredService<SearchPageViewModel>();
+            var view = new SearchPage
+            {
+                DataContext = vm
+            };
+            return view;
+        });
+        services.AddSingleton<StatisticsPage>(sp =>
+        {
+            var vm = sp.GetRequiredService<StatisticsPageViewModel>();
+            var view = new StatisticsPage
+            {
+                DataContext = vm
+            };
+            return view;
+        });
+        services.AddSingleton<ToolsPage>(sp =>
+        {
+            var vm = sp.GetRequiredService<ToolsPageViewModel>();
+            var view = new ToolsPage
+            {
+                DataContext = vm
+            };
+            return view;
+        });
+        services.AddSingleton<SettingsPage>(sp =>
+        {
+            var vm = sp.GetRequiredService<SettingsPageViewModel>();
+            var view = new SettingsPage
+            {
+                DataContext = vm
+            };
+            return view;
         });
 
         return services.BuildServiceProvider();
@@ -41,10 +112,9 @@ public partial class App : Application
         // var logger = Services.GetService<ILogger>();
         // logger?.Information("Application Start Up.");
         // _ = Services.GetService<ILanguageManager>();
+
         _ = Services.GetService<IThemeManager>();
 
-        // var loginWindow = Services.GetService<LoginWindow>();
-        // loginWindow!.Show();
         var mainWindow = Services.GetService<MainWindow>();
         mainWindow!.Show();
     }

@@ -3,6 +3,7 @@
   <Style TargetType="TextBlock">
     <Setter Property="FontFamily" Value="{StaticResource MiSans}"></Setter>
     <Setter Property="FontWeight" Value="Normal"></Setter>
+    <Setter Property="FontSize" Value="20"></Setter>
     <Setter Property="Foreground" Value="{DynamicResource FontBrush}"></Setter>
   </Style>
 </ResourceDictionary>

@@ -1,8 +1,18 @@
-﻿using System.Windows.Media;
-using System.Windows.Shell;
-using Orchidic.Utils;
+﻿using Orchidic.Utils;
+using Orchidic.ViewModels;
 
 namespace Orchidic.Views;
+
+public partial class MainWindow : IViewFor<MainWindowViewModel>
+{
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (MainWindowViewModel)value!;
+    }
+
+    public MainWindowViewModel? ViewModel { get; set; }
+}
 
 public partial class MainWindow
 {

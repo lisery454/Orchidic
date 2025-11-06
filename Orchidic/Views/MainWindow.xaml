@@ -6,6 +6,7 @@
         xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
         xmlns:views="clr-namespace:Orchidic.Views"
         xmlns:components="clr-namespace:Orchidic.Views.Components"
+        xmlns:reactiveUi="http://reactiveui.net"
         mc:Ignorable="d"
         Width="1200" Height="800"
         MinWidth="900" MinHeight="600"
@@ -40,6 +41,15 @@
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
+
+    <!-- content -->
+    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+      <reactiveUi:TransitioningContentControl
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Stretch"
+        Content="{Binding CurrentPageViewModel, Converter={StaticResource ViewModelToViewConverter}}" Transition="Fade"
+        Duration="0:0:0.150" />
+    </Grid>
 
 
     <!-- title bar -->
