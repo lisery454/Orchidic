@@ -67,11 +67,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"
             Version="9.0.10" />
+        <PackageReference Include="NAudio" Version="2.2.1" />
         <PackageReference Include="ReactiveUI.WPF" Version="22.2.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Views\Components\" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Color x:Key="BGColor">#cccccccc</Color>
+  <Color x:Key="BGColor">#ddd6d6d6</Color>
   <SolidColorBrush x:Key="BGBrush" Color="{DynamicResource BGColor}" />
   <Color x:Key="MenuBGColor">#33f4f4f4</Color>
   <SolidColorBrush x:Key="MenuBGBrush" Color="{DynamicResource MenuBGColor}" />

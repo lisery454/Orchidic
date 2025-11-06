@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
         xmlns:views="clr-namespace:Orchidic.Views"
+        xmlns:components="clr-namespace:Orchidic.Views.Components"
         mc:Ignorable="d"
         Width="1200" Height="800"
         MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         SnapsToDevicePixels="True"
-
+        WindowStyle="None"
         Title="Orchidic">
 
   <Window.Resources>
@@ -20,12 +21,13 @@
 
   <WindowChrome.WindowChrome>
     <WindowChrome CaptionHeight="60"
-                  CornerRadius="0" 
-                  GlassFrameThickness="0"
+                  CornerRadius="0"
+                  GlassFrameThickness="0,0,0,1"
                   ResizeBorderThickness="6"
-                  UseAeroCaptionButtons="False" />
+                  UseAeroCaptionButtons="False"
+                  NonClientFrameEdges="Bottom" />
   </WindowChrome.WindowChrome>
-  
+
 
   <Grid
     Background="{DynamicResource BGBrush}"
@@ -38,8 +40,8 @@
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
-  
-  
+
+
     <!-- title bar -->
     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="50"
           Background="Transparent">
@@ -55,12 +57,12 @@
         </Grid>
       </StackPanel>
     </Grid>
-  
+
     <!-- left menu bar -->
     <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
           Background="{DynamicResource MenuBGBrush}"
           Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource MenuWidthConverter}}">
-    
+
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
@@ -73,9 +75,9 @@
             Orchidic
           </TextBlock>
         </Grid>
-    
+
         <!-- menu -->
-        <!-- <views:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></views:SideMenu> -->
+        <components:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></components:SideMenu>
       </Grid>
     </Grid>
   </Grid>
