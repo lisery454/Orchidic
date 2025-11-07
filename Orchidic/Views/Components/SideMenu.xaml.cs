@@ -92,7 +92,7 @@ public static class SmoothCanvasBehavior
             {
                 From = from,
                 To = to,
-                Duration = TimeSpan.FromSeconds(0.15),
+                Duration = TimeSpan.FromSeconds(0.10),
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
             };
 

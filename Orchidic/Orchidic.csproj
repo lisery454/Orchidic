@@ -99,6 +99,9 @@
             Version="9.0.10" />
         <PackageReference Include="NAudio" Version="2.2.1" />
         <PackageReference Include="ReactiveUI.WPF" Version="22.2.1" />
+        <PackageReference Include="Serilog" Version="4.3.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+        <PackageReference Include="YamlDotNet" Version="16.3.0" />
     </ItemGroup>
 
 </Project>

@@ -1,12 +1,13 @@
 ﻿using Orchidic.Utils;
+using Orchidic.Utils.LogManager;
+using Orchidic.Utils.SettingManager;
 using Orchidic.Utils.ThemeManager;
 using Orchidic.ViewModels;
 using Orchidic.Views;
-using Splat;
 
 namespace Orchidic;
 
-public partial class App : Application
+public partial class App
 {
     public new static App Current => (App)Application.Current;
 
@@ -20,6 +21,12 @@ public partial class App : Application
     private static IServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();
+
+        services.AddSingleton<ISerializer, Serializer>();
+        services.AddSingleton<IDeserializer, Deserializer>();
+
+        services.AddSingleton<ILogManager, LogManager>();
+        services.AddSingleton<ISettingManager, SettingManager>();
         services.AddSingleton<IThemeManager, ThemeManager>();
 
         services.AddSingleton<MainWindowViewModel>();
@@ -109,9 +116,8 @@ public partial class App : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        // var logger = Services.GetService<ILogger>();
-        // logger?.Information("Application Start Up.");
-        // _ = Services.GetService<ILanguageManager>();
+        var logManager = Services.GetService<ILogManager>();
+        logManager?.Info("Application Start Up.");
 
         _ = Services.GetService<IThemeManager>();
 

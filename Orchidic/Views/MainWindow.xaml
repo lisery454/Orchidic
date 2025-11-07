@@ -7,6 +7,7 @@
         xmlns:views="clr-namespace:Orchidic.Views"
         xmlns:components="clr-namespace:Orchidic.Views.Components"
         xmlns:reactiveUi="http://reactiveui.net"
+        xmlns:utils="clr-namespace:Orchidic.Utils"
         mc:Ignorable="d"
         Width="1200" Height="800"
         MinWidth="900" MinHeight="600"
@@ -14,81 +15,81 @@
         d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         SnapsToDevicePixels="True"
         WindowStyle="None"
-        Title="Orchidic">
+        Title="{x:Static utils:ProgramConstants.AppName}">
 
-  <Window.Resources>
-    <views:MenuWidthConverter x:Key="MenuWidthConverter" />
-  </Window.Resources>
+    <Window.Resources>
+        <views:MenuWidthConverter x:Key="MenuWidthConverter" />
+    </Window.Resources>
 
-  <WindowChrome.WindowChrome>
-    <WindowChrome CaptionHeight="60"
-                  CornerRadius="0"
-                  GlassFrameThickness="0,0,0,1"
-                  ResizeBorderThickness="6"
-                  UseAeroCaptionButtons="False"
-                  NonClientFrameEdges="Bottom" />
-  </WindowChrome.WindowChrome>
-
-
-  <Grid
-    Background="{DynamicResource BGBrush}"
-    Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" />
-      <ColumnDefinition Width="*" />
-    </Grid.ColumnDefinitions>
-
-    <!-- content -->
-    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
-      <reactiveUi:TransitioningContentControl
-        HorizontalContentAlignment="Stretch"
-        VerticalContentAlignment="Stretch"
-        Content="{Binding CurrentPageViewModel, Converter={StaticResource ViewModelToViewConverter}}" Transition="Fade"
-        Duration="0:0:0.150" />
-    </Grid>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="60"
+                      CornerRadius="0"
+                      GlassFrameThickness="0,0,0,1"
+                      ResizeBorderThickness="6"
+                      UseAeroCaptionButtons="False"
+                      NonClientFrameEdges="Bottom" />
+    </WindowChrome.WindowChrome>
 
 
-    <!-- title bar -->
-    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="50"
-          Background="Transparent">
-      <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
-        <Grid Height="50" Width="30" Margin="8,0,0,0">
-          <Button Style="{StaticResource WindowCloseButton}" Click="CloseButton_OnClick" />
-        </Grid>
-        <Grid Height="50" Width="30">
-          <Button Style="{StaticResource WindowControlButton}" Click="MaxButton_OnClick" />
-        </Grid>
-        <Grid Height="50" Width="30">
-          <Button Style="{StaticResource WindowControlButton}" Click="MinButton_OnClick" />
-        </Grid>
-      </StackPanel>
-    </Grid>
-
-    <!-- left menu bar -->
-    <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-          Background="{DynamicResource MenuBGBrush}"
-          Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource MenuWidthConverter}}">
-
-      <Grid>
+    <Grid
+        Background="{DynamicResource BGBrush}"
+        Margin="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource StateToMargin}}">
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <!-- title -->
-        <Grid Height="100">
-          <TextBlock FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"
-                     Foreground="{DynamicResource TitleBrush}" FontWeight="Bold">
-            Orchidic
-          </TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- content -->
+        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+            <reactiveUi:TransitioningContentControl
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Content="{Binding CurrentPageViewModel, Converter={StaticResource ViewModelToViewConverter}}"
+                Transition="Fade"
+                Duration="0:0:0.150" />
         </Grid>
 
-        <!-- menu -->
-        <components:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></components:SideMenu>
-      </Grid>
+
+        <!-- title bar -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="50"
+              Background="Transparent">
+            <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+                <Grid Height="50" Width="30" Margin="8,0,0,0">
+                    <Button Style="{StaticResource WindowCloseButton}" Click="CloseButton_OnClick" />
+                </Grid>
+                <Grid Height="50" Width="30">
+                    <Button Style="{StaticResource WindowControlButton}" Click="MaxButton_OnClick" />
+                </Grid>
+                <Grid Height="50" Width="30">
+                    <Button Style="{StaticResource WindowControlButton}" Click="MinButton_OnClick" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <!-- left menu bar -->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+              Background="{DynamicResource MenuBGBrush}"
+              Width="{Binding Width, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource MenuWidthConverter}}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <!-- title -->
+                <Grid Height="100">
+                    <TextBlock FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="{DynamicResource TitleBrush}" FontWeight="Bold"
+                               Text="{x:Static utils:ProgramConstants.AppName}" />
+                </Grid>
+
+                <!-- menu -->
+                <components:SideMenu Grid.Row="1" DataContext="{Binding SideMenuViewModel}"></components:SideMenu>
+            </Grid>
+        </Grid>
     </Grid>
-  </Grid>
 </Window>

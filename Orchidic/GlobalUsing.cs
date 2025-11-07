@@ -18,3 +18,7 @@ global using System.Reactive.Linq;
 global using System.Windows.Input;
 global using System.Windows.Controls;
 global using System.Windows.Media.Animation;
+global using Serilog;
+global using Serilog.Core;
+global using System.IO;
+global using YamlDotNet.Serialization;

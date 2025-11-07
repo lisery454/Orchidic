@@ -1,13 +1,18 @@
-﻿using System.Windows;
+﻿using Orchidic.Utils.LogManager;
+using Orchidic.Utils.SettingManager;
 
 namespace Orchidic.Utils.ThemeManager;
 
 public class ThemeManager : IThemeManager
 {
-    // public ThemeManager(ISettingManager settingManager)
-    // {
-    //     ChangeTheme(settingManager.CurrentSetting.ThemeType);
-    // }
+    private readonly ILogManager _logManager;
+
+    public ThemeManager(ISettingManager settingManager, ILogManager logManager)
+    {
+        _logManager = logManager;
+        _logManager.Info("Create ThemeManager Success");
+        ChangeTheme(settingManager.CurrentSetting.ThemeType);
+    }
 
 
     public void ChangeTheme(ThemeType themeType)
@@ -24,6 +29,8 @@ public class ThemeManager : IThemeManager
             Source = new Uri(themeFilePath, UriKind.Relative)
         };
 
-        Application.Current.Resources.MergedDictionaries[2] = resourceDictionary;
+        Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
+
+        _logManager.Info($"Change Theme {themeType} Success");
     }
 }
