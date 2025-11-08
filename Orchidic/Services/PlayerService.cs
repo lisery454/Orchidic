@@ -1,6 +1,6 @@
-﻿
-using Orchidic.Models;
+﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
+using Orchidic.Utils.SettingManager;
 
 namespace Orchidic.Services;
 
@@ -9,9 +9,9 @@ public class PlayerService : IPlayerService, IDisposable
     private readonly WaveOutEvent _device;
     private AudioFileReader? _currentAudioFileReader;
     private readonly AudioQueue _audioQueue;
-    private float _currentVolume;
     private readonly object _deviceLock = new();
     private bool _isPlaying;
+    private ISettingManager _settingManager; 
 
     private AudioFileReader? CurrentAudioFileReader
     {
@@ -25,13 +25,13 @@ public class PlayerService : IPlayerService, IDisposable
         }
     }
 
-    public PlayerService()
+    public PlayerService(ISettingManager settingManager)
     {
+        _settingManager = settingManager;
         _audioQueue = new AudioQueue();
 
         _device = new WaveOutEvent();
-        _currentVolume = 0.3f;
-        _device.Volume = _currentVolume;
+        _device.Volume = _settingManager.CurrentSetting.Volume;
 
         _device.PlaybackStopped += OnPlaybackStopped;
         _isPlaying = false;
@@ -153,13 +153,13 @@ public class PlayerService : IPlayerService, IDisposable
 
     public float GetVolume()
     {
-        return _currentVolume;
+        return _settingManager.CurrentSetting.Volume;
     }
 
     public void SetVolume(float volume)
     {
-        _currentVolume = volume;
-        _device.Volume = _currentVolume;
+        _settingManager.CurrentSetting.Volume = volume;
+        _device.Volume = volume;
     }
 
     public void Dispose()

@@ -298,7 +298,7 @@
                                      Duration="0:0:0.05" />
                     <DoubleAnimation Storyboard.TargetName="RootBorder"
                                      Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
-                                     To="0"
+                                     To="-0.5"
                                      EasingFunction="{StaticResource AnimatedButtonRotateEase}"
                                      Duration="0:0:1.0" />
                   </Storyboard>

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Orchidic.Views"
              xmlns:utils="clr-namespace:Orchidic.Utils"
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
+             xmlns:components="clr-namespace:Orchidic.Views.Components"
              d:DataContext="{d:DesignInstance Type=viewModels:PlayingPageViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -14,6 +15,7 @@
     <local:CoverSizeConverter x:Key="CoverSizeConverter" />
     <local:PanelHeightConverter x:Key="PanelHeightConverter" />
     <local:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+    <local:VolumeToStringConverter x:Key="VolumeToStringConverter" />
   </UserControl.Resources>
 
   <Grid>
@@ -106,9 +108,9 @@
             </TextBlock>
           </Grid>
           <Grid Grid.Column="1">
-            <!-- <components:SelfSlider x:Name="ProgressSlider" Progress="{Binding Progress}" -->
-            <!--                        CancelDragRequested="{Binding IsCancelDragRequested}"> -->
-            <!-- </components:SelfSlider> -->
+            <components:SelfSlider x:Name="ProgressSlider" Progress="{Binding Progress}"
+                                   CancelDragRequested="{Binding IsCancelDragRequested}">
+            </components:SelfSlider>
           </Grid>
           <Grid Grid.Column="2" Width="160">
             <TextBlock Text="{Binding TotalTime, Converter={StaticResource TimeSpanToStringConverter}}"
@@ -140,9 +142,16 @@
               <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
                                         Fill="{DynamicResource SecondaryBrush}" />
             </Button>
-            <Grid Width="100">
-              <!-- <components:SelfSlider Progress="{Binding Volume}"></components:SelfSlider> -->
+            <Grid Width="100" Margin="0,0,34,0">
+              <components:SelfSlider Progress="{Binding Volume}"></components:SelfSlider>
             </Grid>
+            <TextBlock Text="{Binding Volume, Converter={StaticResource VolumeToStringConverter}}"
+                       Foreground="{DynamicResource FontBrush}" FontSize="18"
+                       FontFamily="{StaticResource NotoSansMono}"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+            </TextBlock>
           </StackPanel>
         </Grid>
 

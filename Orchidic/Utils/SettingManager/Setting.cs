@@ -6,7 +6,5 @@ public class Setting
 {
     public ThemeType ThemeType { get; set; } = ThemeType.LIGHT;
 
-    public Setting()
-    {
-    }
+    public float Volume { get; set; } = 0.3f;
 }

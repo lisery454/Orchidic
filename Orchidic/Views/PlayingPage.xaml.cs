@@ -22,6 +22,21 @@ public partial class PlayingPage
     }
 }
 
+public class VolumeToStringConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var percent = (int)((double)value! * 100);
+        var result = percent.ToString();
+        return result;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return Binding.DoNothing;
+    }
+}
+
 public class CoverSizeConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
