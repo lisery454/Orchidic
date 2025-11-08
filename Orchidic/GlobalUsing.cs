@@ -22,3 +22,6 @@ global using Serilog;
 global using Serilog.Core;
 global using System.IO;
 global using YamlDotNet.Serialization;
+// global using System.Drawing;
+global using System.Windows.Media.Imaging;
+global using NAudio.Wave;

@@ -20,6 +20,7 @@ public partial class MainWindow
     {
         Loaded += Window_Loaded;
         WindowCornerRestorer.ApplyRoundCorner(this);
+        DataContext = App.Current.Services.GetService<MainWindowViewModel>();
         InitializeComponent();
     }
 

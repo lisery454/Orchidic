@@ -1,4 +1,6 @@
-﻿using Orchidic.Utils;
+﻿using Orchidic.Services;
+using Orchidic.Services.Interfaces;
+using Orchidic.Utils;
 using Orchidic.Utils.LogManager;
 using Orchidic.Utils.SettingManager;
 using Orchidic.Utils.ThemeManager;
@@ -29,6 +31,9 @@ public partial class App
         services.AddSingleton<ISettingManager, SettingManager>();
         services.AddSingleton<IThemeManager, ThemeManager>();
 
+        services.AddSingleton<IFileInfoService, FileInfoService>();
+        services.AddSingleton<IPlayerService, PlayerService>();
+
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<PlayingPageViewModel>();
         services.AddSingleton<QueuePageViewModel>();
@@ -38,103 +43,44 @@ public partial class App
         services.AddSingleton<ToolsPageViewModel>();
         services.AddSingleton<SettingsPageViewModel>();
 
-        services.AddSingleton<MainWindow>(sp =>
-        {
-            var vm = sp.GetRequiredService<MainWindowViewModel>();
-            var view = new MainWindow
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<PlayingPage>(sp =>
-        {
-            var vm = sp.GetRequiredService<PlayingPageViewModel>();
-            var view = new PlayingPage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<QueuePage>(sp =>
-        {
-            var vm = sp.GetRequiredService<QueuePageViewModel>();
-            var view = new QueuePage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<ListPage>(sp =>
-        {
-            var vm = sp.GetRequiredService<ListPageViewModel>();
-            var view = new ListPage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<SearchPage>(sp =>
-        {
-            var vm = sp.GetRequiredService<SearchPageViewModel>();
-            var view = new SearchPage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<StatisticsPage>(sp =>
-        {
-            var vm = sp.GetRequiredService<StatisticsPageViewModel>();
-            var view = new StatisticsPage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<ToolsPage>(sp =>
-        {
-            var vm = sp.GetRequiredService<ToolsPageViewModel>();
-            var view = new ToolsPage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
-        services.AddSingleton<SettingsPage>(sp =>
-        {
-            var vm = sp.GetRequiredService<SettingsPageViewModel>();
-            var view = new SettingsPage
-            {
-                DataContext = vm
-            };
-            return view;
-        });
+        services.AddSingleton<MainWindow>();
+        services.AddSingleton<PlayingPage>();
+        services.AddSingleton<QueuePage>();
+        services.AddSingleton<ListPage>();
+        services.AddSingleton<SearchPage>();
+        services.AddSingleton<StatisticsPage>();
+        services.AddSingleton<ToolsPage>();
+        services.AddSingleton<SettingsPage>();
 
         return services.BuildServiceProvider();
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
+        // save setting
         var settingManager = Services.GetService<ISettingManager>();
         settingManager?.Save();
-        Console.WriteLine("Exit");
+        
+        // log
+        var logManager = Services.GetService<ILogManager>();
+        logManager?.Info("Application Exit.");
         base.OnExit(e);
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        // log
         var logManager = Services.GetService<ILogManager>();
         logManager?.Info("Application Start Up.");
 
+        // set theme
         var themeManager = Services.GetService<IThemeManager>();
         var settingManager = Services.GetService<ISettingManager>();
         themeManager!.ChangeTheme(settingManager!.CurrentSetting.ThemeType);
-        
 
+        // start window
         var mainWindow = Services.GetService<MainWindow>();
-
         mainWindow!.Show();
     }
 }

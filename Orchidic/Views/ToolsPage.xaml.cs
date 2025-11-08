@@ -17,6 +17,7 @@ public partial class ToolsPage
 {
     public ToolsPage()
     {
+        DataContext = App.Current.Services.GetService<ToolsPageViewModel>();
         InitializeComponent();
     }
 }

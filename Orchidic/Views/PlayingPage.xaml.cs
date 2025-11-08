@@ -17,6 +17,7 @@ public partial class PlayingPage
 {
     public PlayingPage()
     {
+        DataContext = App.Current.Services.GetService<PlayingPageViewModel>();
         InitializeComponent();
     }
 }

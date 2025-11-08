@@ -17,6 +17,7 @@ public partial class QueuePage
 {
     public QueuePage()
     {
+        DataContext = App.Current.Services.GetService<QueuePageViewModel>();
         InitializeComponent();
     }
 }

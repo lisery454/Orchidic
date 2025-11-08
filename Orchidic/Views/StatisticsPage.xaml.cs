@@ -17,6 +17,7 @@ public partial class StatisticsPage
 {
     public StatisticsPage()
     {
+        DataContext = App.Current.Services.GetService<StatisticsPageViewModel>();
         InitializeComponent();
     }
 }

@@ -17,6 +17,7 @@ public partial class ListPage
 {
     public ListPage()
     {
+        DataContext = App.Current.Services.GetService<ListPageViewModel>();
         InitializeComponent();
     }
 }
