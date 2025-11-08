@@ -26,11 +26,13 @@
   <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}" />
   <Color x:Key="MenuItemIndicatorColor">#aa050505</Color>
   <SolidColorBrush x:Key="MenuItemIndicatorBrush" Color="{DynamicResource MenuItemIndicatorColor}" />
-  <RadialGradientBrush x:Key="CoverMaskBrush" Center="50%,50%"
-                       GradientOrigin="50%,50%">
+  <RadialGradientBrush x:Key="CoverMaskBrush" Center="0.5,0.5"
+                       GradientOrigin="0.5,0.5">
     <!-- 中心透明 -->
     <GradientStop Offset="0.0" Color="#00000000" />
     <!-- 边缘渐暗 -->
     <GradientStop Offset="1.0" Color="#30000000" />
   </RadialGradientBrush>
+  <Color x:Key="CoverShadowColor">#85a5a4</Color>
+
 </ResourceDictionary>

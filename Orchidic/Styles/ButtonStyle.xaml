@@ -147,4 +147,189 @@
     </Setter>
   </Style>
 
+
+  <BounceEase x:Key="AnimatedButtonScaleEase" EasingMode="EaseOut" />
+  <ElasticEase x:Key="AnimatedButtonRotateEase" Oscillations="3" Springiness="0.5" EasingMode="EaseOut" />
+
+  <!--  AnimatedButton  -->
+  <Style x:Key="AnimatedButton" TargetType="Button">
+    <!-- 移除虚线框 -->
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+    <Setter Property="RenderTransform">
+      <Setter.Value>
+        <ScaleTransform ScaleX="1" ScaleY="1" />
+      </Setter.Value>
+    </Setter>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="RootBorder"
+                  Background="Transparent"
+                  BorderBrush="Transparent"
+                  BorderThickness="0" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+              <TransformGroup>
+                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="0"></RotateTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+              </TransformGroup>
+            </Border.RenderTransform>
+            <ContentPresenter HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}" />
+
+            <!-- VisualStateGroups 必须放在 FrameworkElement 内 -->
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal">
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                  </Storyboard>
+                </VisualState>
+                <VisualState x:Name="MouseOver">
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                  </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                     To="0.95"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                     To="0.95"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                  </Storyboard>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+          </Border>
+
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  <Style x:Key="CoverAnimatedButton" TargetType="Button">
+    <!-- 移除虚线框 -->
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+    <Setter Property="RenderTransform">
+      <Setter.Value>
+        <ScaleTransform ScaleX="1" ScaleY="1" />
+      </Setter.Value>
+    </Setter>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="RootBorder"
+                  Background="Transparent"
+                  BorderBrush="Transparent"
+                  BorderThickness="0" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+              <TransformGroup>
+                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="-1"></RotateTransform>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+              </TransformGroup>
+            </Border.RenderTransform>
+            <ContentPresenter HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}" />
+
+            <!-- VisualStateGroups 必须放在 FrameworkElement 内 -->
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal">
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                     To="0"
+                                     EasingFunction="{StaticResource AnimatedButtonRotateEase}"
+                                     Duration="0:0:1.0" />
+                  </Storyboard>
+                </VisualState>
+                <VisualState x:Name="MouseOver">
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                     To="0"
+                                     EasingFunction="{StaticResource AnimatedButtonRotateEase}"
+                                     Duration="0:0:1.0" />
+                  </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Pressed">
+                  <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
+                                     To="0.99"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
+                                     To="0.99"
+                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
+                                     Duration="0:0:0.05" />
+                    <DoubleAnimation Storyboard.TargetName="RootBorder"
+                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                     To="1"
+                                     EasingFunction="{StaticResource AnimatedButtonRotateEase}"
+                                     Duration="0:0:1.0" />
+                  </Storyboard>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+          </Border>
+
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+
 </ResourceDictionary>

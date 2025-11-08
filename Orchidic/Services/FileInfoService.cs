@@ -1,5 +1,4 @@
-﻿using System.Windows.Media;
-using Orchidic.Services.Interfaces;
+﻿using Orchidic.Services.Interfaces;
 
 namespace Orchidic.Services;
 
@@ -32,15 +31,15 @@ public class FileInfoService : IFileInfoService
         return GetDefaultCover();
     }
 
-    public BitmapSource  GetDefaultCover()
+    public BitmapSource GetDefaultCover()
     {
         const int height = 100;
         const int width = 100;
-        var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        var rtb = new RenderTargetBitmap(width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
 
         // 使用 DrawingVisual 绘制内容
-        var dv = new DrawingVisual();
-        var brush = Application.Current.Resources["SecondaryBrush"] as SolidColorBrush;
+        var dv = new System.Windows.Media.DrawingVisual();
+        var brush = Application.Current.Resources["SecondaryBrush"] as System.Windows.Media.SolidColorBrush;
         using (var dc = dv.RenderOpen())
         {
             // 填充矩形
