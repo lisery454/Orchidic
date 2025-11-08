@@ -3,10 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Orchidic.Views"
+             xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewModels:SettingsPageViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
-  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Settings" />
+  <Grid HorizontalAlignment="Center" Margin="0,100,0,100" Width="400" VerticalAlignment="Stretch">
+    <Button Height="100" Width="300" Command="{Binding ToggleThemeCommand}">切换主题</Button>
+  </Grid>
 
 </UserControl>

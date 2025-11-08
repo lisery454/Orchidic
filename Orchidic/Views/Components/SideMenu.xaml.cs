@@ -1,64 +1,13 @@
-﻿
+﻿namespace Orchidic.Views.Components;
 
-namespace Orchidic.Views.Components;
-
-public partial class SideMenu : UserControl
+public partial class SideMenu
 {
     public SideMenu()
     {
         InitializeComponent();
     }
 
-    // #region AttachedProperty
-    //
-    // public static readonly AttachedProperty<bool> IsItemSelectedProperty =
-    //     AvaloniaProperty.RegisterAttached<SideMenu, Control, bool>(
-    //         "IsItemSelected",
-    //         defaultValue: false);
-    //
-    // public static void SetIsItemSelected(AvaloniaObject element, bool value) =>
-    //     element.SetValue(IsItemSelectedProperty, value);
-    //
-    // public static bool GetIsItemSelected(AvaloniaObject element) =>
-    //     element.GetValue(IsItemSelectedProperty);
-    //
-    // #endregion
-
-    #region Converters
-
     public static readonly IValueConverter IndexToOffsetConverterIns = new IndexToOffsetConverter();
-
-    private class IndexToOffsetConverter : IValueConverter
-    {
-        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            if (value is int index)
-                return index * 60.0; // 每项高度 60
-            return 0.0;
-        }
-
-        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-            => Binding.DoNothing;
-    }
-
-    public static readonly IMultiValueConverter IsSelectedConverterIns = new IsSelectedConverter();
-
-    private class IsSelectedConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            var item = values[0];
-            var selected = values[1];
-            return Equals(item, selected);
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            return [];
-        }
-    }
-
-    #endregion
 }
 
 public static class SmoothCanvasBehavior
@@ -100,4 +49,17 @@ public static class SmoothCanvasBehavior
             element.BeginAnimation(Canvas.TopProperty, anim);
         }
     }
+}
+
+public class IndexToOffsetConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is int index)
+            return index * 60.0; // 每项高度 60
+        return 0.0;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => Binding.DoNothing;
 }

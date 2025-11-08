@@ -6,14 +6,14 @@ namespace Orchidic.Utils.ThemeManager;
 public class ThemeManager : IThemeManager
 {
     private readonly ILogManager _logManager;
+    private readonly ISettingManager _settingManager;
 
     public ThemeManager(ISettingManager settingManager, ILogManager logManager)
     {
         _logManager = logManager;
+        _settingManager = settingManager;
         _logManager.Info("Create ThemeManager Success");
-        ChangeTheme(settingManager.CurrentSetting.ThemeType);
     }
-
 
     public void ChangeTheme(ThemeType themeType)
     {
@@ -30,7 +30,16 @@ public class ThemeManager : IThemeManager
         };
 
         Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
-
+        
+        ThemeChanged?.Invoke(null, themeType);
         _logManager.Info($"Change Theme {themeType} Success");
+        _settingManager.CurrentSetting.ThemeType = themeType;
     }
+
+    public ThemeType GetCurrentTheme()
+    {
+        return _settingManager.CurrentSetting.ThemeType;
+    }
+
+    public event EventHandler<ThemeType>? ThemeChanged;
 }

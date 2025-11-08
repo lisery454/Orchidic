@@ -114,14 +114,27 @@ public partial class App
         return services.BuildServiceProvider();
     }
 
-    private void Application_Startup(object sender, StartupEventArgs e)
+    protected override void OnExit(ExitEventArgs e)
     {
+        var settingManager = Services.GetService<ISettingManager>();
+        settingManager?.Save();
+        Console.WriteLine("Exit");
+        base.OnExit(e);
+    }
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
         var logManager = Services.GetService<ILogManager>();
         logManager?.Info("Application Start Up.");
 
-        _ = Services.GetService<IThemeManager>();
+        var themeManager = Services.GetService<IThemeManager>();
+        var settingManager = Services.GetService<ISettingManager>();
+        themeManager!.ChangeTheme(settingManager!.CurrentSetting.ThemeType);
+        
 
         var mainWindow = Services.GetService<MainWindow>();
+
         mainWindow!.Show();
     }
 }

@@ -15,19 +15,20 @@
         d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         SnapsToDevicePixels="True"
         WindowStyle="None"
+        Background="Transparent"
         Title="{x:Static utils:ProgramConstants.AppName}">
 
     <Window.Resources>
         <views:MenuWidthConverter x:Key="MenuWidthConverter" />
     </Window.Resources>
-
+    
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="60"
+        <WindowChrome CaptionHeight="80"
                       CornerRadius="0"
-                      GlassFrameThickness="0,0,0,1"
+                      GlassFrameThickness="0,0,0,0"
                       ResizeBorderThickness="6"
                       UseAeroCaptionButtons="False"
-                      NonClientFrameEdges="Bottom" />
+                      NonClientFrameEdges="None" />
     </WindowChrome.WindowChrome>
 
 
