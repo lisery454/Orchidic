@@ -56,7 +56,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\avalonia-logo.ico" />
         <Resource Include="Assets\Fonts\MiSans-Bold.otf" />
         <Resource Include="Assets\Fonts\MiSans-Demibold.otf" />
         <Resource Include="Assets\Fonts\MiSans-ExtraLight.otf" />
@@ -84,6 +83,7 @@
         <Resource Include="Assets\test2.png" />
         <Resource Include="Assets\test3.png" />
         <Resource Include="Assets\test4.png" />
+        <None Remove="Utils\BokehBlur.ps" />
     </ItemGroup>
 
     <ItemGroup>

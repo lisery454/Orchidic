@@ -11,7 +11,7 @@ public class PlayerService : IPlayerService, IDisposable
     private readonly AudioQueue _audioQueue;
     private readonly object _deviceLock = new();
     private bool _isPlaying;
-    private ISettingManager _settingManager; 
+    private readonly ISettingManager _settingManager; 
 
     private AudioFileReader? CurrentAudioFileReader
     {

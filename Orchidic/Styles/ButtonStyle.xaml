@@ -149,7 +149,7 @@
 
 
   <BounceEase x:Key="AnimatedButtonScaleEase" EasingMode="EaseOut" />
-  <ElasticEase x:Key="AnimatedButtonRotateEase" Oscillations="3" Springiness="0.5" EasingMode="EaseOut" />
+  <ElasticEase x:Key="AnimatedButtonRotateEase" Oscillations="1" Springiness="0.5" EasingMode="EaseOut" />
 
   <!--  AnimatedButton  -->
   <Style x:Key="AnimatedButton" TargetType="Button">
@@ -234,6 +234,7 @@
     </Setter>
   </Style>
   
+  <!-- CoverAnimatedButton -->
   <Style x:Key="CoverAnimatedButton" TargetType="Button">
     <!-- 移除虚线框 -->
     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -254,7 +255,7 @@
                   BorderThickness="0" RenderTransformOrigin="0.5,0.5">
             <Border.RenderTransform>
               <TransformGroup>
-                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="-1"></RotateTransform>
+                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="0"></RotateTransform>
                 <ScaleTransform ScaleX="1" ScaleY="1" />
               </TransformGroup>
             </Border.RenderTransform>
@@ -281,7 +282,7 @@
                                      Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
                                      To="0"
                                      EasingFunction="{StaticResource AnimatedButtonRotateEase}"
-                                     Duration="0:0:1.0" />
+                                     Duration="0:0:0.2" />
                   </Storyboard>
                 </VisualState>
                 <VisualState x:Name="MouseOver">
@@ -300,7 +301,7 @@
                                      Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
                                      To="-0.5"
                                      EasingFunction="{StaticResource AnimatedButtonRotateEase}"
-                                     Duration="0:0:1.0" />
+                                     Duration="0:0:0.2" />
                   </Storyboard>
                 </VisualState>
                 <VisualState x:Name="Pressed">
@@ -317,9 +318,9 @@
                                      Duration="0:0:0.05" />
                     <DoubleAnimation Storyboard.TargetName="RootBorder"
                                      Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)"
-                                     To="1"
+                                     To="0.5"
                                      EasingFunction="{StaticResource AnimatedButtonRotateEase}"
-                                     Duration="0:0:1.0" />
+                                     Duration="0:0:0.2" />
                   </Storyboard>
                 </VisualState>
               </VisualStateGroup>

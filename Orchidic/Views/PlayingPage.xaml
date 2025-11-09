@@ -9,6 +9,7 @@
              xmlns:components="clr-namespace:Orchidic.Views.Components"
              d:DataContext="{d:DesignInstance Type=viewModels:PlayingPageViewModel}"
              mc:Ignorable="d"
+             ClipToBounds="False"
              d:DesignHeight="300" d:DesignWidth="300">
 
   <UserControl.Resources>
@@ -24,6 +25,7 @@
         <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
+
       <!-- cover -->
       <Grid Grid.Row="0" x:Name="CoverParent" ClipToBounds="True">
         <Button HorizontalAlignment="Center" VerticalAlignment="Center"

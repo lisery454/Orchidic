@@ -26,3 +26,4 @@ global using System.Windows.Media.Imaging;
 global using NAudio.Wave;
 global using System.Windows.Threading;
 global using System.Windows.Media;
+global using System.Windows.Media.Effects;
