@@ -12,15 +12,8 @@ public class FileInfoService : IFileInfoService
             if (file.Tag.Pictures is { Length: > 0 })
             {
                 var pic = file.Tag.Pictures[0];
-                using var mem = new MemoryStream(pic.Data.Data);
-                // 使用 BitmapImage 从 MemoryStream 创建 WPF 可用的 BitmapSource
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载，释放流安全
-                bitmap.StreamSource = mem;
-                bitmap.EndInit();
-                bitmap.Freeze(); // 可跨线程使用
-                return bitmap;
+                var coverBitmap = LoadAlbumCoverSquare(pic.Data.Data, 400);
+                return coverBitmap;
             }
         }
         catch
@@ -31,24 +24,131 @@ public class FileInfoService : IFileInfoService
         return GetDefaultCover();
     }
 
-    public BitmapSource GetDefaultCover()
+    private static BitmapSource LoadAlbumCoverSquare(byte[] imageData, int targetSize = 200)
     {
-        const int height = 100;
-        const int width = 100;
-        var rtb = new RenderTargetBitmap(width, height, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+        using var mem = new MemoryStream(imageData);
 
-        // 使用 DrawingVisual 绘制内容
-        var dv = new System.Windows.Media.DrawingVisual();
-        var brush = Application.Current.Resources["SecondaryBrush"] as System.Windows.Media.SolidColorBrush;
-        using (var dc = dv.RenderOpen())
+        // 先加载 BitmapImage，但不完全解码
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载，MemoryStream 可释放
+        bitmap.StreamSource = mem;
+
+        // 获取原图尺寸信息
+        bitmap.CreateOptions = BitmapCreateOptions.DelayCreation;
+        bitmap.EndInit();
+
+        int originalWidth = bitmap.PixelWidth;
+        int originalHeight = bitmap.PixelHeight;
+
+        // 计算等比例缩放尺寸
+        // 保证最短边 >= targetSize，这样裁剪中心正方形不会放大
+        double scale = (double)targetSize / Math.Min(originalWidth, originalHeight);
+        int decodeWidth = (int)(originalWidth * scale);
+        int decodeHeight = (int)(originalHeight * scale);
+
+        // 重新加载 BitmapImage，限制解码大小
+        mem.Position = 0; // 重置流
+        var scaledBitmap = new BitmapImage();
+        scaledBitmap.BeginInit();
+        scaledBitmap.CacheOption = BitmapCacheOption.OnLoad;
+        scaledBitmap.StreamSource = mem;
+        scaledBitmap.DecodePixelWidth = decodeWidth;
+        scaledBitmap.DecodePixelHeight = decodeHeight;
+        scaledBitmap.EndInit();
+        scaledBitmap.Freeze();
+
+        // 裁剪中心正方形
+        var cropped = CropCenterSquare(scaledBitmap);
+
+        // 如果需要保证输出是 targetSize×targetSize，可以再缩放一次
+        var resized = ResizeToFixedSize(cropped, targetSize, targetSize);
+
+        return resized;
+    }
+
+    private static BitmapSource CropCenterSquare(BitmapSource source)
+    {
+        int width = source.PixelWidth;
+        int height = source.PixelHeight;
+
+        int side = Math.Min(width, height);
+        int x = (width - side) / 2;
+        int y = (height - side) / 2;
+
+        var rect = new Int32Rect(x, y, side, side);
+        var cropped = new CroppedBitmap(source, rect);
+        cropped.Freeze();
+        return cropped;
+    }
+
+    private static BitmapSource ResizeToFixedSize(BitmapSource source, int width, int height)
+    {
+        var visual = new DrawingVisual();
+        using (var context = visual.RenderOpen())
         {
-            // 填充矩形
-            dc.DrawRectangle(brush, null, new Rect(0, 0, width, height));
+            RenderOptions.SetBitmapScalingMode(visual, BitmapScalingMode.HighQuality);
+            context.DrawImage(source, new Rect(0, 0, width, height));
         }
 
-        // 渲染到 RenderTargetBitmap
-        rtb.Render(dv);
-        return rtb;
+        var renderTarget = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        renderTarget.Render(visual);
+        renderTarget.Freeze();
+        return renderTarget;
+    }
+
+    public BitmapSource GetDefaultCover()
+    {
+        var color = (Application.Current.Resources["SecondaryBrush"] as SolidColorBrush)?.Color ?? Colors.Gray;
+
+        return RunInSta(() =>
+        {
+            const int height = 100;
+            const int width = 100;
+            var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+
+            var dv = new DrawingVisual();
+            using (var dc = dv.RenderOpen())
+            {
+                var brush = new SolidColorBrush(color);
+                dc.DrawRectangle(brush, null, new Rect(0, 0, width, height));
+            }
+
+            rtb.Render(dv);
+            return rtb; // RunInSta 内部会 Freeze
+        });
+    }
+
+    private static BitmapSource RunInSta(Func<BitmapSource> func)
+    {
+        BitmapSource? result = null;
+        Exception? exception = null;
+
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                // ⚡ 这里一定要在 STA 内创建所有 WPF 对象
+                result = func();
+
+                // Freeze 在同一个 STA 线程内
+                result?.Freeze();
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+        });
+
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.IsBackground = true;
+        thread.Start();
+        thread.Join();
+
+        if (exception != null)
+            throw new InvalidOperationException("STA thread execution failed.", exception);
+
+        return result!;
     }
 
     public string GetTitleFromAudio(string path)

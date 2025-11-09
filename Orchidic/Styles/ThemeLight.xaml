@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
   <Color x:Key="BGColor">#ffd6d6d6</Color>
   <SolidColorBrush x:Key="BGBrush" Color="{DynamicResource BGColor}" />
-  <Color x:Key="MenuBGColor">#99f4f4f4</Color>
+  <Color x:Key="MenuBGColor">#55f4f4f4</Color>
   <SolidColorBrush x:Key="MenuBGBrush" Color="{DynamicResource MenuBGColor}" />
   <Color x:Key="TitleColor">#1c4b56</Color>
   <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource TitleColor}" />
@@ -19,11 +19,11 @@
   <SolidColorBrush x:Key="WindowCtrlBtnHoverBrush" Color="{DynamicResource WindowCtrlBtnHoverColor}" />
   <Color x:Key="WindowCtrlBtnPressedColor">#899092</Color>
   <SolidColorBrush x:Key="WindowCtrlBtnPressedBrush" Color="{DynamicResource WindowCtrlBtnPressedColor}" />
-  <Color x:Key="SecondaryColor">#9ea8aa</Color>
+  <Color x:Key="SecondaryColor">#537177</Color>
   <SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource SecondaryColor}" />
-  <Color x:Key="PrimaryColor">#465a5f</Color>
+  <Color x:Key="PrimaryColor">#46A7B0</Color>
   <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />
-  <Color x:Key="FontColor">#555</Color>
+  <Color x:Key="FontColor">#444</Color>
   <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}" />
   <Color x:Key="MenuItemIndicatorColor">#aafafafa</Color>
   <SolidColorBrush x:Key="MenuItemIndicatorBrush" Color="{DynamicResource MenuItemIndicatorColor}" />

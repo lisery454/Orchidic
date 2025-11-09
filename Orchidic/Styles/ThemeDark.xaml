@@ -35,6 +35,6 @@
     <GradientStop Offset="1.0" Color="#30000000" />
   </RadialGradientBrush>
   <Color x:Key="CoverShadowColor">#85a5a4</Color>
-  <system:Double x:Key="BlurCoverOpacity">0.06</system:Double>
+  <system:Double x:Key="BlurCoverOpacity">0.1</system:Double>
 
 </ResourceDictionary>

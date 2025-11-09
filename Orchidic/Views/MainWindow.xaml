@@ -54,7 +54,7 @@
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
         ClipToBounds="False"
-        RenderOptions.BitmapScalingMode="HighQuality"
+        RenderOptions.BitmapScalingMode="LowQuality"
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Opacity="{DynamicResource BlurCoverOpacity}">
@@ -70,9 +70,7 @@
             <Binding Path="ActualHeight" ElementName="RootParent" />
           </MultiBinding>
         </Image.Width>
-        <Image.Effect>
-          <BlurEffect Radius="30" />
-        </Image.Effect>
+        
       </Image>
     </Grid>
 
