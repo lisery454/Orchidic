@@ -1,6 +1,5 @@
 ﻿using Orchidic.Models;
 using Orchidic.Utils;
-using Orchidic.Utils.ThemeManager;
 using Orchidic.ViewModels.Components;
 
 namespace Orchidic.ViewModels;
@@ -14,8 +13,6 @@ public class MainWindowViewModel : ViewModelBase
 
     private readonly ObservableAsPropertyHelper<BitmapSource?> _cover;
     public BitmapSource? Cover => _cover.Value;
-
-    private static IThemeManager themeManager => App.Current.Services.GetService<IThemeManager>()!;
 
     public MainWindowViewModel()
     {
@@ -35,44 +32,8 @@ public class MainWindowViewModel : ViewModelBase
                 };
             }).ToProperty(this, x => x.CurrentPageViewModel);
 
-        App.Current.Services.GetService<PlayingPageViewModel>().WhenAnyValue(x => x.Cover)
-            // 在后台线程生成模糊图像
-            .SelectMany(original =>
-                Observable.FromAsync(() =>
-                        RunInSta(() => SmoothImageScaler.ScaleWithSmoothBlur(original!, 800, 100))
-                    )
-                    .Catch<BitmapSource, Exception>(ex =>
-                    {
-                        Console.WriteLine($"Blur generation error: {ex.Message}");
-                        return Observable.Empty<BitmapSource>();
-                    })
-            )
-            // 切回 UI 线程更新
-            .ObserveOn(RxApp.MainThreadScheduler)
+        App.Current.Services.GetService<PlayingPageViewModel>()
+            .WhenAnyValue(x => x.BlurCover)
             .ToProperty(this, x => x.Cover, out _cover);
-    }
-
-    private static Task<T> RunInSta<T>(Func<T> func)
-    {
-        var tcs = new TaskCompletionSource<T>();
-
-        var thread = new Thread(() =>
-        {
-            try
-            {
-                var result = func();
-                tcs.SetResult(result);
-            }
-            catch (Exception ex)
-            {
-                tcs.SetException(ex);
-            }
-        });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.IsBackground = true;
-        thread.Start();
-
-        return tcs.Task;
     }
 }

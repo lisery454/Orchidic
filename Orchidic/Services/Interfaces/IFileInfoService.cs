@@ -1,6 +1,4 @@
-﻿
-
-namespace Orchidic.Services.Interfaces;
+﻿namespace Orchidic.Services.Interfaces;
 
 public interface IFileInfoService
 {
@@ -11,4 +9,6 @@ public interface IFileInfoService
     string GetTitleFromAudio(string path);
 
     string GetDefaultTitle();
+
+    Task<BitmapSource> GetBlurCoverFromCover(BitmapSource cover, string? audioPath);
 }

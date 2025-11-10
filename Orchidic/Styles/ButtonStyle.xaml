@@ -287,16 +287,16 @@
                 </VisualState>
                 <VisualState x:Name="MouseOver">
                   <Storyboard>
-                    <DoubleAnimation Storyboard.TargetName="RootBorder"
-                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)"
-                                     To="1.01"
-                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
-                                     Duration="0:0:0.05" />
-                    <DoubleAnimation Storyboard.TargetName="RootBorder"
-                                     Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)"
-                                     To="1.01"
-                                     EasingFunction="{StaticResource AnimatedButtonScaleEase}"
-                                     Duration="0:0:0.05" />
+                    <!-- <DoubleAnimation Storyboard.TargetName="RootBorder" -->
+                    <!--                  Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleX)" -->
+                    <!--                  To="1.01" -->
+                    <!--                  EasingFunction="{StaticResource AnimatedButtonScaleEase}" -->
+                    <!--                  Duration="0:0:0.05" /> -->
+                    <!-- <DoubleAnimation Storyboard.TargetName="RootBorder" -->
+                    <!--                  Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(ScaleTransform.ScaleY)" -->
+                    <!--                  To="1.01" -->
+                    <!--                  EasingFunction="{StaticResource AnimatedButtonScaleEase}" -->
+                    <!--                  Duration="0:0:0.05" /> -->
                     <!-- <DoubleAnimation Storyboard.TargetName="RootBorder" -->
                     <!--                  Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(RotateTransform.Angle)" -->
                     <!--                  To="-0.5" -->

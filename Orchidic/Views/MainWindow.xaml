@@ -47,9 +47,10 @@
     </Grid.ColumnDefinitions>
 
     <!-- blur cover -->
-    <Grid Grid.Column="0" ColumnSpan="2" Grid.Row="0" RowSpan="2" ClipToBounds="False">
+    <Grid Grid.Column="0" ColumnSpan="2" Grid.Row="0" RowSpan="2" ClipToBounds="False" x:Name="BlurCoverParent">
       <Image
-        Source="{Binding Cover}"
+        x:Name="BlurImage"
+        views:ImageFadeExtensions.AnimatedSource="{Binding Cover}"
         Stretch="UniformToFill"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
@@ -70,7 +71,6 @@
             <Binding Path="ActualHeight" ElementName="RootParent" />
           </MultiBinding>
         </Image.Width>
-        
       </Image>
     </Grid>
 

@@ -3,6 +3,8 @@ using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
 using Orchidic.Utils.LogManager;
 using Orchidic.Utils.SettingManager;
+using Orchidic.Utils.SmoothImageScaler;
+using Orchidic.Utils.STAManager;
 using Orchidic.Utils.ThemeManager;
 using Orchidic.ViewModels;
 using Orchidic.Views;
@@ -28,6 +30,8 @@ public partial class App
         services.AddSingleton<IDeserializer, Deserializer>();
 
         services.AddSingleton<ILogManager, LogManager>();
+        services.AddSingleton<ISTAManager, STAManager>();
+        services.AddSingleton<SmoothImageScaler>();
         services.AddSingleton<ISettingManager, SettingManager>();
         services.AddSingleton<IThemeManager, ThemeManager>();
 
@@ -60,7 +64,7 @@ public partial class App
         // save setting
         var settingManager = Services.GetService<ISettingManager>();
         settingManager?.Save();
-        
+
         // log
         var logManager = Services.GetService<ILogManager>();
         logManager?.Info("Application Exit.");

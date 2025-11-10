@@ -1,24 +1,105 @@
 ﻿using Orchidic.Services.Interfaces;
+using Orchidic.Utils;
+using Orchidic.Utils.LogManager;
+using Orchidic.Utils.SmoothImageScaler;
 
 namespace Orchidic.Services;
 
 public class FileInfoService : IFileInfoService
 {
+    private ILogManager _logManager;
+
+    public FileInfoService(ILogManager logManager)
+    {
+        _logManager = logManager;
+    }
+
+    public async Task<BitmapSource> GetBlurCoverFromCover(BitmapSource cover, string? audioPath)
+    {
+        string? blurCoverPath = null;
+        if (audioPath != null)
+        {
+            var id = GetAudioFileId(audioPath);
+            blurCoverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath,"blur--" + id  + ".png");
+            if (File.Exists(blurCoverPath))
+            {
+                await using var stream = File.OpenRead(blurCoverPath);
+                var decoder =
+                    new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+                var bitmap = decoder.Frames[0];
+                bitmap.Freeze();
+                return bitmap;
+            }
+        }
+        
+        var blurCover = await SmoothImageScaler.ScaleWithSmoothBlurAsync(cover, 400, 30);
+
+        if (audioPath != null && blurCoverPath != null)
+        {
+            SaveImage(blurCover, blurCoverPath);
+        }
+
+        return blurCover;
+    }
+
+    private static string GetAudioFileId(string path)
+    {
+        var info = new FileInfo(path);
+        var str = $"{path.ToLowerInvariant()}|{info.Length}|{info.LastWriteTimeUtc.Ticks}";
+
+        using var sha1 = SHA1.Create();
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var hash = sha1.ComputeHash(bytes);
+        return BitConverter.ToString(hash).Replace("-", "");
+    }
+
+    private static void SaveImage(BitmapSource bitmap, string path)
+    {
+        // 确保目录存在
+        var dir = Path.GetDirectoryName(path)!;
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+
+        // 使用 FileStream 写入文件
+        using var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+        encoder.Save(stream);
+    }
+
     public BitmapSource GetCoverFromAudio(string path)
     {
+        var id = GetAudioFileId(path);
+        var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, id + ".png");
+        if (File.Exists(coverPath))
+        {
+            using var stream = File.OpenRead(coverPath);
+            var decoder =
+                new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+            var bitmap = decoder.Frames[0];
+            bitmap.Freeze();
+            return bitmap;
+        }
+
         try
         {
             using var file = TagLib.File.Create(path);
             if (file.Tag.Pictures is { Length: > 0 })
             {
                 var pic = file.Tag.Pictures[0];
-                var coverBitmap = LoadAlbumCoverSquare(pic.Data.Data, 400);
+                var bytes = pic.Data.Data;
+                var buffer = new byte[bytes.Length];
+                Buffer.BlockCopy(bytes, 0, buffer, 0, bytes.Length);
+
+                var coverBitmap = LoadAlbumCoverSquare(buffer, 400);
+                SaveImage(coverBitmap, coverPath);
                 return coverBitmap;
             }
         }
         catch
         {
-            ;
+            _logManager.Error($"Failed to load cover from audio file: {path}");
         }
 
         return GetDefaultCover();
@@ -153,24 +234,26 @@ public class FileInfoService : IFileInfoService
 
     public string GetTitleFromAudio(string path)
     {
-        try
-        {
-            using var file = TagLib.File.Create(path);
+        return Path.GetFileNameWithoutExtension(path);
 
-            // 优先读取音频标签里的标题
-            var title = file.Tag.Title;
-
-            // 如果标签里没有标题，则使用文件名
-            if (string.IsNullOrWhiteSpace(title))
-                title = Path.GetFileNameWithoutExtension(path);
-
-            return title;
-        }
-        catch
-        {
-            // 如果文件无法读取或格式不支持，仍返回文件名
-            return Path.GetFileNameWithoutExtension(path);
-        }
+        // try
+        // {
+        //     using var file = TagLib.File.Create(path);
+        //
+        //     // 优先读取音频标签里的标题
+        //     var title = file.Tag.Title;
+        //
+        //     // 如果标签里没有标题，则使用文件名
+        //     if (string.IsNullOrWhiteSpace(title))
+        //         title = Path.GetFileNameWithoutExtension(path);
+        //
+        //     return title;
+        // }
+        // catch
+        // {
+        //     // 如果文件无法读取或格式不支持，仍返回文件名
+        //     return Path.GetFileNameWithoutExtension(path);
+        // }
     }
 
     public string GetDefaultTitle()

@@ -151,6 +151,7 @@
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
                        FontFamily="{StaticResource NotoSansMono}"
                        FontWeight="Bold"
+                       Width="50"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center">
             </TextBlock>
