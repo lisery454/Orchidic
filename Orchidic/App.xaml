@@ -10,8 +10,7 @@
       <converters:ViewModelToViewConverter x:Key="ViewModelToViewConverter" />
 
       <ResourceDictionary.MergedDictionaries>
-        <!-- 默认加载亮色主题 -->
-        <ResourceDictionary Source="Styles/ThemeTransparent.xaml" />
+        <ResourceDictionary Source="Styles/ThemeDark.xaml" />
         <ResourceDictionary Source="Styles/Fonts.xaml" />
         <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
         <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />

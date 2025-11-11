@@ -5,7 +5,6 @@ using Orchidic.Utils.LogManager;
 using Orchidic.Utils.SettingManager;
 using Orchidic.Utils.SmoothImageScaler;
 using Orchidic.Utils.STAManager;
-using Orchidic.Utils.ThemeManager;
 using Orchidic.ViewModels;
 using Orchidic.Views;
 
@@ -33,7 +32,6 @@ public partial class App
         services.AddSingleton<ISTAManager, STAManager>();
         services.AddSingleton<SmoothImageScaler>();
         services.AddSingleton<ISettingManager, SettingManager>();
-        services.AddSingleton<IThemeManager, ThemeManager>();
 
         services.AddSingleton<IFileInfoService, FileInfoService>();
         services.AddSingleton<IPlayerService, PlayerService>();
@@ -77,12 +75,7 @@ public partial class App
         // log
         var logManager = Services.GetService<ILogManager>();
         logManager?.Info("Application Start Up.");
-
-        // set theme
-        var themeManager = Services.GetService<IThemeManager>();
-        var settingManager = Services.GetService<ISettingManager>();
-        themeManager!.ChangeTheme(settingManager!.CurrentSetting.ThemeType);
-
+        
         // start window
         var mainWindow = Services.GetService<MainWindow>();
         mainWindow!.Show();

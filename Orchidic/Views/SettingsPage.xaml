@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
   <Grid HorizontalAlignment="Center" Margin="0,100,0,100" Width="400" VerticalAlignment="Stretch">
-    <Button Height="100" Width="300" Command="{Binding ToggleThemeCommand}">切换主题</Button>
+    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Setting" />
   </Grid>
 
 </UserControl>

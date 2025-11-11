@@ -5,7 +5,7 @@
   <SolidColorBrush x:Key="BGBrush" Color="{DynamicResource BGColor}" />
   <Color x:Key="MenuBGColor">#22000000</Color>
   <SolidColorBrush x:Key="MenuBGBrush" Color="{DynamicResource MenuBGColor}" />
-  <Color x:Key="TitleColor">#3b9a97</Color>
+  <Color x:Key="TitleColor">#989898</Color>
   <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource TitleColor}" />
   <Color x:Key="WindowCloseBtnFillColor">#ba4444</Color>
   <SolidColorBrush x:Key="WindowCloseBtnFillBrush" Color="{DynamicResource WindowCloseBtnFillColor}" />
@@ -13,15 +13,15 @@
   <SolidColorBrush x:Key="WindowCloseBtnHoverBrush" Color="{DynamicResource WindowCloseBtnHoverColor}" />
   <Color x:Key="WindowCloseBtnPressedColor">#a13535</Color>
   <SolidColorBrush x:Key="WindowCloseBtnPressedBrush" Color="{DynamicResource WindowCloseBtnPressedColor}" />
-  <Color x:Key="WindowCtrlBtnFillColor">#4a6c77</Color>
+  <Color x:Key="WindowCtrlBtnFillColor">#676767</Color>
   <SolidColorBrush x:Key="WindowCtrlBtnFillBrush" Color="{DynamicResource WindowCtrlBtnFillColor}" />
-  <Color x:Key="WindowCtrlBtnHoverColor">#5a7780</Color>
+  <Color x:Key="WindowCtrlBtnHoverColor">#606060</Color>
   <SolidColorBrush x:Key="WindowCtrlBtnHoverBrush" Color="{DynamicResource WindowCtrlBtnHoverColor}" />
-  <Color x:Key="WindowCtrlBtnPressedColor">#365b66</Color>
+  <Color x:Key="WindowCtrlBtnPressedColor">#545454</Color>
   <SolidColorBrush x:Key="WindowCtrlBtnPressedBrush" Color="{DynamicResource WindowCtrlBtnPressedColor}" />
   <Color x:Key="SecondaryColor">#646a6b</Color>
   <SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource SecondaryColor}" />
-  <Color x:Key="PrimaryColor">#28aaa6</Color>
+  <Color x:Key="PrimaryColor">#b3b3b3</Color>
   <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />
   <Color x:Key="FontColor">#aaa</Color>
   <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}" />
@@ -34,7 +34,7 @@
     <!-- 边缘渐暗 -->
     <GradientStop Offset="1.0" Color="#30000000" />
   </RadialGradientBrush>
-  <Color x:Key="CoverShadowColor">#85a5a4</Color>
+  <Color x:Key="CoverShadowColor">#a3a3a3</Color>
   <system:Double x:Key="BlurCoverOpacity">0.1</system:Double>
 
 </ResourceDictionary>

@@ -48,11 +48,6 @@
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>
         </Page>
-        <Page Update="Styles\ThemeTransparent.xaml">
-          <Generator>MSBuild:Compile</Generator>
-          <XamlRuntime>Wpf</XamlRuntime>
-          <SubType>Designer</SubType>
-        </Page>
     </ItemGroup>
 
     <ItemGroup>
@@ -79,10 +74,6 @@
         <Resource Include="Assets\Fonts\SpaceMono-BoldItalic.ttf" />
         <Resource Include="Assets\Fonts\SpaceMono-Italic.ttf" />
         <Resource Include="Assets\Fonts\SpaceMono-Regular.ttf" />
-        <Resource Include="Assets\test.png" />
-        <Resource Include="Assets\test2.png" />
-        <Resource Include="Assets\test3.png" />
-        <Resource Include="Assets\test4.png" />
         <None Remove="Utils\BokehBlur.ps" />
     </ItemGroup>
 
