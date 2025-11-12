@@ -9,9 +9,12 @@ public class PlayerService : IPlayerService, IDisposable
     private readonly WaveOutEvent _device;
     private AudioFileReader? _currentAudioFileReader;
     private readonly AudioQueue _audioQueue;
-    private readonly object _deviceLock = new();
+    private readonly object _deviceLock = new(); // 保护 WaveOutEvent / AudioFileReader
     private bool _isPlaying;
-    private readonly ISettingManager _settingManager; 
+    private readonly ISettingManager _settingManager;
+
+    // 异步队列，保证方法按顺序执行
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     private AudioFileReader? CurrentAudioFileReader
     {
@@ -19,7 +22,6 @@ public class PlayerService : IPlayerService, IDisposable
         set
         {
             if (value == _currentAudioFileReader) return;
-
             _currentAudioFileReader?.Dispose();
             _currentAudioFileReader = value;
         }
@@ -39,13 +41,12 @@ public class PlayerService : IPlayerService, IDisposable
         LoadFile(_audioQueue.CurrentAudioFile);
     }
 
-
-    private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
+    private async void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
-        // 如果是播放到末尾的停止
-        if ((GetTotalTime() - GetCurrentTime()).Duration() < TimeSpan.FromSeconds(1))
+        if ((await GetTotalTimeAsync() - await GetCurrentTimeAsync()).Duration() < TimeSpan.FromSeconds(1))
         {
-            lock (_deviceLock)
+            await _semaphore.WaitAsync();
+            try
             {
                 if (CurrentAudioFileReader != null)
                 {
@@ -53,10 +54,14 @@ public class PlayerService : IPlayerService, IDisposable
                     _isPlaying = false;
                 }
             }
+            finally
+            {
+                _semaphore.Release();
+            }
 
             if (e.Exception == null)
             {
-                Next();
+                await NextAsync();
             }
             else
             {
@@ -65,17 +70,11 @@ public class PlayerService : IPlayerService, IDisposable
         }
     }
 
-    public AudioFile? GetCurrentAudioFile()
-    {
-        return _audioQueue.CurrentAudioFile;
-    }
+    public AudioFile? GetCurrentAudioFile() => _audioQueue.CurrentAudioFile;
 
-    public IObservable<IReadOnlyCollection<AudioFile>> GetAllAudioFiles()
-    {
-        return _audioQueue.AudioFilesObservable;
-    }
+    public IObservable<IReadOnlyCollection<AudioFile>> GetAllAudioFiles() => _audioQueue.AudioFilesObservable;
 
-    public void LoadFile(AudioFile? file)
+    private void LoadFile(AudioFile? file)
     {
         lock (_deviceLock)
         {
@@ -90,82 +89,138 @@ public class PlayerService : IPlayerService, IDisposable
         }
     }
 
-    public void Next()
+    public async Task NextAsync()
     {
-        _audioQueue.CurrentIndex += 1;
-        LoadFile(_audioQueue.CurrentAudioFile);
-        Play();
-    }
-
-    public void Prev()
-    {
-        _audioQueue.CurrentIndex -= 1;
-        LoadFile(_audioQueue.CurrentAudioFile);
-        Play();
-    }
-
-    public TimeSpan GetTotalTime()
-    {
-        return CurrentAudioFileReader?.TotalTime ?? TimeSpan.Zero;
-    }
-
-    public TimeSpan GetCurrentTime()
-    {
-        return CurrentAudioFileReader?.CurrentTime ?? TimeSpan.Zero;
-    }
-
-    public void Play()
-    {
-        _isPlaying = true;
-        lock (_deviceLock)
+        await _semaphore.WaitAsync();
+        try
         {
-            _device.Stop(); // 清除缓存
-            _device.Init(CurrentAudioFileReader);
+            _audioQueue.CurrentIndex += 1;
+            LoadFile(_audioQueue.CurrentAudioFile);
+            await PlayAsync();
         }
-
-        _device.Play();
-    }
-
-    public void Pause()
-    {
-        _isPlaying = false;
-        _device.Pause();
-    }
-
-
-    public void Seek(TimeSpan targetTime)
-    {
-        lock (_deviceLock)
+        finally
         {
-            if (CurrentAudioFileReader == null) return;
-
-            if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
-            if (targetTime > CurrentAudioFileReader.TotalTime) targetTime = CurrentAudioFileReader.TotalTime;
-
-            CurrentAudioFileReader.CurrentTime = targetTime;
+            _semaphore.Release();
         }
     }
 
-    public bool IsPlaying()
+    public async Task PrevAsync()
     {
-        return _isPlaying;
+        await _semaphore.WaitAsync();
+        try
+        {
+            _audioQueue.CurrentIndex -= 1;
+            LoadFile(_audioQueue.CurrentAudioFile);
+            await PlayAsync();
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 
-    public float GetVolume()
+    public Task<TimeSpan> GetTotalTimeAsync()
     {
-        return _settingManager.CurrentSetting.Volume;
+        lock (_deviceLock)
+        {
+            return Task.FromResult(CurrentAudioFileReader?.TotalTime ?? TimeSpan.Zero);
+        }
     }
 
-    public void SetVolume(float volume)
+    public Task<TimeSpan> GetCurrentTimeAsync()
     {
-        _settingManager.CurrentSetting.Volume = volume;
-        _device.Volume = volume;
+        lock (_deviceLock)
+        {
+            return Task.FromResult(CurrentAudioFileReader?.CurrentTime ?? TimeSpan.Zero);
+        }
+    }
+
+    public async Task PlayAsync()
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            _isPlaying = true;
+            lock (_deviceLock)
+            {
+                _device.Stop(); // 清除缓存
+                if (CurrentAudioFileReader != null)
+                    _device.Init(CurrentAudioFileReader);
+            }
+
+            _device.Play();
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    public Task PauseAsync()
+    {
+        lock (_deviceLock)
+        {
+            _isPlaying = false;
+            _device.Pause();
+        }
+        return Task.CompletedTask;
+    }
+
+    public async Task SeekAsync(TimeSpan targetTime)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            lock (_deviceLock)
+            {
+                if (CurrentAudioFileReader == null) return;
+
+                if (targetTime < TimeSpan.Zero) targetTime = TimeSpan.Zero;
+                if (targetTime > CurrentAudioFileReader.TotalTime) targetTime = CurrentAudioFileReader.TotalTime;
+
+                CurrentAudioFileReader.CurrentTime = targetTime;
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    public Task<bool> IsPlayingAsync()
+    {
+        lock (_deviceLock)
+        {
+            return Task.FromResult(_isPlaying);
+        }
+    }
+
+    public Task<float> GetVolumeAsync()
+    {
+        lock (_deviceLock)
+        {
+            return Task.FromResult(_settingManager.CurrentSetting.Volume);
+        }
+    }
+
+    public Task SetVolumeAsync(float volume)
+    {
+        lock (_deviceLock)
+        {
+            _settingManager.CurrentSetting.Volume = volume;
+            _device.Volume = volume;
+        }
+        return Task.CompletedTask;
     }
 
     public void Dispose()
     {
-        _device.Stop();
-        _device.Dispose();
-        CurrentAudioFileReader = null;
+        lock (_deviceLock)
+        {
+            _device.Stop();
+            _device.Dispose();
+            CurrentAudioFileReader = null;
+        }
+        _semaphore.Dispose();
     }
 }
