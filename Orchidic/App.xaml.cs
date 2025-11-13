@@ -34,6 +34,7 @@ public partial class App
         services.AddSingleton<ISettingManager, SettingManager>();
 
         services.AddSingleton<IFileInfoService, FileInfoService>();
+        services.AddSingleton<IAudioQueueService, AudioQueueService>();
         services.AddSingleton<IPlayerService, PlayerService>();
 
         services.AddSingleton<MainWindowViewModel>();

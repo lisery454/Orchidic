@@ -1,4 +1,5 @@
 ﻿using Orchidic.Models;
+using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
 using Orchidic.ViewModels.Components;
 
@@ -11,11 +12,13 @@ public class MainWindowViewModel : ViewModelBase
     private readonly ObservableAsPropertyHelper<ViewModelBase> _currentPageViewModel;
     public ViewModelBase CurrentPageViewModel => _currentPageViewModel.Value;
 
-    private readonly ObservableAsPropertyHelper<BitmapSource?> _cover;
-    public BitmapSource? Cover => _cover.Value;
+    private readonly IAudioQueueService _audioQueueService;
 
-    public MainWindowViewModel()
+    public BitmapSource? CurrentBlurCover => _audioQueueService.CurrentBlurCover;
+
+    public MainWindowViewModel(IAudioQueueService audioQueueService)
     {
+        _audioQueueService = audioQueueService;
         _currentPageViewModel = this.WhenAnyValue(x => x.SideMenuViewModel.PageType)
             .Select<PageType, ViewModelBase>(x =>
             {
@@ -32,8 +35,7 @@ public class MainWindowViewModel : ViewModelBase
                 };
             }).ToProperty(this, x => x.CurrentPageViewModel);
 
-        App.Current.Services.GetService<PlayingPageViewModel>()
-            .WhenAnyValue(x => x.BlurCover)
-            .ToProperty(this, x => x.Cover, out _cover);
+        this.WhenAnyValue(x => x._audioQueueService.CurrentBlurCover)
+            .Subscribe(_ => { this.RaisePropertyChanged(nameof(CurrentBlurCover));  });
     }
 }

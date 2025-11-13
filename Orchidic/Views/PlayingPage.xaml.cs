@@ -24,9 +24,9 @@ public partial class PlayingPage
 
 public class VolumeToStringConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var percent = (int)((double)value! * 100);
+        var percent = (int)((float)value! * 100);
         var result = percent.ToString();
         return result;
     }

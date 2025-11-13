@@ -4,185 +4,106 @@ using Orchidic.Utils;
 
 namespace Orchidic.ViewModels;
 
-public class PlayingPageViewModel : ViewModelBase, IDisposable
+public class PlayingPageViewModel : ViewModelBase
 {
     private readonly IPlayerService _playerService;
-    private readonly IFileInfoService _fileInfoService;
+    private readonly IAudioQueueService _audioQueueService;
 
     #region Property
 
-    private BitmapSource _cover;
+    public ICommand NextAudioCommand { get; }
+    public ICommand PrevAudioCommand { get; }
+    public ICommand PlayOrPauseCommand { get; }
 
-    public BitmapSource Cover
+    public BitmapSource CurrentCover => _audioQueueService.CurrentCover;
+    public BitmapSource? CurrentBlurCover => _audioQueueService.CurrentBlurCover;
+    
+    public string Title => _audioQueueService.Title;
+
+    private readonly ObservableAsPropertyHelper<float> _volume;
+
+    public float Volume
     {
-        get => _cover;
-        private set => this.RaiseAndSetIfChanged(ref _cover, value);
+        get => _volume.Value;
+        set => _playerService.Volume = value;
     }
 
-    private BitmapSource? _blurCover;
+    private readonly ObservableAsPropertyHelper<TimeSpan> _currentTime;
+    public TimeSpan CurrentTime => _currentTime.Value;
 
-    public BitmapSource? BlurCover
+    private readonly ObservableAsPropertyHelper<TimeSpan> _totalTime;
+    public TimeSpan TotalTime => _totalTime.Value;
+
+
+    public float Progress
     {
-        get => _blurCover;
-        private set => this.RaiseAndSetIfChanged(ref _blurCover, value);
-    }
-
-    private string? CurrAudioPath { get; set; }
-
-    private readonly DispatcherTimer _updateTimer = new() { Interval = TimeSpan.FromSeconds(1) };
-    public ICommand NextAudioCommand { get; set; }
-    public ICommand PrevAudioCommand { get; set; }
-    public ICommand PlayOrPauseCommand { get; set; }
-
-    private bool _audioOperationCommandEnable;
-
-    private bool AudioOperationCommandEnable
-    {
-        get => _audioOperationCommandEnable;
-        set => this.RaiseAndSetIfChanged(ref _audioOperationCommandEnable, value);
-    }
-
-    private string _title;
-
-    public string Title
-    {
-        get => _title;
-        private set => this.RaiseAndSetIfChanged(ref _title, value);
-    }
-
-    private double _volume;
-
-    public double Volume
-    {
-        get => _volume;
-        set
-        {
-            var newValue = Math.Clamp(value, 0, 1);
-            _playerService.SetVolumeAsync((float)newValue);
-            this.RaiseAndSetIfChanged(ref _volume, newValue);
-        }
-    }
-
-    private TimeSpan _totalTime;
-
-    public TimeSpan TotalTime
-    {
-        get => _totalTime;
-        private set => this.RaiseAndSetIfChanged(ref _totalTime, value);
-    }
-
-    private TimeSpan _currentTime;
-
-    public TimeSpan CurrentTime
-    {
-        get => _currentTime;
-        private set => this.RaiseAndSetIfChanged(ref _currentTime, value);
-    }
-
-    private double _progress;
-
-    public double Progress
-    {
-        get => _progress;
-        set
-        {
-            RawUpdateProgress(value);
-            var newCurrentTime = new TimeSpan(0, 0, 0, (int)(_progress * TotalTime.TotalSeconds));
-            _playerService.SeekAsync(newCurrentTime);
-            CurrentTime = newCurrentTime;
-        }
-    }
-
-    private void RawUpdateProgress(double value)
-    {
-        this.RaiseAndSetIfChanged(ref _progress, Math.Clamp(value, 0, 1), nameof(Progress));
-    }
-
-    private bool _isCancelDragRequested;
-
-    public bool IsCancelDragRequested
-    {
-        get => _isCancelDragRequested;
-        set => this.RaiseAndSetIfChanged(ref _isCancelDragRequested, value);
+        get => _playerService.Progress;
+        set => _playerService.Progress = value;
     }
 
     #endregion
 
-    private async Task LoadAsync()
-    {
-        Volume = await _playerService.GetVolumeAsync();
-        CurrentTime = await _playerService.GetCurrentTimeAsync();
-        TotalTime = await _playerService.GetTotalTimeAsync();
-    }
 
-    public PlayingPageViewModel(IPlayerService playerService, IFileInfoService fileInfoService)
+    public PlayingPageViewModel(IPlayerService playerService, IAudioQueueService audioQueueService)
     {
         _playerService = playerService;
-        _fileInfoService = fileInfoService;
-        CurrAudioPath = null;
-        _volume = 0;
-        _cover = _fileInfoService.GetDefaultCover();
-        _currentTime = new TimeSpan(0);
-        _totalTime = new TimeSpan(0);
-        _ = LoadAsync();
-        _title = _fileInfoService.GetDefaultTitle();
-        _audioOperationCommandEnable = false;
-        RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-        _updateTimer.Tick += (_, _) => { _ = UpdateCurrAudioPathAsync(); };
-        _updateTimer.Start();
-        PlayOrPauseCommand = ReactiveCommand.CreateFromTask(async () =>
+        _audioQueueService = audioQueueService;
+
+        // CurrentTime 属性绑定
+        _playerService.CurrentTimeObservable
+            .ToProperty(this, x => x.CurrentTime, out _currentTime);
+
+        // TotalTime 属性绑定
+        _playerService.TotalTimeObservable
+            .ToProperty(this, x => x.TotalTime, out _totalTime);
+
+        // Progress 属性绑定
+        this.WhenAnyValue(x => x._playerService.Progress)
+            .Subscribe(_ => this.RaisePropertyChanged(nameof(Progress)));
+
+        // Volume 属性绑定
+        _playerService.VolumeObservable
+            .ToProperty(this, x => x.Volume, out _volume);
+
+        // Title 属性绑定
+        this.WhenAnyValue(x => x._audioQueueService.Title)
+            .Subscribe(_ => this.RaisePropertyChanged(nameof(Title)));
+        
+        // CurrentCover 属性绑定
+        this.WhenAnyValue(x => x._audioQueueService.CurrentCover)
+            .Subscribe(_ => this.RaisePropertyChanged(nameof(CurrentCover)));
+        
+        // CurrentBlurCover 属性绑定
+        this.WhenAnyValue(x => x._audioQueueService.CurrentBlurCover)
+            .Subscribe(_ => this.RaisePropertyChanged(nameof(CurrentBlurCover)));
+
+        PlayOrPauseCommand = ReactiveCommand.Create(() =>
         {
-            AudioOperationCommandEnable = false;
-            if (await _playerService.IsPlayingAsync())
-                await _playerService.PauseAsync();
+            if (_playerService.IsPlaying)
+                _playerService.Pause();
             else
-                await _playerService.PlayAsync();
-            await Application.Current.Dispatcher.InvokeAsync(async () => await UpdateCurrAudioPathAsync());
-        }, this.WhenAnyValue(x => x.AudioOperationCommandEnable));
+                _playerService.Resume();
+        });
         NextAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            AudioOperationCommandEnable = false;
-            await _playerService.NextAsync();
-            await Application.Current.Dispatcher.InvokeAsync(async () => await UpdateCurrAudioPathAsync());
-        }, this.WhenAnyValue(x => x.AudioOperationCommandEnable));
+            _audioQueueService.CurrentIndex += 1;
+            var currentAudioFile = _audioQueueService.CurrentAudioFile;
+            if (currentAudioFile != null)
+            {
+                await _playerService.PlayAsync(currentAudioFile);
+            }
+        });
         PrevAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            AudioOperationCommandEnable = false;
-            await _playerService.PrevAsync();
-            await Application.Current.Dispatcher.InvokeAsync(async () => await UpdateCurrAudioPathAsync());
-        }, this.WhenAnyValue(x => x.AudioOperationCommandEnable));
+            _audioQueueService.CurrentIndex -= 1;
+            var currentAudioFile = _audioQueueService.CurrentAudioFile;
+            if (currentAudioFile != null)
+            {
+                await _playerService.PlayAsync(currentAudioFile);
+            }
+        });
 
-        _ = Application.Current.Dispatcher.InvokeAsync(async () => await UpdateCurrAudioPathAsync());
-    }
-
-    private async Task UpdateCurrAudioPathAsync()
-    {
-        var path = _playerService.GetCurrentAudioFile()?.FilePath;
-
-        AudioOperationCommandEnable = path != null;
-
-        if (CurrAudioPath != path)
-        {
-            IsCancelDragRequested = true;
-            Cover = path != null ? _fileInfoService.GetCoverFromAudio(path) : _fileInfoService.GetDefaultCover();
-
-            Title = path != null ? _fileInfoService.GetTitleFromAudio(path) : _fileInfoService.GetDefaultTitle();
-            CurrAudioPath = path;
-            _ = UpdateBlurCover();
-        }
-
-        CurrentTime = await _playerService.GetCurrentTimeAsync();
-        TotalTime = await _playerService.GetTotalTimeAsync();
-        RawUpdateProgress(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
-    }
-
-    private async Task UpdateBlurCover()
-    {
-        BlurCover = await _fileInfoService.GetBlurCoverFromCover(Cover, CurrAudioPath);
-    }
-
-    public void Dispose()
-    {
-        _updateTimer.Stop();
+        if (_audioQueueService.CurrentAudioFile != null)
+            _ = _playerService.PlayAsync(_audioQueueService.CurrentAudioFile);
     }
 }

@@ -2,21 +2,25 @@
 
 namespace Orchidic.Services.Interfaces;
 
-public interface IPlayerService
+public interface IPlayerService : IDisposable
 {
-    AudioFile? GetCurrentAudioFile();
-    IObservable<IReadOnlyCollection<AudioFile>> GetAllAudioFiles();
+    bool IsPlaying { get; }
+    AudioFile? CurrentAudioFile { get; }
+    TimeSpan CurrentTime { get; }
+    float Progress { get; set; }
+    TimeSpan TotalTime { get; }
+    float Volume { get; set; }
 
-    Task NextAsync();
-    Task PrevAsync();
-    Task PlayAsync();
-    Task PauseAsync();
-    Task SeekAsync(TimeSpan targetTime);
+    IObservable<TimeSpan> CurrentTimeObservable { get; }
+    IObservable<TimeSpan> TotalTimeObservable { get; }
+    IObservable<float> ProgressObservable { get; }
+    IObservable<float> VolumeObservable { get; }
 
-    Task<TimeSpan> GetTotalTimeAsync();
-    Task<TimeSpan> GetCurrentTimeAsync();
+    Task PlayAsync(AudioFile audioFile);
+    void Pause();
+    void Resume();
+    void Stop();
+    void Seek(float progress);
 
-    Task<bool> IsPlayingAsync();
-    Task<float> GetVolumeAsync();
-    Task SetVolumeAsync(float volume);
+    event EventHandler? PlaybackEnded;
 }

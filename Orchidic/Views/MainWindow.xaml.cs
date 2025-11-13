@@ -109,24 +109,26 @@ public static class ImageFadeExtensions
         {
             throw new InvalidOperationException("Image parent must be a Grid for AnimatedSource.");
         }
+        
+        startAnimation();
 
-        if (!double.IsNaN(img.ActualWidth) && !double.IsNaN(img.ActualHeight) && img.ActualWidth > 0 &&
-            img.ActualHeight > 0)
-        {
-            startAnimation();
-        }
-        else
-        {
-            // 尺寸未确定，等待 Layout 完成再执行
-            void handler(object s, SizeChangedEventArgs args)
-            {
-                Console.WriteLine(img.ActualWidth);
-                container.SizeChanged -= handler;
-                startAnimation();
-            }
-
-            container.SizeChanged += handler;
-        }
+        // if (!double.IsNaN(img.ActualWidth) && !double.IsNaN(img.ActualHeight) && img.ActualWidth > 0 &&
+        //     img.ActualHeight > 0)
+        // {
+        //     startAnimation();
+        // }
+        // else
+        // {
+        //     // 尺寸未确定，等待 Layout 完成再执行
+        //     void handler(object s, SizeChangedEventArgs args)
+        //     {
+        //         Console.WriteLine(img.ActualWidth);
+        //         img.SizeChanged -= handler;
+        //         startAnimation();
+        //     }
+        //
+        //     img.SizeChanged += handler;
+        // }
 
         return;
 

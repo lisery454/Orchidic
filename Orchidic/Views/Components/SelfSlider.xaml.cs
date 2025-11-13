@@ -5,17 +5,17 @@ public partial class SelfSlider
     public static readonly DependencyProperty ProgressProperty =
         DependencyProperty.Register(
             nameof(Progress),
-            typeof(double),
+            typeof(float),
             typeof(SelfSlider),
             new FrameworkPropertyMetadata(
-                0.0,
+                0f,
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault
             )
         );
 
-    public double Progress
+    public float Progress
     {
-        get => (double)GetValue(ProgressProperty);
+        get => (float)GetValue(ProgressProperty);
         set => SetValue(ProgressProperty, value);
     }
 
@@ -66,7 +66,7 @@ public partial class SelfSlider
 
             if (sender is Border border)
             {
-                Progress = Math.Clamp(e.GetPosition(border).X / ProgressBarWidth, 0, 1);
+                Progress = (float)Math.Clamp(e.GetPosition(border).X / ProgressBarWidth, 0, 1);
                 Mouse.Capture(border); // 捕获鼠标
             }
         }
@@ -90,7 +90,7 @@ public partial class SelfSlider
     {
         if (_isDragging && sender is Border border)
         {
-            Progress = Math.Clamp(e.GetPosition(border).X / ProgressBarWidth, 0, 1);
+            Progress = (float)Math.Clamp(e.GetPosition(border).X / ProgressBarWidth, 0, 1);
         }
     }
 
@@ -115,7 +115,7 @@ public class ProgressToWidthConverter : IMultiValueConverter
         if (values[0] is not double totalWidth || double.IsNaN(totalWidth))
             return 0d;
 
-        if (values[1] is not double progress)
+        if (values[1] is not float progress)
             return 0d;
 
         // 进度一般在 [0,1]

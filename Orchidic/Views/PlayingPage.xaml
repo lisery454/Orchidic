@@ -51,7 +51,7 @@
 
               <Grid>
                 <Image
-                  Source="{Binding Cover}"
+                  Source="{Binding  CurrentCover}"
                   Stretch="UniformToFill"
                   SnapsToDevicePixels="True"
                   UseLayoutRounding="True"
@@ -110,8 +110,7 @@
             </TextBlock>
           </Grid>
           <Grid Grid.Column="1">
-            <components:SelfSlider x:Name="ProgressSlider" Progress="{Binding Progress}"
-                                   CancelDragRequested="{Binding IsCancelDragRequested}">
+            <components:SelfSlider Progress="{Binding Progress, Mode=TwoWay}">
             </components:SelfSlider>
           </Grid>
           <Grid Grid.Column="2" Width="160">
