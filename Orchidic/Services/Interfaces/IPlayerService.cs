@@ -11,11 +11,6 @@ public interface IPlayerService : IDisposable
     TimeSpan TotalTime { get; }
     float Volume { get; set; }
 
-    IObservable<TimeSpan> CurrentTimeObservable { get; }
-    IObservable<TimeSpan> TotalTimeObservable { get; }
-    IObservable<float> ProgressObservable { get; }
-    IObservable<float> VolumeObservable { get; }
-
     Task PlayAsync(AudioFile audioFile);
     void Pause();
     void Resume();

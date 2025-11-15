@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 using Orchidic.Models;
@@ -17,7 +18,7 @@ public class PlayerService : ReactiveObject, IPlayerService
     private WaveOutEvent? _outputDevice;
     private AudioFileReader? _audioFileReader;
 
-    private readonly Subject<float> _seekSubject = new();
+    private ISettingManager _settingManager;
 
     #endregion
 
@@ -38,22 +39,6 @@ public class PlayerService : ReactiveObject, IPlayerService
         private set => this.RaiseAndSetIfChanged(ref _currentAudioFile, value);
     }
 
-    public TimeSpan CurrentTime => _audioFileReader?.CurrentTime ?? TimeSpan.Zero;
-    public TimeSpan TotalTime => _audioFileReader?.TotalTime ?? TimeSpan.Zero;
-
-    private float _progress;
-
-    public float Progress
-    {
-        get => _progress;
-        set
-        {
-            if (Math.Abs(_progress - value) < 0.001f) return;
-            this.RaiseAndSetIfChanged(ref _progress, value);
-            Seek(value);
-        }
-    }
-
     public IObservable<TimeSpan> CurrentTimeObservable =>
         Observable.Interval(TimeSpan.FromMilliseconds(200))
             .Select(_ => _audioFileReader?.CurrentTime ?? TimeSpan.Zero)
@@ -62,20 +47,53 @@ public class PlayerService : ReactiveObject, IPlayerService
     private readonly BehaviorSubject<TimeSpan> _totalTimeSubject = new(TimeSpan.Zero);
     public IObservable<TimeSpan> TotalTimeObservable => _totalTimeSubject.AsObservable();
 
-    public IObservable<float> ProgressObservable =>
-        CurrentTimeObservable
-            .CombineLatest(TotalTimeObservable,
-                (current, total) => total.TotalSeconds == 0 ? 0 : (float)(current.TotalSeconds / total.TotalSeconds));
+    private readonly ObservableAsPropertyHelper<TimeSpan> _currentTime;
+    public TimeSpan CurrentTime => _currentTime.Value;
+
+    private readonly ObservableAsPropertyHelper<TimeSpan> _totalTime;
+    public TimeSpan TotalTime => _totalTime.Value;
+
+    private float _insideProgress;
+
+    private float InsideProgress
+    {
+        get => _insideProgress;
+        set
+        {
+            if (Math.Abs(_insideProgress - value) < 0.001f) return;
+            this.RaiseAndSetIfChanged(ref _insideProgress, value);
+            Seek(value);
+        }
+    }
+
+    private float _progress;
+
+    public float Progress
+    {
+        get => _progress;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _progress, value);
+            InsideProgress = value;
+        }
+    }
 
     private float _volume;
 
     public float Volume
     {
         get => _volume;
-        set => this.RaiseAndSetIfChanged(ref _volume, value);
-    }
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _volume, value);
 
-    public IObservable<float> VolumeObservable => this.WhenAnyValue(x => x.Volume);
+            if (_audioFileReader != null)
+                _audioFileReader.Volume = value;
+
+            // 保存设置
+            _settingManager.CurrentSetting.Volume = value;
+        }
+    }
 
     #endregion
 
@@ -83,17 +101,15 @@ public class PlayerService : ReactiveObject, IPlayerService
 
     public PlayerService(ISettingManager settingManager)
     {
+        _settingManager = settingManager;
         _volume = settingManager.CurrentSetting.Volume;
 
-        VolumeObservable.Subscribe(vol =>
-        {
-            // 更新底层 NAudio 音量
-            if (_audioFileReader != null)
-                _audioFileReader.Volume = vol;
 
-            // 保存设置
-            settingManager.CurrentSetting.Volume = vol;
-        });
+        CurrentTimeObservable
+            .ToProperty(this, x => x.CurrentTime, out _currentTime);
+        TotalTimeObservable
+            .ToProperty(this, x => x.TotalTime, out _totalTime);
+
 
         StartProgressTimer();
 
@@ -131,11 +147,13 @@ public class PlayerService : ReactiveObject, IPlayerService
                 _outputDevice.PlaybackStopped += (_, _) =>
                 {
                     IsPlaying = false;
-                    PlaybackEnded?.Invoke(this, EventArgs.Empty);
+                    if ((CurrentTime - TotalTime).TotalMilliseconds + 500 >= 0)
+                        PlaybackEnded?.Invoke(this, EventArgs.Empty);
                 };
                 _outputDevice.Play();
                 IsPlaying = true;
                 CurrentAudioFile = audioFile;
+                Progress = 0;
                 _totalTimeSubject.OnNext(_audioFileReader.TotalTime);
                 tcs.SetResult();
             }
@@ -198,7 +216,12 @@ public class PlayerService : ReactiveObject, IPlayerService
     {
         if (_currentAudioFile != null)
         {
-            Progress = (float)(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
+            var progress = (float)(CurrentTime.TotalSeconds / TotalTime.TotalSeconds);
+            // 只有自然的播放推进才会更新
+            if (Math.Abs(CurrentTime.TotalSeconds - InsideProgress * TotalTime.TotalSeconds) < 1f)
+            {
+                Progress = progress;
+            }
         }
     }
 
@@ -213,7 +236,7 @@ public class PlayerService : ReactiveObject, IPlayerService
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[AudioThread Error] {ex}");
+                Console.WriteLine($"[AudioThread Error] {ex}");
             }
         }
     }

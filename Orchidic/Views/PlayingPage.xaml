@@ -51,7 +51,7 @@
 
               <Grid>
                 <Image
-                  Source="{Binding  CurrentCover}"
+                  Source="{Binding  AudioQueueService.CurrentCover}"
                   Stretch="UniformToFill"
                   SnapsToDevicePixels="True"
                   UseLayoutRounding="True"
@@ -89,7 +89,7 @@
         <!-- title -->
         <Grid Grid.Row="0">
           <TextBlock FontSize="22" Margin="0,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Center"
-                     Text="{Binding Title}"
+                     Text="{Binding AudioQueueService.Title}"
                      Foreground="{DynamicResource FontBrush}" />
         </Grid>
 
@@ -101,7 +101,7 @@
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
           <Grid Grid.Column="0" Width="160">
-            <TextBlock Text="{Binding CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"
+            <TextBlock Text="{Binding PlayerService.CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
                        FontWeight="Bold"
                        FontFamily="{StaticResource NotoSansMono}"
@@ -110,11 +110,11 @@
             </TextBlock>
           </Grid>
           <Grid Grid.Column="1">
-            <components:SelfSlider Progress="{Binding Progress, Mode=TwoWay}">
+            <components:SelfSlider Progress="{Binding PlayerService.Progress, Mode=TwoWay}">
             </components:SelfSlider>
           </Grid>
           <Grid Grid.Column="2" Width="160">
-            <TextBlock Text="{Binding TotalTime, Converter={StaticResource TimeSpanToStringConverter}}"
+            <TextBlock Text="{Binding PlayerService.TotalTime, Converter={StaticResource TimeSpanToStringConverter}}"
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
                        FontFamily="{StaticResource NotoSansMono}"
                        FontWeight="Bold"
@@ -144,9 +144,9 @@
                                         Fill="{DynamicResource SecondaryBrush}" />
             </Button>
             <Grid Width="100" Margin="0,0,34,0">
-              <components:SelfSlider Progress="{Binding Volume}"></components:SelfSlider>
+              <components:SelfSlider Progress="{Binding PlayerService.Volume}"></components:SelfSlider>
             </Grid>
-            <TextBlock Text="{Binding Volume, Converter={StaticResource VolumeToStringConverter}}"
+            <TextBlock Text="{Binding PlayerService.Volume, Converter={StaticResource VolumeToStringConverter}}"
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
                        FontFamily="{StaticResource NotoSansMono}"
                        FontWeight="Bold"

@@ -12,13 +12,13 @@ public class MainWindowViewModel : ViewModelBase
     private readonly ObservableAsPropertyHelper<ViewModelBase> _currentPageViewModel;
     public ViewModelBase CurrentPageViewModel => _currentPageViewModel.Value;
 
-    private readonly IAudioQueueService _audioQueueService;
+    public IAudioQueueService AudioQueueService { get; }
 
-    public BitmapSource? CurrentBlurCover => _audioQueueService.CurrentBlurCover;
+    
 
     public MainWindowViewModel(IAudioQueueService audioQueueService)
     {
-        _audioQueueService = audioQueueService;
+        AudioQueueService = audioQueueService;
         _currentPageViewModel = this.WhenAnyValue(x => x.SideMenuViewModel.PageType)
             .Select<PageType, ViewModelBase>(x =>
             {
@@ -34,8 +34,5 @@ public class MainWindowViewModel : ViewModelBase
                     _ => App.Current.Services.GetRequiredService<PlayingPageViewModel>()
                 };
             }).ToProperty(this, x => x.CurrentPageViewModel);
-
-        this.WhenAnyValue(x => x._audioQueueService.CurrentBlurCover)
-            .Subscribe(_ => { this.RaisePropertyChanged(nameof(CurrentBlurCover));  });
     }
 }
