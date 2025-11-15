@@ -5,6 +5,8 @@
   <SolidColorBrush x:Key="BGBrush" Color="{DynamicResource BGColor}" />
   <Color x:Key="MenuBGColor">#22000000</Color>
   <SolidColorBrush x:Key="MenuBGBrush" Color="{DynamicResource MenuBGColor}" />
+  <Color x:Key="MenuBGHighlightColor">#22cccccc</Color>
+  <SolidColorBrush x:Key="MenuBGHighlightBrush" Color="{DynamicResource MenuBGHighlightColor}" />
   <Color x:Key="TitleColor">#989898</Color>
   <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource TitleColor}" />
   <Color x:Key="WindowCloseBtnFillColor">#ba4444</Color>

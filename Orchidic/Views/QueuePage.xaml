@@ -5,9 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
              xmlns:utils="clr-namespace:Orchidic.Utils"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
+
+  <UserControl.Resources>
+    <viewModels:AudioFileEqualConverter x:Key="AudioFileEqualConverter"></viewModels:AudioFileEqualConverter>
+  </UserControl.Resources>
 
   <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch">
     <Grid.ColumnDefinitions>
@@ -16,7 +21,7 @@
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
 
-    <ListBox Grid.Column="1" ItemsSource="{Binding AudioQueueService.AudioFiles }"
+    <ListBox Grid.Column="1" ItemsSource="{Binding AudioQueueService.AudioQueue.AudioFiles }"
              Background="Transparent"
              HorizontalAlignment="Stretch"
              BorderThickness="0"
@@ -25,12 +30,12 @@
              FocusVisualStyle="{x:Null}"
              VirtualizingStackPanel.IsVirtualizing="True"
              VirtualizingStackPanel.VirtualizationMode="Recycling"
-             ScrollViewer.CanContentScroll="False">
+             >
       <ListBox.Resources>
         <Style TargetType="ListBoxItem">
           <Setter Property="Margin" Value="0 2" />
           <Setter Property="BorderThickness" Value="0" />
-          <Setter Property="Cursor" Value="Arrow" />
+          <Setter Property="Cursor" Value="Hand" />
           <Setter Property="FocusVisualStyle" Value="{x:Null}" />
           <Setter Property="Template">
             <Setter.Value>
@@ -80,31 +85,55 @@
       </ListBox.Resources>
       <ListBox.ItemTemplate>
         <DataTemplate>
-          <Border Background="{StaticResource MenuBGBrush}" CornerRadius="10" Padding="10,20">
+          <Border CornerRadius="10" Padding="10,10">
+
+            <Border.Style>
+              <Style TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource MenuBGBrush}" />
+                <Style.Triggers>
+                  <DataTrigger
+                    Value="True">
+                    <DataTrigger.Binding>
+                      <MultiBinding Converter="{StaticResource AudioFileEqualConverter}">
+                        <Binding Path="DataContext.AudioQueueService.AudioQueue.CurrentAudioFile"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                        <Binding />
+                      </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}"></Setter>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Border.Style>
+
+            <b:Interaction.Triggers>
+              <b:EventTrigger EventName="MouseLeftButtonUp">
+                <b:InvokeCommandAction
+                  Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                  CommandParameter="{Binding}" />
+              </b:EventTrigger>
+            </b:Interaction.Triggers>
+
             <Grid>
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <!-- <ColumnDefinition Width="Auto" /> -->
               </Grid.ColumnDefinitions>
 
-              <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0" />
+              <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0"
+                     Width="30" />
 
               <TextBlock Grid.Column="1" Text="{Binding  Name}"
                          Margin="5 0 10 0"
-                         FontSize="18"
+                         FontSize="16"
                          TextTrimming="CharacterEllipsis"
                          TextWrapping="Wrap"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Center" />
 
               <Grid Grid.Column="2" Width="50"></Grid>
-
-              <Button Grid.Column="3" Height="30" Width="30" Style="{DynamicResource AnimatedButton}" Margin="0,0,5,0">
-                <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
-                                          Fill="{DynamicResource SecondaryBrush}" />
-              </Button>
             </Grid>
 
           </Border>

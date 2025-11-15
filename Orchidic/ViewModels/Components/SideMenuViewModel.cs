@@ -20,8 +20,6 @@ public class SideMenuViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _sideMenuItems, value);
     }
 
-    public ICommand SelectMenuCommand { get; }
-
     private readonly ObservableAsPropertyHelper<int> _selectIndex;
     public int SelectIndex => _selectIndex.Value;
 
@@ -38,8 +36,6 @@ public class SideMenuViewModel : ViewModelBase
             PageType.Tools,
             PageType.Settings,
         ];
-
-        SelectMenuCommand = ReactiveCommand.Create((PageType type) => { PageType = type; });
 
         _selectIndex = this
             .WhenAnyValue(vm => vm.PageType)

@@ -22,7 +22,7 @@
       Canvas.Left="0"
       Canvas.Top="0"
       local:SmoothCanvasBehavior.Top="{Binding SelectIndex, Converter={x:Static local:SideMenu.IndexToOffsetConverterIns}}"
-      Background="{DynamicResource MenuItemIndicatorBrush}">
+      Background="{DynamicResource MenuBGHighlightBrush}">
     </Border>
 
     <!-- 菜单列表 -->

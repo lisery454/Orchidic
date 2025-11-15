@@ -32,8 +32,8 @@ public class PlayingPageViewModel : ViewModelBase
         });
         NextAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            AudioQueueService.CurrentIndex += 1;
-            var currentAudioFile = AudioQueueService.CurrentAudioFile;
+            AudioQueueService.AudioQueue.CurrentIndex += 1;
+            var currentAudioFile = AudioQueueService.AudioQueue.CurrentAudioFile;
             if (currentAudioFile != null)
             {
                 await PlayerService.PlayAsync(currentAudioFile);
@@ -41,20 +41,18 @@ public class PlayingPageViewModel : ViewModelBase
         });
         PrevAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            AudioQueueService.CurrentIndex -= 1;
-            var currentAudioFile = AudioQueueService.CurrentAudioFile;
+            AudioQueueService.AudioQueue.CurrentIndex -= 1;
+            var currentAudioFile = AudioQueueService.AudioQueue.CurrentAudioFile;
             if (currentAudioFile != null)
             {
+                AudioQueueService.AudioQueue.TrySetCurrentAudioFile(currentAudioFile);
                 await PlayerService.PlayAsync(currentAudioFile);
             }
         });
 
-        PlayerService.PlaybackEnded += (_, _) =>
-        {
-            NextAudioCommand.Execute(null);
-        };
+        PlayerService.PlaybackEnded += (_, _) => { NextAudioCommand.Execute(null); };
 
-        if (AudioQueueService.CurrentAudioFile != null)
-            _ = PlayerService.PlayAsync(AudioQueueService.CurrentAudioFile);
+        if (AudioQueueService.AudioQueue.CurrentAudioFile != null)
+            _ = PlayerService.PlayAsync(AudioQueueService.AudioQueue.CurrentAudioFile);
     }
 }
