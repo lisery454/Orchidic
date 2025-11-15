@@ -1,8 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Reactive;
-using System.Reactive.Concurrency;
-using System.Reactive.Subjects;
-using Orchidic.Models;
+﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
 using Orchidic.Utils.SettingManager;
 
@@ -141,7 +137,7 @@ public class PlayerService : ReactiveObject, IPlayerService
             try
             {
                 StopInternal();
-                _audioFileReader = new AudioFileReader(audioFile.FilePath) { Volume = _volume };
+                _audioFileReader = new AudioFileReader(audioFile.Path) { Volume = _volume };
                 _outputDevice = new WaveOutEvent();
                 _outputDevice.Init(_audioFileReader);
                 _outputDevice.PlaybackStopped += (_, _) =>

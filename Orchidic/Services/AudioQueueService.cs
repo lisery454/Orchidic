@@ -1,25 +1,23 @@
 ﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
+using Orchidic.Utils;
 
 namespace Orchidic.Services;
 
 public class AudioQueueService : ReactiveObject, IAudioQueueService
 {
     private readonly AudioQueue _audioQueue = new();
-    private readonly IFileInfoService _fileInfoService;
-
-    public AudioQueueService(IFileInfoService fileInfoService)
+    public AudioQueueService()
     {
-        _fileInfoService = fileInfoService;
         _title = CurrentAudioFile != null
-            ? _fileInfoService.GetTitleFromAudio(CurrentAudioFile.FilePath)
-            : _fileInfoService.GetDefaultTitle();
+            ? AudioFileUtils.GetTitleFromAudio(CurrentAudioFile.Path)
+            : AudioFileUtils.GetDefaultTitle();
         _currentCover = CurrentAudioFile != null
-            ? _fileInfoService.GetCoverFromAudio(CurrentAudioFile.FilePath)
-            : _fileInfoService.GetDefaultCover();
+            ? AudioFileUtils.GetCoverFromAudio(CurrentAudioFile.Path)
+            : AudioFileUtils.GetDefaultCover();
         Task.Run(async () =>
         {
-            var image = await _fileInfoService.GetBlurCoverFromCover(CurrentCover, CurrentAudioFile?.FilePath);
+            var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, CurrentAudioFile?.Path);
             App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
         });
     }
@@ -47,9 +45,8 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
         get => _currentBlurCover;
         private set => this.RaiseAndSetIfChanged(ref _currentBlurCover, value);
     }
-
-    public IObservable<IReadOnlyCollection<AudioFile>> AudioFilesObservable =>
-        _audioQueue.AudioFilesObservable;
+    
+    public ObservableCollection<AudioFile> AudioFiles => _audioQueue.AudioFiles;
 
     private int _currentIndex;
 
@@ -61,14 +58,14 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
             this.RaiseAndSetIfChanged(ref _currentIndex, value);
             _audioQueue.CurrentIndex = value;
             Title = CurrentAudioFile != null
-                ? _fileInfoService.GetTitleFromAudio(CurrentAudioFile.FilePath)
-                : _fileInfoService.GetDefaultTitle();
+                ? AudioFileUtils.GetTitleFromAudio(CurrentAudioFile.Path)
+                : AudioFileUtils.GetDefaultTitle();
             CurrentCover = CurrentAudioFile != null
-                ? _fileInfoService.GetCoverFromAudio(CurrentAudioFile.FilePath)
-                : _fileInfoService.GetDefaultCover();
+                ? AudioFileUtils.GetCoverFromAudio(CurrentAudioFile.Path)
+                : AudioFileUtils.GetDefaultCover();
             Task.Run(async () =>
             {
-                var image = await _fileInfoService.GetBlurCoverFromCover(CurrentCover, CurrentAudioFile?.FilePath);
+                var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, CurrentAudioFile?.Path);
                 App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
             });
         }

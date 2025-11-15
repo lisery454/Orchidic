@@ -1,6 +1,6 @@
-﻿namespace Orchidic.Utils.SmoothImageScaler;
+﻿namespace Orchidic.Utils;
 
-public class SmoothImageScaler
+public static class SmoothImageScaler
 {
     /// <summary>
     /// 从原图中取中心正方形 → 缩放 → 高斯模糊 → 减少色带

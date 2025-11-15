@@ -49,7 +49,7 @@ public class PlayingPageViewModel : ViewModelBase
             }
         });
 
-        PlayerService.PlaybackEnded += async (_, _) =>
+        PlayerService.PlaybackEnded += (_, _) =>
         {
             NextAudioCommand.Execute(null);
         };

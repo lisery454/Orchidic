@@ -1,26 +1,14 @@
-﻿using Orchidic.Services.Interfaces;
-using Orchidic.Utils;
-using Orchidic.Utils.LogManager;
-using Orchidic.Utils.SmoothImageScaler;
+﻿namespace Orchidic.Utils;
 
-namespace Orchidic.Services;
-
-public class FileInfoService : IFileInfoService
+public static class AudioFileUtils
 {
-    private ILogManager _logManager;
-
-    public FileInfoService(ILogManager logManager)
-    {
-        _logManager = logManager;
-    }
-
-    public async Task<BitmapSource> GetBlurCoverFromCover(BitmapSource cover, string? audioPath)
+    public static async Task<BitmapSource> GetBlurCoverFromCover(BitmapSource cover, string? audioPath)
     {
         string? blurCoverPath = null;
         if (audioPath != null)
         {
             var id = GetAudioFileId(audioPath);
-            blurCoverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath,"blur--" + id  + ".png");
+            blurCoverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, "blur--" + id + ".png");
             if (File.Exists(blurCoverPath))
             {
                 await using var stream = File.OpenRead(blurCoverPath);
@@ -31,7 +19,8 @@ public class FileInfoService : IFileInfoService
                 return bitmap;
             }
         }
-        
+
+
         var blurCover = await SmoothImageScaler.ScaleWithSmoothBlurAsync(cover, 400, 30);
 
         if (audioPath != null && blurCoverPath != null)
@@ -68,18 +57,46 @@ public class FileInfoService : IFileInfoService
         encoder.Save(stream);
     }
 
-    public BitmapSource GetCoverFromAudio(string path)
+    public static BitmapSource GetThumbnailsCoverFromAudio(string path)
+    {
+        var id = GetAudioFileId(path);
+        var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, "thumbnails--" + id + ".png");
+        if (File.Exists(coverPath))
+        {
+            return ReadImageFromPath(coverPath);
+        }
+
+        try
+        {
+            using var file = TagLib.File.Create(path);
+            if (file.Tag.Pictures is { Length: > 0 })
+            {
+                var pic = file.Tag.Pictures[0];
+                var bytes = pic.Data.Data;
+                var buffer = new byte[bytes.Length];
+                Buffer.BlockCopy(bytes, 0, buffer, 0, bytes.Length);
+
+                var coverBitmap = LoadAlbumCoverSquare(buffer, 50);
+                SaveImage(coverBitmap, coverPath);
+                return coverBitmap;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine(e.Message);
+            Console.Error.WriteLine($"Failed to load cover from audio file: {path}");
+        }
+
+        return GetDefaultCover();
+    }
+
+    public static BitmapSource GetCoverFromAudio(string path)
     {
         var id = GetAudioFileId(path);
         var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, id + ".png");
         if (File.Exists(coverPath))
         {
-            using var stream = File.OpenRead(coverPath);
-            var decoder =
-                new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-            var bitmap = decoder.Frames[0];
-            bitmap.Freeze();
-            return bitmap;
+            return ReadImageFromPath(coverPath);
         }
 
         try
@@ -99,7 +116,7 @@ public class FileInfoService : IFileInfoService
         }
         catch
         {
-            _logManager.Error($"Failed to load cover from audio file: {path}");
+            Console.Error.WriteLine($"Failed to load cover from audio file: {path}");
         }
 
         return GetDefaultCover();
@@ -150,12 +167,12 @@ public class FileInfoService : IFileInfoService
 
     private static BitmapSource CropCenterSquare(BitmapSource source)
     {
-        int width = source.PixelWidth;
-        int height = source.PixelHeight;
+        var width = source.PixelWidth;
+        var height = source.PixelHeight;
 
-        int side = Math.Min(width, height);
-        int x = (width - side) / 2;
-        int y = (height - side) / 2;
+        var side = Math.Min(width, height);
+        var x = (width - side) / 2;
+        var y = (height - side) / 2;
 
         var rect = new Int32Rect(x, y, side, side);
         var cropped = new CroppedBitmap(source, rect);
@@ -178,14 +195,30 @@ public class FileInfoService : IFileInfoService
         return renderTarget;
     }
 
-    public BitmapSource GetDefaultCover()
+    private static BitmapSource ReadImageFromPath(string path)
     {
+        using var stream = File.OpenRead(path);
+        var decoder =
+            new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+        var bitmap = decoder.Frames[0];
+        bitmap.Freeze();
+        return bitmap;
+    }
+
+    public static BitmapSource GetDefaultCover()
+    {
+        var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, "default-cover" + ".png");
+        if (File.Exists(coverPath))
+        {
+            return ReadImageFromPath(coverPath);
+        }
+
         var color = (Application.Current.Resources["SecondaryBrush"] as SolidColorBrush)?.Color ?? Colors.Gray;
 
-        return RunInSta(() =>
+        var result = RunInSta(() =>
         {
-            const int height = 100;
-            const int width = 100;
+            const int height = 50;
+            const int width = 50;
             var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
 
             var dv = new DrawingVisual();
@@ -198,6 +231,10 @@ public class FileInfoService : IFileInfoService
             rtb.Render(dv);
             return rtb; // RunInSta 内部会 Freeze
         });
+
+        SaveImage(result, coverPath);
+
+        return result;
     }
 
     private static BitmapSource RunInSta(Func<BitmapSource> func)
@@ -232,31 +269,12 @@ public class FileInfoService : IFileInfoService
         return result!;
     }
 
-    public string GetTitleFromAudio(string path)
+    public static string GetTitleFromAudio(string path)
     {
         return Path.GetFileNameWithoutExtension(path);
-
-        // try
-        // {
-        //     using var file = TagLib.File.Create(path);
-        //
-        //     // 优先读取音频标签里的标题
-        //     var title = file.Tag.Title;
-        //
-        //     // 如果标签里没有标题，则使用文件名
-        //     if (string.IsNullOrWhiteSpace(title))
-        //         title = Path.GetFileNameWithoutExtension(path);
-        //
-        //     return title;
-        // }
-        // catch
-        // {
-        //     // 如果文件无法读取或格式不支持，仍返回文件名
-        //     return Path.GetFileNameWithoutExtension(path);
-        // }
     }
 
-    public string GetDefaultTitle()
+    public static string GetDefaultTitle()
     {
         return "No Audio Playing";
     }

@@ -3,10 +3,116 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Orchidic.Views"
+             xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
+             xmlns:utils="clr-namespace:Orchidic.Utils"
              mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
 
-  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Queue" />
+  <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="4*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <ListBox Grid.Column="1" ItemsSource="{Binding AudioQueueService.AudioFiles }"
+             Background="Transparent"
+             HorizontalAlignment="Stretch"
+             BorderThickness="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             FocusVisualStyle="{x:Null}"
+             VirtualizingStackPanel.IsVirtualizing="True"
+             VirtualizingStackPanel.VirtualizationMode="Recycling"
+             ScrollViewer.CanContentScroll="False">
+      <ListBox.Resources>
+        <Style TargetType="ListBoxItem">
+          <Setter Property="Margin" Value="0 2" />
+          <Setter Property="BorderThickness" Value="0" />
+          <Setter Property="Cursor" Value="Arrow" />
+          <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="ListBoxItem">
+                <Border x:Name="Border"
+                        Background="Transparent"
+                        Padding="0,0,5,5">
+                  <ContentPresenter />
+                </Border>
+                <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SecondaryBrush}"></Setter>
+                  </Trigger>
+                </ControlTemplate.Triggers>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+          <Setter Property="Width" Value="8" />
+          <Setter Property="Background" Value="Transparent" />
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="ScrollBar">
+                <Grid>
+                  <Track x:Name="PART_Track" IsDirectionReversed="True">
+                    <Track.DecreaseRepeatButton>
+                      <RepeatButton
+                        Style="{x:Null}" Background="Transparent" BorderBrush="Transparent"
+                        OverridesDefaultStyle="True" FocusVisualStyle="{x:Null}" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                      <Thumb x:Name="Thumb" Style="{StaticResource CustomThumb}" />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                      <RepeatButton
+                        Style="{x:Null}" Background="Transparent" BorderBrush="Transparent"
+                        OverridesDefaultStyle="True" FocusVisualStyle="{x:Null}" />
+                    </Track.IncreaseRepeatButton>
+                  </Track>
+                </Grid>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </ListBox.Resources>
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Border Background="{StaticResource MenuBGBrush}" CornerRadius="10" Padding="10,20">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+
+              <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0" />
+
+              <TextBlock Grid.Column="1" Text="{Binding  Name}"
+                         Margin="5 0 10 0"
+                         FontSize="18"
+                         TextTrimming="CharacterEllipsis"
+                         TextWrapping="Wrap"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Center" />
+
+              <Grid Grid.Column="2" Width="50"></Grid>
+
+              <Button Grid.Column="3" Height="30" Width="30" Style="{DynamicResource AnimatedButton}" Margin="0,0,5,0">
+                <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
+                                          Fill="{DynamicResource SecondaryBrush}" />
+              </Button>
+            </Grid>
+
+          </Border>
+
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+
+  </Grid>
 
 </UserControl>

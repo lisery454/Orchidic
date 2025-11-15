@@ -3,7 +3,6 @@ using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
 using Orchidic.Utils.LogManager;
 using Orchidic.Utils.SettingManager;
-using Orchidic.Utils.SmoothImageScaler;
 using Orchidic.Utils.STAManager;
 using Orchidic.ViewModels;
 using Orchidic.Views;
@@ -30,10 +29,8 @@ public partial class App
 
         services.AddSingleton<ILogManager, LogManager>();
         services.AddSingleton<ISTAManager, STAManager>();
-        services.AddSingleton<SmoothImageScaler>();
         services.AddSingleton<ISettingManager, SettingManager>();
-
-        services.AddSingleton<IFileInfoService, FileInfoService>();
+        
         services.AddSingleton<IAudioQueueService, AudioQueueService>();
         services.AddSingleton<IPlayerService, PlayerService>();
 

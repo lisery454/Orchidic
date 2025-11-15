@@ -14,6 +14,7 @@
         <ResourceDictionary Source="Styles/Fonts.xaml" />
         <ResourceDictionary Source="Styles/ButtonStyle.xaml" />
         <ResourceDictionary Source="Styles/TextBlockStyle.xaml" />
+        <ResourceDictionary Source="Styles/ThumbStyle.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>
