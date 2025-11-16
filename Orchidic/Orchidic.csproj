@@ -8,6 +8,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
         <NoWarn>NU1701</NoWarn>
+        <ApplicationIcon>Assets\logo_icon.ico</ApplicationIcon>
 
     </PropertyGroup>
 
