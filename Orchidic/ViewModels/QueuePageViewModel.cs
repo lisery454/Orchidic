@@ -12,6 +12,20 @@ public class QueuePageViewModel : ViewModelBase
 
     public ICommand PlayCommand { get; }
 
+    public ICollectionView AudioFilesView { get; }
+
+    private string _filterText;
+
+    public string FilterText
+    {
+        get => _filterText;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _filterText, value);
+            AudioFilesView.Refresh();
+        }
+    }
+
     public QueuePageViewModel(IPlayerService playerService, IAudioQueueService audioQueueService)
     {
         PlayerService = playerService;
@@ -32,6 +46,25 @@ public class QueuePageViewModel : ViewModelBase
                 await PlayerService.PlayAsync(file);
             }
         });
+
+        _filterText = "";
+
+        AudioFilesView = CollectionViewSource.GetDefaultView(AudioQueueService.AudioQueue.AudioFiles);
+        AudioFilesView.Filter = FilterAudioFiles;
+    }
+
+    private bool FilterAudioFiles(object obj)
+    {
+        if (obj is AudioFile file)
+        {
+            if (string.IsNullOrEmpty(FilterText))
+                return true;
+
+            // 忽略大小写匹配
+            return file.Name.IndexOf(FilterText, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        return false;
     }
 }
 

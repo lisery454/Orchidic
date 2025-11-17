@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-using System.Windows;
-using System.Windows.Data;
-
-namespace Orchidic.Converters;
+﻿namespace Orchidic.Converters;
 
 public class WindowStateToMarginConverter : IValueConverter
 {

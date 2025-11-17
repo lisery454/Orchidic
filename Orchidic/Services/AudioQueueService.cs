@@ -21,11 +21,14 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
 
         AudioQueue.WhenAnyValue(x => x.CurrentAudioFile).Subscribe(currentAudioFile =>
         {
-            CurrentCover = currentAudioFile != null
-                ? AudioFileUtils.GetCoverFromAudio(currentAudioFile.Path)
-                : AudioFileUtils.GetDefaultCover();
             Task.Run(async () =>
             {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    CurrentCover = currentAudioFile != null
+                        ? AudioFileUtils.GetCoverFromAudio(currentAudioFile.Path)
+                        : AudioFileUtils.GetDefaultCover();
+                });
                 var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, currentAudioFile?.Path);
                 App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
             });

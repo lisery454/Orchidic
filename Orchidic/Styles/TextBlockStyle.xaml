@@ -6,4 +6,10 @@
     <Setter Property="FontSize" Value="20"></Setter>
     <Setter Property="Foreground" Value="{DynamicResource FontBrush}"></Setter>
   </Style>
+  <Style TargetType="TextBlock" x:Key="TextBlockBaseStyle">
+    <Setter Property="FontFamily" Value="{StaticResource LXGWWenKaiGB}"></Setter>
+    <Setter Property="FontWeight" Value="Normal"></Setter>
+    <Setter Property="FontSize" Value="20"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource FontBrush}"></Setter>
+  </Style>
 </ResourceDictionary>

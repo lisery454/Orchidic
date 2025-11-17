@@ -27,6 +27,8 @@
   <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />
   <Color x:Key="FontColor">#aaa</Color>
   <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}" />
+  <Color x:Key="HighlightFontColor">#eee</Color>
+  <SolidColorBrush x:Key="HighlightFontBrush" Color="{DynamicResource HighlightFontColor}" />
   <Color x:Key="MenuItemIndicatorColor">#77050505</Color>
   <SolidColorBrush x:Key="MenuItemIndicatorBrush" Color="{DynamicResource MenuItemIndicatorColor}" />
   <RadialGradientBrush x:Key="CoverMaskBrush" Center="0.5,0.5"

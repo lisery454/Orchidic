@@ -28,3 +28,4 @@ global using System.Windows.Threading;
 global using System.Windows.Media;
 global using System.Collections.Concurrent;
 global using System.Reactive.Subjects;
+global using System.ComponentModel;

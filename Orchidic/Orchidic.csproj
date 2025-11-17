@@ -52,41 +52,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Assets\Fonts\MiSans-Bold.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Demibold.otf" />
-        <Resource Include="Assets\Fonts\MiSans-ExtraLight.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Heavy.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Light.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Medium.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Normal.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Regular.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Semibold.otf" />
-        <Resource Include="Assets\Fonts\MiSans-Thin.otf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-Black.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-Bold.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-ExtraBold.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-ExtraLight.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-Light.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-Medium.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-Regular.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-SemiBold.ttf" />
-        <Resource Include="Assets\Fonts\NotoSansMono-Thin.ttf" />
-        <Resource Include="Assets\Fonts\SpaceMono-Bold.ttf" />
-        <Resource Include="Assets\Fonts\SpaceMono-BoldItalic.ttf" />
-        <Resource Include="Assets\Fonts\SpaceMono-Italic.ttf" />
-        <Resource Include="Assets\Fonts\SpaceMono-Regular.ttf" />
-        <None Remove="Utils\BokehBlur.ps" />
-        <None Remove="Assets\Fonts\LXGWWenKaiGB-Light.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiGB-Light.ttf" />
-        <None Remove="Assets\Fonts\LXGWWenKaiGB-Medium.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiGB-Medium.ttf" />
-        <None Remove="Assets\Fonts\LXGWWenKaiGB-Regular.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiGB-Regular.ttf" />
-        <None Remove="Assets\Fonts\LXGWWenKaiMonoGB-Light.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Light.ttf" />
-        <None Remove="Assets\Fonts\LXGWWenKaiMonoGB-Medium.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Medium.ttf" />
-        <None Remove="Assets\Fonts\LXGWWenKaiMonoGB-Regular.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Regular.ttf" />
     </ItemGroup>
 

@@ -6,8 +6,8 @@ public class AudioQueue : ReactiveObject
     {
         _currentIndex = 0;
         AudioFiles = [];
-        
-        
+
+
         const string musicFolder = @"D:\Music";
         var files = Directory.GetFiles(musicFolder, "*.mp3", SearchOption.AllDirectories);
         foreach (var file in files)
@@ -33,7 +33,7 @@ public class AudioQueue : ReactiveObject
                 newValue = AudioFiles.Count - 1;
             else
                 newValue = value;
-            
+
             this.RaiseAndSetIfChanged(ref _currentIndex, newValue);
             this.RaisePropertyChanged(nameof(CurrentAudioFile));
         }
@@ -50,11 +50,11 @@ public class AudioQueue : ReactiveObject
 
     public void TrySetCurrentAudioFile(AudioFile audioFile)
     {
-        for (var i = 0; i < AudioFiles.Count; i++)
+        var index = AudioFiles.IndexOf(audioFile);
+
+        if (index >= 0)
         {
-            if (AudioFiles[i] != audioFile) continue;
-            CurrentIndex = i;
-            return;
+            CurrentIndex = index;
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Interop;
-
-namespace Orchidic.Utils;
+﻿namespace Orchidic.Utils;
 
 public static class WindowCornerRestorer
 {

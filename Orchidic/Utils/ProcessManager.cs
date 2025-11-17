@@ -1,10 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace Orchidic.Utils;
+﻿namespace Orchidic.Utils;
 
 internal static class ProcessManager
 {
