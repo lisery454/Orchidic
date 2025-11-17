@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <FontFamily x:Key="MiSans">pack://application:,,,/Assets/Fonts/#MiSans</FontFamily>
-  <FontFamily x:Key="SpaceMono">pack://application:,,,/Assets/Fonts/#Space Mono</FontFamily>
-  <FontFamily x:Key="NotoSansMono">pack://application:,,,/Assets/Fonts/#Noto Sans Mono</FontFamily>
+  <FontFamily x:Key="LXGWWenKaiGB">pack://application:,,,/Assets/Fonts/#LXGW WenKai GB</FontFamily>
+  <FontFamily x:Key="LXGWWenKaiMonoGB">pack://application:,,,/Assets/Fonts/#LXGW WenKai Mono GB</FontFamily>
 </ResourceDictionary>

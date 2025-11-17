@@ -104,7 +104,7 @@
             <TextBlock Text="{Binding PlayerService.CurrentTime, Converter={StaticResource TimeSpanToStringConverter}}"
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
                        FontWeight="Bold"
-                       FontFamily="{StaticResource NotoSansMono}"
+                       FontFamily="{StaticResource LXGWWenKaiMonoGB}"
                        Margin="0,0,30,0" HorizontalAlignment="Right"
                        VerticalAlignment="Center">
             </TextBlock>
@@ -116,7 +116,7 @@
           <Grid Grid.Column="2" Width="160">
             <TextBlock Text="{Binding PlayerService.TotalTime, Converter={StaticResource TimeSpanToStringConverter}}"
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
-                       FontFamily="{StaticResource NotoSansMono}"
+                       FontFamily="{StaticResource LXGWWenKaiMonoGB}"
                        FontWeight="Bold"
                        Margin="30,0,0,0" HorizontalAlignment="Left"
                        VerticalAlignment="Center">
@@ -148,7 +148,7 @@
             </Grid>
             <TextBlock Text="{Binding PlayerService.Volume, Converter={StaticResource VolumeToStringConverter}}"
                        Foreground="{DynamicResource FontBrush}" FontSize="18"
-                       FontFamily="{StaticResource NotoSansMono}"
+                       FontFamily="{StaticResource LXGWWenKaiMonoGB}"
                        FontWeight="Bold"
                        Width="50"
                        HorizontalAlignment="Center"

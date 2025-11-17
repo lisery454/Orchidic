@@ -76,6 +76,18 @@
         <Resource Include="Assets\Fonts\SpaceMono-Italic.ttf" />
         <Resource Include="Assets\Fonts\SpaceMono-Regular.ttf" />
         <None Remove="Utils\BokehBlur.ps" />
+        <None Remove="Assets\Fonts\LXGWWenKaiGB-Light.ttf" />
+        <Resource Include="Assets\Fonts\LXGWWenKaiGB-Light.ttf" />
+        <None Remove="Assets\Fonts\LXGWWenKaiGB-Medium.ttf" />
+        <Resource Include="Assets\Fonts\LXGWWenKaiGB-Medium.ttf" />
+        <None Remove="Assets\Fonts\LXGWWenKaiGB-Regular.ttf" />
+        <Resource Include="Assets\Fonts\LXGWWenKaiGB-Regular.ttf" />
+        <None Remove="Assets\Fonts\LXGWWenKaiMonoGB-Light.ttf" />
+        <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Light.ttf" />
+        <None Remove="Assets\Fonts\LXGWWenKaiMonoGB-Medium.ttf" />
+        <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Medium.ttf" />
+        <None Remove="Assets\Fonts\LXGWWenKaiMonoGB-Regular.ttf" />
+        <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Regular.ttf" />
     </ItemGroup>
 
     <ItemGroup>
