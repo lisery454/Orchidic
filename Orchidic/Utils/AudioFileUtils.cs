@@ -1,4 +1,6 @@
-﻿namespace Orchidic.Utils;
+﻿using SkiaSharp;
+
+namespace Orchidic.Utils;
 
 public static class AudioFileUtils
 {
@@ -76,7 +78,7 @@ public static class AudioFileUtils
                 var buffer = new byte[bytes.Length];
                 Buffer.BlockCopy(bytes, 0, buffer, 0, bytes.Length);
 
-                var coverBitmap = LoadAlbumCoverSquare(buffer, 50);
+                var coverBitmap = LoadAlbumCoverSquare(SafeImageByteArray(buffer), 50);
                 SaveImage(coverBitmap, coverPath);
                 return coverBitmap;
             }
@@ -109,15 +111,17 @@ public static class AudioFileUtils
                 var buffer = new byte[bytes.Length];
                 Buffer.BlockCopy(bytes, 0, buffer, 0, bytes.Length);
 
-                var coverBitmap = LoadAlbumCoverSquare(buffer, 400);
+                var coverBitmap = LoadAlbumCoverSquare(SafeImageByteArray(buffer), 400);
                 SaveImage(coverBitmap, coverPath);
                 return coverBitmap;
             }
         }
-        catch
+        catch (Exception e)
         {
+            Console.Error.WriteLine(e.Message);
             Console.Error.WriteLine($"Failed to load cover from audio file: {path}");
         }
+
 
         return GetDefaultCover();
     }
@@ -268,14 +272,23 @@ public static class AudioFileUtils
 
         return result!;
     }
-
-    public static string GetTitleFromAudio(string path)
+    
+    private static byte[] SafeImageByteArray(byte[] inputBytes)
     {
-        return Path.GetFileNameWithoutExtension(path);
-    }
+        using var inputStream = new MemoryStream(inputBytes);
 
-    public static string GetDefaultTitle()
-    {
-        return "No Audio Playing";
+        // 尝试解码图片
+        using var original = SKBitmap.Decode(inputStream);
+        if (original == null)
+        {
+            throw new Exception("unable to decode image.");
+        }
+
+        // 将 bitmap 编码成 PNG
+        using var image = SKImage.FromBitmap(original);
+        using var output = new MemoryStream();
+        image.Encode(SKEncodedImageFormat.Png, 100).SaveTo(output);
+
+        return output.ToArray();
     }
 }
