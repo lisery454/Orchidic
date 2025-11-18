@@ -58,6 +58,8 @@
         <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Light.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Medium.ttf" />
         <Resource Include="Assets\Fonts\LXGWWenKaiMonoGB-Regular.ttf" />
+        <None Remove="Assets\logo_icon.ico" />
+        <Resource Include="Assets\logo_icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
