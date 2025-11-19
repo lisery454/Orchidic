@@ -1,15 +1,20 @@
 ﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
+using Orchidic.Utils.SettingManager;
 
 namespace Orchidic.Services;
 
 public class AudioQueueService : ReactiveObject, IAudioQueueService
 {
-    public AudioQueue AudioQueue { get; } = new();
+    public AudioQueue AudioQueue { get; }
 
-    public AudioQueueService()
+    private ISettingManager _settingManager;
+
+    public AudioQueueService(ISettingManager settingManager)
     {
+        _settingManager = settingManager;
+        AudioQueue = new AudioQueue(_settingManager.CurrentSetting.QueuePaths.Select(x => new AudioFile(x)).ToList());
         _currentCover = AudioQueue.CurrentAudioFile != null
             ? AudioFileUtils.GetCoverFromAudio(AudioQueue.CurrentAudioFile.Path)
             : AudioFileUtils.GetDefaultCover();
@@ -33,6 +38,13 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
                 App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
             });
         });
+
+        AudioQueue.AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;
+    }
+
+    private void AudioFilesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        _settingManager.CurrentSetting.QueuePaths = AudioQueue.AudioFiles.Select(x => x.Path).ToList();
     }
 
     private BitmapSource _currentCover;

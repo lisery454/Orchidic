@@ -2,18 +2,11 @@
 
 public class AudioQueue : ReactiveObject
 {
-    public AudioQueue()
+    public AudioQueue(List<AudioFile> audioFiles)
     {
         _currentIndex = 0;
         AudioFiles = [];
-
-
-        const string musicFolder = @"D:\Music";
-        var files = Directory.GetFiles(musicFolder, "*.mp3", SearchOption.AllDirectories);
-        foreach (var file in files)
-        {
-            AudioFiles.Add(new AudioFile(file));
-        }
+        AudioFiles = new ObservableCollection<AudioFile>(audioFiles);
     }
 
     public ObservableCollection<AudioFile> AudioFiles { get; }
