@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:models="clr-namespace:Orchidic.Models"
+             xmlns:utils="clr-namespace:Orchidic.Utils"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -102,6 +103,10 @@
         <ListBox.ItemTemplate>
           <DataTemplate>
             <Border CornerRadius="10" Padding="10,10">
+              <Border.Background>
+                <!-- 必须是可变的 SolidColorBrush -->
+                <SolidColorBrush x:Name="ItemBorderBackgroundBrush" Color="{StaticResource MenuBGColor}" />
+              </Border.Background>
 
               <Border.Style>
                 <Style TargetType="Border">
@@ -117,6 +122,27 @@
                         </MultiBinding>
                       </DataTrigger.Binding>
                       <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}" />
+                      <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                          <Storyboard>
+                            <ColorAnimation
+                              Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                              To="{StaticResource MenuBGHighlightColor}"
+                              Duration="0:0:0.150" />
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </DataTrigger.EnterActions>
+
+                      <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                          <Storyboard>
+                            <ColorAnimation
+                              Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                              To="{StaticResource MenuBGColor}"
+                              Duration="0:0:0.150" />
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </DataTrigger.ExitActions>
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>
@@ -170,13 +196,21 @@
                   </TextBlock.Style>
                 </TextBlock>
 
-                <Grid Grid.Column="2" Width="50"></Grid>
+                <Grid Grid.Column="2">
+                  <Button Height="30" Width="30" Style="{DynamicResource AnimatedButton}"
+                          Command="{Binding DataContext.RemoveFileCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                          CommandParameter="{Binding}">
+                    <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
+                                              Fill="{DynamicResource SecondaryBrush}" />
+                  </Button>
+                </Grid>
               </Grid>
 
             </Border>
 
           </DataTemplate>
         </ListBox.ItemTemplate>
+
       </ListBox>
 
 

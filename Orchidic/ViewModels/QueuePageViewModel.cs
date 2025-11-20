@@ -26,6 +26,8 @@ public class QueuePageViewModel : ViewModelBase
         }
     }
 
+    public ICommand RemoveFileCommand { get; }
+
     public QueuePageViewModel(IPlayerService playerService, IAudioQueueService audioQueueService)
     {
         PlayerService = playerService;
@@ -44,6 +46,19 @@ public class QueuePageViewModel : ViewModelBase
             {
                 AudioQueueService.AudioQueue.TrySetCurrentAudioFile(file);
                 await PlayerService.PlayAsync(file);
+            }
+        });
+
+        RemoveFileCommand = ReactiveCommand.Create<AudioFile>((file) =>
+        {
+            if (PlayerService.CurrentAudioFile == file)
+            {
+                AudioQueueService.AudioQueue.Remove(file);
+                playerService.PlayAsync(PlayerService.CurrentAudioFile);
+            }
+            else
+            {
+                AudioQueueService.AudioQueue.Remove(file);
             }
         });
 

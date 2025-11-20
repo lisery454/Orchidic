@@ -50,4 +50,27 @@ public class AudioQueue : ReactiveObject
             CurrentIndex = index;
         }
     }
+
+    public void Remove(AudioFile audioFile)
+    {
+        var index = AudioFiles.IndexOf(audioFile);
+
+        if (index >= 0)
+        {
+            if (CurrentIndex == index)
+            {
+                AudioFiles.RemoveAt(index);
+                CurrentIndex = index; // 下一首
+            }
+            else if (CurrentIndex > index)
+            {
+                AudioFiles.RemoveAt(index);
+                CurrentIndex -= 1; // 上移一位，还是同一首
+            }
+            else
+            {
+                AudioFiles.RemoveAt(index); // 同一首
+            }
+        }
+    }
 }
