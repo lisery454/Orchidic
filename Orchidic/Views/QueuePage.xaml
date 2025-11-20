@@ -46,7 +46,10 @@
                ScrollViewer.VerticalScrollBarVisibility="Auto"
                FocusVisualStyle="{x:Null}"
                VirtualizingStackPanel.IsVirtualizing="True"
-               VirtualizingStackPanel.VirtualizationMode="Recycling">
+               VirtualizingStackPanel.VirtualizationMode="Recycling"
+               AllowDrop="True"
+               PreviewDragOver="AudioListBox_PreviewDragOver"
+               Drop="AudioListBox_Drop">
 
         <ListBox.Resources>
           <Style TargetType="ListBoxItem">

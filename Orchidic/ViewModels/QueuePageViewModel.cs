@@ -27,6 +27,7 @@ public class QueuePageViewModel : ViewModelBase
     }
 
     public ICommand RemoveFileCommand { get; }
+    public ICommand AddFilesCommand { get; }
 
     public QueuePageViewModel(IPlayerService playerService, IAudioQueueService audioQueueService)
     {
@@ -54,12 +55,21 @@ public class QueuePageViewModel : ViewModelBase
             if (PlayerService.CurrentAudioFile == file)
             {
                 AudioQueueService.AudioQueue.Remove(file);
-                playerService.PlayAsync(PlayerService.CurrentAudioFile);
+                if (AudioQueueService.AudioQueue.CurrentAudioFile != null)
+                    playerService.PlayAsync(AudioQueueService.AudioQueue.CurrentAudioFile);
+                else playerService.Stop();
             }
             else
             {
                 AudioQueueService.AudioQueue.Remove(file);
             }
+        });
+
+        AddFilesCommand = ReactiveCommand.Create<IEnumerable<AudioFile>>(files =>
+        {
+            AudioQueueService.AudioQueue.Add(files);
+            if (AudioQueueService.AudioQueue.CurrentAudioFile != null)
+                playerService.PlayAsync(AudioQueueService.AudioQueue.CurrentAudioFile);
         });
 
         _filterText = "";

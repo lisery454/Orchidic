@@ -73,4 +73,11 @@ public class AudioQueue : ReactiveObject
             }
         }
     }
+
+    public void Add(IEnumerable<AudioFile> audioFiles)
+    {
+        var count = AudioFiles.Count;
+        AudioFiles.AddRange(audioFiles);
+        CurrentIndex = count;
+    }
 }

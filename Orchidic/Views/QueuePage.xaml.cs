@@ -1,4 +1,5 @@
-﻿using Orchidic.ViewModels;
+﻿using Orchidic.Models;
+using Orchidic.ViewModels;
 
 namespace Orchidic.Views;
 
@@ -19,5 +20,37 @@ public partial class QueuePage
     {
         DataContext = App.Current.Services.GetService<QueuePageViewModel>();
         InitializeComponent();
+    }
+
+    private void AudioListBox_PreviewDragOver(object sender, DragEventArgs e)
+    {
+        e.Effects = DragDropEffects.Copy;
+        e.Handled = true;
+    }
+
+    private static readonly string[] AudioExtensions =
+    [
+        ".mp3", ".wav", ".flac", ".aac", ".m4a", ".ogg"
+    ];
+
+    private void AudioListBox_Drop(object sender, DragEventArgs e)
+    {
+        if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+            return;
+        
+        var filePaths = (string[]?)e.Data.GetData(DataFormats.FileDrop) ?? [];
+        
+        var audioFiles = filePaths
+            .Where(f => AudioExtensions.Contains(Path.GetExtension(f).ToLower()))
+            .Select(x => new AudioFile(x))
+            .ToList();
+        if (audioFiles.Count == 0)
+            return;
+
+        // 获取 DataContext (ViewModel)
+        if (DataContext is QueuePageViewModel vm)
+        {
+            vm.AddFilesCommand.Execute(audioFiles);
+        }
     }
 }
