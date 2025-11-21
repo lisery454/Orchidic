@@ -49,19 +49,23 @@
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>
         </Page>
+        <Page Remove="Assets\Fonts\**" />
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="Assets\logo_icon.ico" />
         <Resource Include="Assets\logo_icon.ico" />
+        <None Remove="Assets\Fonts\**" />
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="Assets\Svgs\**" />
+        <Compile Remove="Assets\Fonts\**" />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Remove="Assets\Svgs\**" />
+        <EmbeddedResource Remove="Assets\Fonts\**" />
     </ItemGroup>
 
     <ItemGroup>
