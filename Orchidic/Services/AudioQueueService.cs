@@ -24,6 +24,9 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
             App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
         });
 
+        AudioQueue.TrySetCurrentAudioFile(settingManager.CurrentSetting.CurrentAudioPath);
+
+
         AudioQueue.WhenAnyValue(x => x.CurrentAudioFile).Subscribe(currentAudioFile =>
         {
             Task.Run(async () =>
@@ -37,6 +40,8 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
                 var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, currentAudioFile?.Path);
                 App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
             });
+
+            _settingManager.CurrentSetting.CurrentAudioPath = currentAudioFile?.Path;
         });
 
         AudioQueue.AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;

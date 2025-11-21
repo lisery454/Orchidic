@@ -20,7 +20,11 @@ public class AudioQueue : ReactiveObject
         set
         {
             int newValue;
-            if (value >= AudioFiles.Count)
+            if (value == -1)
+            {
+                newValue = -1; // -1 标识没有歌曲正在播放
+            }
+            else if (value >= AudioFiles.Count)
                 newValue = 0;
             else if (value < 0)
                 newValue = AudioFiles.Count - 1;
@@ -41,13 +45,33 @@ public class AudioQueue : ReactiveObject
         }
     }
 
-    public void TrySetCurrentAudioFile(AudioFile audioFile)
+    public void TrySetCurrentAudioFile(AudioFile? audioFile)
     {
-        var index = AudioFiles.IndexOf(audioFile);
-
-        if (index >= 0)
+        if (audioFile == null)
         {
-            CurrentIndex = index;
+            CurrentIndex = -1;
+        }
+        else
+        {
+            var index = AudioFiles.IndexOf(audioFile);
+
+            if (index >= 0)
+            {
+                CurrentIndex = index;
+            }
+        }
+    }
+
+    public void TrySetCurrentAudioFile(string? audioFilePath)
+    {
+        if (audioFilePath == null)
+        {
+            CurrentIndex = -1;
+        }
+        else
+        {
+            var audioFile = AudioFiles.FirstOrDefault(a => a.Path == audioFilePath);
+            TrySetCurrentAudioFile(audioFile);
         }
     }
 
