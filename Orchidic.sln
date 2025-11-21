@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrchidicAvalonia", "OrchidicAvalonia\OrchidicAvalonia.csproj", "{BC354D4A-71CA-40C9-B1D4-BD823C46831C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchidic", "Orchidic\Orchidic.csproj", "{5C227F30-4191-4EB0-849B-2FE182B73020}"
 EndProject
 Global
