@@ -5,7 +5,7 @@
 # -----------------------------
 $zipUrl = "https://github.com/lxgw/LxgwWenKai/releases/download/v1.521/lxgw-wenkai-v1.521.zip"
 $zipFile = "lxgw-wenkai-v1.521.zip"
-$fontsDir = "..\Assets\Fonts"
+$fontsDir = "Orchidic\Assets\Fonts"
 
 # -----------------------------
 # 创建目录
