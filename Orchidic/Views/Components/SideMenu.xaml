@@ -32,6 +32,7 @@
              BorderThickness="0"
              Background="Transparent"
              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
              SelectionMode="Single"
              FocusVisualStyle="{x:Null}">
 

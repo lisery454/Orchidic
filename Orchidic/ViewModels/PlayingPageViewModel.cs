@@ -15,10 +15,13 @@ public class PlayingPageViewModel : ViewModelBase
     public ICommand PrevAudioCommand { get; }
     public ICommand PlayOrPauseCommand { get; }
 
+    public ICommand SetZenModeCommand { get; }
+
     #endregion
 
 
-    public PlayingPageViewModel(IPlayerService playerService, IAudioQueueService audioQueueService)
+    public PlayingPageViewModel(IPlayerService playerService, IAudioQueueService audioQueueService,
+        IGlobalService globalService)
     {
         PlayerService = playerService;
         AudioQueueService = audioQueueService;
@@ -49,6 +52,7 @@ public class PlayingPageViewModel : ViewModelBase
                 await PlayerService.PlayAsync(currentAudioFile);
             }
         });
+        SetZenModeCommand = ReactiveCommand.Create(() => { globalService.IsZenMode = !globalService.IsZenMode; });
 
         PlayerService.PlaybackEnded += (_, _) => { NextAudioCommand.Execute(null); };
 

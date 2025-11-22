@@ -13,12 +13,13 @@ public class MainWindowViewModel : ViewModelBase
     public ViewModelBase CurrentPageViewModel => _currentPageViewModel.Value;
 
     public IAudioQueueService AudioQueueService { get; }
+    public IGlobalService GlobalService { get; }
 
-    
 
-    public MainWindowViewModel(IAudioQueueService audioQueueService)
+    public MainWindowViewModel(IAudioQueueService audioQueueService, IGlobalService globalService)
     {
         AudioQueueService = audioQueueService;
+        GlobalService = globalService;
         _currentPageViewModel = this.WhenAnyValue(x => x.SideMenuViewModel.PageType)
             .Select<PageType, ViewModelBase>(x =>
             {
