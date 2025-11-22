@@ -12,6 +12,8 @@ public class QueuePageViewModel : ViewModelBase
 
     public ICommand PlayCommand { get; }
 
+    public ICommand LocateCommand { get; }
+
     public ICollectionView AudioFilesView { get; }
 
     private string _filterText;
@@ -72,6 +74,16 @@ public class QueuePageViewModel : ViewModelBase
                 playerService.PlayAsync(AudioQueueService.AudioQueue.CurrentAudioFile);
         });
 
+        var canLocate = this
+            .WhenAnyValue(x => x.AudioQueueService.AudioQueue.CurrentAudioFile)
+            .Select(file => file != null);
+        LocateCommand = ReactiveCommand.Create<ListBox>(listbox =>
+        {
+            if (AudioQueueService.AudioQueue.CurrentAudioFile == null) return;
+            FilterText = "";
+            listbox.ScrollIntoView(AudioQueueService.AudioQueue.CurrentAudioFile);
+        }, canLocate);
+
         _filterText = "";
 
         AudioFilesView = CollectionViewSource.GetDefaultView(AudioQueueService.AudioQueue.AudioFiles);
@@ -105,5 +117,18 @@ public class AudioFileEqualConverter : IMultiValueConverter
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
     {
         return [];
+    }
+}
+
+public class AudioCountTextConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return $"总共 {value} 首";
+    }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return null;
     }
 }

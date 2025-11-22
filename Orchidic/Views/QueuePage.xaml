@@ -13,6 +13,7 @@
 
   <UserControl.Resources>
     <viewModels:AudioFileEqualConverter x:Key="AudioFileEqualConverter"></viewModels:AudioFileEqualConverter>
+    <viewModels:AudioCountTextConverter x:Key="AudioCountTextConverter"></viewModels:AudioCountTextConverter>
   </UserControl.Resources>
 
   <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch">
@@ -28,17 +29,39 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
       </Grid.RowDefinitions>
+      <Grid Grid.Row="0" Margin="0,0,0,10">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" FontSize="16"
+                   Margin="0,0,15,0"
+                   Text="{Binding AudioQueueService.AudioQueue.AudioFiles.Count, Converter={StaticResource AudioCountTextConverter }}">
+        </TextBlock>
+        <Button Grid.Column="1" Height="20" Width="40" Style="{DynamicResource AnimatedButton}"
+                Command="{Binding LocateCommand}"
+                CommandParameter="{Binding ElementName=AudioListBox}">
+          <utils:SuperellipseBorder Height="20" Width="40" CornerRadius="10" Power="8"
+                                    Fill="{DynamicResource SecondaryBrush}" />
+        </Button>
+      </Grid>
 
-      <TextBlock Grid.Row="0" FontSize="16" Margin="0,0,0,10"
-                 Text="{Binding AudioQueueService.AudioQueue.AudioFiles.Count}">
-      </TextBlock>
 
-      <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-               FontSize="16"
-               Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
-               Margin="0,0,0,15" />
+      <Grid Grid.Row="1" Margin="0,0,0,15">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" FontSize="16" Text="搜索" Margin="0,0,15,0" HorizontalAlignment="Stretch"
+                   VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                 FontSize="16"
+                 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
 
-      <ListBox Grid.Row="2" ItemsSource="{Binding AudioFilesView}"
+      </Grid>
+
+
+      <ListBox x:Name="AudioListBox" Grid.Row="2" ItemsSource="{Binding AudioFilesView}"
                Background="Transparent"
                HorizontalAlignment="Stretch"
                BorderThickness="0"
@@ -48,9 +71,15 @@
                VirtualizingStackPanel.IsVirtualizing="True"
                VirtualizingStackPanel.VirtualizationMode="Recycling"
                AllowDrop="True"
+               ScrollViewer.CanContentScroll="False"
                PreviewDragOver="AudioListBox_PreviewDragOver"
                Drop="AudioListBox_Drop">
 
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <VirtualizingStackPanel />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
         <ListBox.Resources>
           <Style TargetType="ListBoxItem">
             <Setter Property="Margin" Value="0 2" />
@@ -105,18 +134,12 @@
         </ListBox.Resources>
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <Border CornerRadius="10" Padding="10,10">
-              <Border.Background>
-                <!-- 必须是可变的 SolidColorBrush -->
-                <SolidColorBrush x:Name="ItemBorderBackgroundBrush" Color="{StaticResource MenuBGColor}" />
-              </Border.Background>
-
+            <Border CornerRadius="10" Padding="10,10" Height="60">
               <Border.Style>
                 <Style TargetType="Border">
                   <Setter Property="Background" Value="{StaticResource MenuBGBrush}" />
                   <Style.Triggers>
-                    <DataTrigger
-                      Value="True">
+                    <DataTrigger Value="True">
                       <DataTrigger.Binding>
                         <MultiBinding Converter="{StaticResource AudioFileEqualConverter}">
                           <Binding Path="DataContext.AudioQueueService.AudioQueue.CurrentAudioFile"
@@ -124,28 +147,9 @@
                           <Binding />
                         </MultiBinding>
                       </DataTrigger.Binding>
-                      <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}" />
-                      <DataTrigger.EnterActions>
-                        <BeginStoryboard>
-                          <Storyboard>
-                            <ColorAnimation
-                              Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                              To="{StaticResource MenuBGHighlightColor}"
-                              Duration="0:0:0.150" />
-                          </Storyboard>
-                        </BeginStoryboard>
-                      </DataTrigger.EnterActions>
 
-                      <DataTrigger.ExitActions>
-                        <BeginStoryboard>
-                          <Storyboard>
-                            <ColorAnimation
-                              Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                              To="{StaticResource MenuBGColor}"
-                              Duration="0:0:0.150" />
-                          </Storyboard>
-                        </BeginStoryboard>
-                      </DataTrigger.ExitActions>
+                      <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}" />
+
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>
