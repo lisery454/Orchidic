@@ -7,6 +7,7 @@
              xmlns:utils="clr-namespace:Orchidic.Utils"
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
              xmlns:components="clr-namespace:Orchidic.Views.Components"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=viewModels:PlayingPageViewModel}"
              mc:Ignorable="d"
              ClipToBounds="False"
@@ -51,18 +52,35 @@
               </utils:SuperellipseBorder.Height>
 
               <Grid>
-                <Image
-                  Source="{Binding  AudioQueueService.CurrentCover}"
-                  Stretch="UniformToFill"
-                  SnapsToDevicePixels="True"
-                  UseLayoutRounding="True"
-                  RenderOptions.BitmapScalingMode="HighQuality"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center" />
-
+                <Grid>
+                  <Image
+                    Stretch="UniformToFill"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <b:Interaction.Behaviors>
+                      <utils:ImageFadeBehavior Source="{Binding AudioQueueService.CurrentCover}" />
+                    </b:Interaction.Behaviors>
+                    <Image.Width>
+                      <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+                        <Binding Path="ActualWidth" ElementName="CoverParent" />
+                        <Binding Path="ActualHeight" ElementName="CoverParent" />
+                      </MultiBinding>
+                    </Image.Width>
+                    <Image.Height>
+                      <MultiBinding Converter="{StaticResource CoverSizeConverter}">
+                        <Binding Path="ActualWidth" ElementName="CoverParent" />
+                        <Binding Path="ActualHeight" ElementName="CoverParent" />
+                      </MultiBinding>
+                    </Image.Height>
+                  </Image>
+                </Grid>
                 <!-- 半透明黑色遮罩，调整 alpha 控制暗度 -->
                 <Rectangle IsHitTestVisible="False" Fill="{DynamicResource CoverMaskBrush}" />
               </Grid>
+
 
             </utils:SuperellipseBorder>
           </Grid>
@@ -158,8 +176,8 @@
               <components:SvgIconButton.IconData>
                 <MultiBinding Converter="{StaticResource ConditionConverter}">
                   <Binding Path="PlayerService.IsPlaying" />
-                  <Binding Source="{StaticResource PlayIconGeometry}" />
                   <Binding Source="{StaticResource PauseIconGeometry}" />
+                  <Binding Source="{StaticResource PlayIconGeometry}" />
                 </MultiBinding>
               </components:SvgIconButton.IconData>
             </components:SvgIconButton>

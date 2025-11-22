@@ -9,6 +9,7 @@
         xmlns:reactiveUi="http://reactiveui.net"
         xmlns:utils="clr-namespace:Orchidic.Utils"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Width="1200" Height="800"
         MinWidth="900" MinHeight="600"
@@ -50,7 +51,6 @@
     <!-- blur cover -->
     <Grid Grid.Column="0" ColumnSpan="2" Grid.Row="0" RowSpan="2" ClipToBounds="False">
       <Image
-        views:ImageFadeExtensions.AnimatedSource="{Binding AudioQueueService.CurrentBlurCover}"
         Stretch="UniformToFill"
         SnapsToDevicePixels="True"
         UseLayoutRounding="True"
@@ -59,6 +59,9 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         Opacity="{DynamicResource BlurCoverOpacity}">
+        <b:Interaction.Behaviors>
+          <utils:ImageFadeBehavior Source="{Binding AudioQueueService.CurrentBlurCover}" />
+        </b:Interaction.Behaviors>
         <Image.Height>
           <MultiBinding Converter="{StaticResource BlurCoverSizeConverter}">
             <Binding Path="ActualWidth" ElementName="RootParent" />
