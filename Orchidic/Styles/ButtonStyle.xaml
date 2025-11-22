@@ -233,7 +233,7 @@
       </Setter.Value>
     </Setter>
   </Style>
-  
+
   <!-- CoverAnimatedButton -->
   <Style x:Key="CoverAnimatedButton" TargetType="Button">
     <!-- 移除虚线框 -->
@@ -331,6 +331,5 @@
       </Setter.Value>
     </Setter>
   </Style>
-
 
 </ResourceDictionary>

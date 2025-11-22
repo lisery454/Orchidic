@@ -17,6 +17,7 @@
     <local:PanelHeightConverter x:Key="PanelHeightConverter" />
     <local:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
     <local:VolumeToStringConverter x:Key="VolumeToStringConverter" />
+
   </UserControl.Resources>
 
   <Grid>
@@ -128,22 +129,41 @@
         <Grid Grid.Row="2" HorizontalAlignment="Center" Margin="0,20,0,0">
           <StackPanel Orientation="Horizontal">
             <Grid Margin="0,0,34,0" Width="100" />
-            <Button Height="30" Width="30" Style="{DynamicResource AnimatedButton}" Margin="0,0,34,0"
-                    Command="{Binding PrevAudioCommand}">
-              <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
-                                        Fill="{DynamicResource SecondaryBrush}" />
-            </Button>
-            <Button Style="{DynamicResource AnimatedButton}"
-                    Width="44" Height="44" Margin="0,0,34,0" Command="{Binding PlayOrPauseCommand}">
-              <utils:SuperellipseBorder Height="44" Width="44" CornerRadius="20" Power="8"
-                                        Fill="{DynamicResource SecondaryBrush}" />
-            </Button>
-            <Button Height="30" Width="30" Style="{DynamicResource AnimatedButton}" Margin="0,0,34,0"
-                    Command="{Binding NextAudioCommand}">
-              <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
-                                        Fill="{DynamicResource SecondaryBrush}" />
-            </Button>
-            <Grid Width="100" Margin="0,0,34,0">
+            <components:SvgIconButton
+              Width="36"
+              Height="36"
+              Margin="18,0,18,0"
+              IconData="{StaticResource PrevIconGeometry}"
+              IconBrush="{StaticResource SecondaryBrush}"
+              HoverBrush="{StaticResource LightSecondaryBrush}"
+              PressedBrush="{StaticResource DarkSecondaryBrush}"
+              Command="{Binding PrevAudioCommand}" />
+            <components:SvgIconButton
+              Width="34"
+              Height="34"
+              Margin="18,0,18,0"
+              IconBrush="{StaticResource SecondaryBrush}"
+              HoverBrush="{StaticResource LightSecondaryBrush}"
+              PressedBrush="{StaticResource DarkSecondaryBrush}"
+              Command="{Binding PlayOrPauseCommand}">
+              <components:SvgIconButton.IconData>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="PlayerService.IsPlaying" />
+                  <Binding Source="{StaticResource PlayIconGeometry}" />
+                  <Binding Source="{StaticResource PauseIconGeometry}" />
+                </MultiBinding>
+              </components:SvgIconButton.IconData>
+            </components:SvgIconButton>
+            <components:SvgIconButton
+              Width="36"
+              Height="36"
+              Margin="18,0,18,0"
+              IconData="{StaticResource NextIconGeometry}"
+              IconBrush="{StaticResource SecondaryBrush}"
+              HoverBrush="{StaticResource LightSecondaryBrush}"
+              PressedBrush="{StaticResource DarkSecondaryBrush}"
+              Command="{Binding NextAudioCommand}" />
+            <Grid Width="100" Margin="10,0,10,0">
               <components:SelfSlider Progress="{Binding PlayerService.Volume}"></components:SelfSlider>
             </Grid>
             <TextBlock Text="{Binding PlayerService.Volume, Converter={StaticResource VolumeToStringConverter}}"
