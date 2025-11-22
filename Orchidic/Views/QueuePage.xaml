@@ -7,6 +7,7 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:models="clr-namespace:Orchidic.Models"
              xmlns:utils="clr-namespace:Orchidic.Utils"
+             xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              Loaded="QueuePage_OnLoaded"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"
@@ -17,7 +18,7 @@
     <viewModels:AudioCountTextConverter x:Key="AudioCountTextConverter"></viewModels:AudioCountTextConverter>
   </UserControl.Resources>
 
-  <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch">
+  <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch" MaxHeight="1000">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" />
       <ColumnDefinition Width="5*" />
@@ -62,22 +63,30 @@
       </Grid>
 
 
-      <ListBox x:Name="AudioListBox" Grid.Row="2" ItemsSource="{Binding AudioFilesView}"
+      <ListBox x:Name="AudioListBox"
+               Grid.Row="2"
+               ItemsSource="{Binding AudioFilesView}"
                Background="Transparent"
                HorizontalAlignment="Stretch"
                BorderThickness="0"
                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                ScrollViewer.VerticalScrollBarVisibility="Auto"
                FocusVisualStyle="{x:Null}"
-               VirtualizingStackPanel.IsVirtualizing="True"
-               VirtualizingStackPanel.VirtualizationMode="Recycling"
                AllowDrop="True"
-               ScrollViewer.CanContentScroll="False"
+               ScrollViewer.CanContentScroll="True"
                PreviewDragOver="AudioListBox_PreviewDragOver"
                Drop="AudioListBox_Drop">
 
         <ListBox.ItemsPanel>
           <ItemsPanelTemplate>
+            <!-- <controls:VirtualizingWrapPanel Orientation="Horizontal" -->
+            <!--                                 VirtualizingPanel.IsVirtualizing="True" -->
+            <!--                                 VirtualizingPanel.VirtualizationMode="Recycling" -->
+            <!--                                 ScrollUnit="Pixel" -->
+            <!--                                 CanHorizontallyScroll="False" -->
+            <!--                                 StretchItems="True" -->
+            <!--                                 ItemAlignment="Stretch" -->
+            <!--                                 Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" /> -->
             <VirtualizingStackPanel />
           </ItemsPanelTemplate>
         </ListBox.ItemsPanel>
@@ -91,9 +100,10 @@
               <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
                   <Border x:Name="Border"
+                          HorizontalAlignment="Stretch"
                           Background="Transparent"
                           Padding="0,0,5,5">
-                    <ContentPresenter />
+                    <ContentPresenter HorizontalAlignment="Stretch" />
                   </Border>
                   <ControlTemplate.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
@@ -135,86 +145,90 @@
         </ListBox.Resources>
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <Border CornerRadius="10" Padding="10,10" Height="60">
-              <Border.Style>
-                <Style TargetType="Border">
-                  <Setter Property="Background" Value="{StaticResource MenuBGBrush}" />
-                  <Style.Triggers>
-                    <DataTrigger Value="True">
-                      <DataTrigger.Binding>
-                        <MultiBinding Converter="{StaticResource AudioFileEqualConverter}">
-                          <Binding Path="DataContext.AudioQueueService.AudioQueue.CurrentAudioFile"
-                                   RelativeSource="{RelativeSource AncestorType=UserControl}" />
-                          <Binding />
-                        </MultiBinding>
-                      </DataTrigger.Binding>
+            <Grid Margin="0">
+              <Border CornerRadius="10" Padding="10,10" Height="60" Margin="0,0,0,0"
+                      HorizontalAlignment="Stretch">
+                <Border.Style>
+                  <Style TargetType="Border">
+                    <Setter Property="Background" Value="{StaticResource MenuBGBrush}" />
+                    <Style.Triggers>
+                      <DataTrigger Value="True">
+                        <DataTrigger.Binding>
+                          <MultiBinding Converter="{StaticResource AudioFileEqualConverter}">
+                            <Binding Path="DataContext.AudioQueueService.AudioQueue.CurrentAudioFile"
+                                     RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                            <Binding />
+                          </MultiBinding>
+                        </DataTrigger.Binding>
 
-                      <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}" />
+                        <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}" />
 
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </Border.Style>
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </Border.Style>
 
-              <b:Interaction.Triggers>
-                <b:EventTrigger EventName="MouseLeftButtonUp">
-                  <b:InvokeCommandAction
-                    Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
-                    CommandParameter="{Binding}" />
-                </b:EventTrigger>
-              </b:Interaction.Triggers>
+                <b:Interaction.Triggers>
+                  <b:EventTrigger EventName="MouseLeftButtonUp">
+                    <b:InvokeCommandAction
+                      Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                      CommandParameter="{Binding}" />
+                  </b:EventTrigger>
+                </b:Interaction.Triggers>
 
-              <Grid d:DataContext="{d:DesignInstance Type=models:AudioFile}">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto" />
-                  <ColumnDefinition Width="*" />
-                  <ColumnDefinition Width="Auto" />
-                  <!-- <ColumnDefinition Width="Auto" /> -->
-                </Grid.ColumnDefinitions>
+                <Grid d:DataContext="{d:DesignInstance Type=models:AudioFile}">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <!-- <ColumnDefinition Width="Auto" /> -->
+                  </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0"
-                       Width="30" />
+                  <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0"
+                         Width="30" />
 
-                <TextBlock Grid.Column="1" Text="{Binding  Name}"
-                           Margin="5 0 10 0"
-                           TextTrimming="CharacterEllipsis"
-                           FontSize="16"
-                           TextWrapping="Wrap"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center">
-                  <TextBlock.Style>
-                    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
-                      <Setter Property="Foreground" Value="{StaticResource FontBrush}" />
+                  <TextBlock Grid.Column="1" Text="{Binding  Name}"
+                             Margin="5 0 10 0"
+                             TextTrimming="CharacterEllipsis"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center">
+                    <TextBlock.Style>
+                      <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+                        <Setter Property="Foreground" Value="{StaticResource FontBrush}" />
 
-                      <Style.Triggers>
-                        <DataTrigger
-                          Value="True">
-                          <DataTrigger.Binding>
-                            <MultiBinding Converter="{StaticResource AudioFileEqualConverter}">
-                              <Binding Path="DataContext.AudioQueueService.AudioQueue.CurrentAudioFile"
-                                       RelativeSource="{RelativeSource AncestorType=UserControl}" />
-                              <Binding />
-                            </MultiBinding>
-                          </DataTrigger.Binding>
-                          <Setter Property="Foreground" Value="{StaticResource HighlightFontBrush}" />
+                        <Style.Triggers>
+                          <DataTrigger
+                            Value="True">
+                            <DataTrigger.Binding>
+                              <MultiBinding Converter="{StaticResource AudioFileEqualConverter}">
+                                <Binding Path="DataContext.AudioQueueService.AudioQueue.CurrentAudioFile"
+                                         RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                <Binding />
+                              </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter Property="Foreground" Value="{StaticResource HighlightFontBrush}" />
 
-                        </DataTrigger>
-                      </Style.Triggers>
-                    </Style>
-                  </TextBlock.Style>
-                </TextBlock>
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </TextBlock.Style>
+                  </TextBlock>
 
-                <Grid Grid.Column="2">
-                  <Button Height="30" Width="30" Style="{DynamicResource AnimatedButton}"
-                          Command="{Binding DataContext.RemoveFileCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
-                          CommandParameter="{Binding}">
-                    <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
-                                              Fill="{DynamicResource SecondaryBrush}" />
-                  </Button>
+                  <Grid Grid.Column="2">
+                    <Button Height="30" Width="30" Style="{DynamicResource AnimatedButton}"
+                            Command="{Binding DataContext.RemoveFileCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                            CommandParameter="{Binding}">
+                      <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
+                                                Fill="{DynamicResource SecondaryBrush}" />
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
 
-            </Border>
+              </Border>
+            </Grid>
+
 
           </DataTemplate>
         </ListBox.ItemTemplate>

@@ -55,13 +55,17 @@
                       <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
 
-                    <utils:SuperellipseBorder Grid.Column="1" Height="36" Width="36"
-                                              Power="4" CornerRadius="18">
-                      <utils:SuperellipseBorder.Fill>
-                        <SolidColorBrush x:Name="BorderBrush"
-                                         Color="{DynamicResource SecondaryColor}" />
-                      </utils:SuperellipseBorder.Fill>
-                    </utils:SuperellipseBorder>
+
+                    <local:SvgIcon Grid.Column="1" Margin="0"
+                                   x:Name="SvgIcon"
+                                   Height="20" Width="20"
+                                   Geometry="{Binding Path='.', Converter={StaticResource PageIconConverter}}">
+                      <local:SvgIcon.Fill>
+                        <SolidColorBrush Color="{StaticResource SecondaryColor}"></SolidColorBrush>
+                      </local:SvgIcon.Fill>
+
+                    </local:SvgIcon>
+
 
                     <TextBlock Grid.Column="2"
                                HorizontalAlignment="Center"
@@ -70,26 +74,28 @@
                                Text="{Binding Path='.', Converter={StaticResource PageTitleConverter}}" />
                   </Grid>
 
-                  <!-- ✅ VisualStateManager 管理动画 -->
+                  <!-- VisualStateManager 管理动画 -->
                   <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="SelectionStates">
                       <!-- 默认状态 -->
                       <VisualState x:Name="Normal">
                         <Storyboard>
-                          <ColorAnimation Storyboard.TargetName="BorderBrush"
-                                          Storyboard.TargetProperty="Color"
+                          <ColorAnimation Storyboard.TargetName="SvgIcon"
+                                          Storyboard.TargetProperty="(local:SvgIcon.Fill).(SolidColorBrush.Color)"
                                           To="{DynamicResource SecondaryColor}"
                                           Duration="0:0:0.15"
                                           EasingFunction="{StaticResource QuadraticEaseInOut}" />
                         </Storyboard>
                       </VisualState>
+
                       <!-- 鼠标悬浮 -->
                       <VisualState x:Name="MouseOver" />
-                      <!-- ✅ 选中状态 -->
+
+                      <!-- 选中状态 -->
                       <VisualState x:Name="Selected">
                         <Storyboard>
-                          <ColorAnimation Storyboard.TargetName="BorderBrush"
-                                          Storyboard.TargetProperty="Color"
+                          <ColorAnimation Storyboard.TargetName="SvgIcon"
+                                          Storyboard.TargetProperty="(local:SvgIcon.Fill).(SolidColorBrush.Color)"
                                           To="{DynamicResource PrimaryColor}"
                                           Duration="0:0:0.15"
                                           EasingFunction="{StaticResource QuadraticEaseInOut}" />
