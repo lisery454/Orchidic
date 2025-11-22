@@ -53,4 +53,15 @@ public partial class QueuePage
             vm.AddFilesCommand.Execute(audioFiles);
         }
     }
+
+    private void QueuePage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is QueuePageViewModel vm)
+        {
+            if (vm.LocateCommand.CanExecute(AudioListBox))
+            {
+                vm.LocateCommand.Execute(AudioListBox);
+            }
+        }
+    }
 }

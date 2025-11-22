@@ -7,6 +7,7 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:models="clr-namespace:Orchidic.Models"
              xmlns:utils="clr-namespace:Orchidic.Utils"
+             Loaded="QueuePage_OnLoaded"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
