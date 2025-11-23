@@ -26,13 +26,17 @@ public class PlayingPageViewModel : ViewModelBase
         PlayerService = playerService;
         AudioQueueService = audioQueueService;
 
+        var canPlay = AudioQueueService.AudioQueue
+            .WhenAnyValue(x => x.CurrentAudioFile)
+            .Select(file => file != null);
+
         PlayOrPauseCommand = ReactiveCommand.Create(() =>
         {
             if (PlayerService.IsPlaying)
                 PlayerService.Pause();
             else
                 PlayerService.Resume();
-        });
+        }, canPlay);
         NextAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             AudioQueueService.AudioQueue.CurrentIndex += 1;
@@ -41,7 +45,7 @@ public class PlayingPageViewModel : ViewModelBase
             {
                 await PlayerService.PlayAsync(currentAudioFile);
             }
-        });
+        }, canPlay);
         PrevAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             AudioQueueService.AudioQueue.CurrentIndex -= 1;
@@ -51,7 +55,7 @@ public class PlayingPageViewModel : ViewModelBase
                 AudioQueueService.AudioQueue.TrySetCurrentAudioFile(currentAudioFile);
                 await PlayerService.PlayAsync(currentAudioFile);
             }
-        });
+        }, canPlay);
         SetZenModeCommand = ReactiveCommand.Create(() => { globalService.IsZenMode = !globalService.IsZenMode; });
 
         PlayerService.PlaybackEnded += (_, _) => { NextAudioCommand.Execute(null); };

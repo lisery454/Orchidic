@@ -22,7 +22,6 @@ public static class AudioFileUtils
             }
         }
 
-
         var blurCover = await SmoothImageScaler.ScaleWithSmoothBlurAsync(cover, 400, 30);
 
         if (audioPath != null && blurCoverPath != null)
@@ -211,68 +210,12 @@ public static class AudioFileUtils
 
     public static BitmapSource GetDefaultCover()
     {
-        var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, "default-cover" + ".png");
-        if (File.Exists(coverPath))
-        {
-            return ReadImageFromPath(coverPath);
-        }
-
-        var color = (Application.Current.Resources["SecondaryBrush"] as SolidColorBrush)?.Color ?? Colors.Gray;
-
-        var result = RunInSta(() =>
-        {
-            const int height = 50;
-            const int width = 50;
-            var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-
-            var dv = new DrawingVisual();
-            using (var dc = dv.RenderOpen())
-            {
-                var brush = new SolidColorBrush(color);
-                dc.DrawRectangle(brush, null, new Rect(0, 0, width, height));
-            }
-
-            rtb.Render(dv);
-            return rtb; // RunInSta 内部会 Freeze
-        });
-
-        SaveImage(result, coverPath);
-
-        return result;
+        var uri = new Uri("pack://application:,,,/Orchidic;component/Assets/default-cover.png");
+        var bitmap = new BitmapImage(uri);
+        bitmap.Freeze();
+        return bitmap;
     }
 
-    private static BitmapSource RunInSta(Func<BitmapSource> func)
-    {
-        BitmapSource? result = null;
-        Exception? exception = null;
-
-        var thread = new Thread(() =>
-        {
-            try
-            {
-                // ⚡ 这里一定要在 STA 内创建所有 WPF 对象
-                result = func();
-
-                // Freeze 在同一个 STA 线程内
-                result?.Freeze();
-            }
-            catch (Exception ex)
-            {
-                exception = ex;
-            }
-        });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.IsBackground = true;
-        thread.Start();
-        thread.Join();
-
-        if (exception != null)
-            throw new InvalidOperationException("STA thread execution failed.", exception);
-
-        return result!;
-    }
-    
     private static byte[] SafeImageByteArray(byte[] inputBytes)
     {
         using var inputStream = new MemoryStream(inputBytes);

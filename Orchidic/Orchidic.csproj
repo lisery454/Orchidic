@@ -54,6 +54,8 @@
     <ItemGroup>
         <Resource Include="Assets\logo_icon.ico" />
         <Resource Include="Assets\Fonts\**" />
+        <None Remove="Assets\default-cover.png" />
+        <Resource Include="Assets\default-cover.png" />
     </ItemGroup>
 
     <ItemGroup>
