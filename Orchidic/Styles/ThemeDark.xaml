@@ -15,15 +15,9 @@
   <SolidColorBrush x:Key="DangerHoverBrush" Color="{DynamicResource DangerHoverColor}" />
   <Color x:Key="DangerPressedColor">#a13535</Color>
   <SolidColorBrush x:Key="DangerPressedBrush" Color="{DynamicResource DangerPressedColor}" />
-  <Color x:Key="WindowCtrlBtnFillColor">#676767</Color>
-  <SolidColorBrush x:Key="WindowCtrlBtnFillBrush" Color="{DynamicResource WindowCtrlBtnFillColor}" />
-  <Color x:Key="WindowCtrlBtnHoverColor">#606060</Color>
-  <SolidColorBrush x:Key="WindowCtrlBtnHoverBrush" Color="{DynamicResource WindowCtrlBtnHoverColor}" />
-  <Color x:Key="WindowCtrlBtnPressedColor">#545454</Color>
-  <SolidColorBrush x:Key="WindowCtrlBtnPressedBrush" Color="{DynamicResource WindowCtrlBtnPressedColor}" />
   <Color x:Key="SecondaryColor">#4B858585</Color>
   <SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource SecondaryColor}" />
-  <Color x:Key="LightSecondaryColor">#4BD8D8D8</Color>
+  <Color x:Key="LightSecondaryColor">#8dffffff</Color>
   <SolidColorBrush x:Key="LightSecondaryBrush" Color="{DynamicResource LightSecondaryColor}" />
   <Color x:Key="DarkSecondaryColor">#4B585858</Color>
   <SolidColorBrush x:Key="DarkSecondaryBrush" Color="{DynamicResource DarkSecondaryColor}" />

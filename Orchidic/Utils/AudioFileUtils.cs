@@ -4,7 +4,9 @@ namespace Orchidic.Utils;
 
 public static class AudioFileUtils
 {
-    public static async Task<BitmapSource> GetBlurCoverFromCover(BitmapSource cover, string? audioPath)
+    private static BitmapSource? DefaultCover { get; set; }
+
+    public static async Task<BitmapSource> GetBlurCoverFromCover(BitmapSource? cover, string? audioPath)
     {
         string? blurCoverPath = null;
         if (audioPath != null)
@@ -22,7 +24,9 @@ public static class AudioFileUtils
             }
         }
 
-        var blurCover = await SmoothImageScaler.ScaleWithSmoothBlurAsync(cover, 400, 30);
+        var originalCover = cover ?? GetDefaultCover();
+
+        var blurCover = await SmoothImageScaler.ScaleWithSmoothBlurAsync(originalCover, 400, 30);
 
         if (audioPath != null && blurCoverPath != null)
         {
@@ -32,10 +36,18 @@ public static class AudioFileUtils
         return blurCover;
     }
 
-    private static string GetAudioFileId(string path)
+    private static string GetAudioFileId(string? path)
     {
-        var info = new FileInfo(path);
-        var str = $"{path.ToLowerInvariant()}|{info.Length}|{info.LastWriteTimeUtc.Ticks}";
+        string str;
+        if (path != null)
+        {
+            var info = new FileInfo(path);
+            str = $"{path.ToLowerInvariant()}|{info.Length}|{info.LastWriteTimeUtc.Ticks}";
+        }
+        else
+        {
+            str = "null_audio_file_id";
+        }
 
         using var sha1 = SHA1.Create();
         var bytes = Encoding.UTF8.GetBytes(str);
@@ -58,7 +70,7 @@ public static class AudioFileUtils
         encoder.Save(stream);
     }
 
-    public static BitmapSource GetThumbnailsCoverFromAudio(string path)
+    public static BitmapSource GetThumbnailsCoverFromAudio(string? path)
     {
         var id = GetAudioFileId(path);
         var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, "thumbnails--" + id + ".png");
@@ -66,6 +78,8 @@ public static class AudioFileUtils
         {
             return ReadImageFromPath(coverPath);
         }
+
+        if (path == null) return GetDefaultCover();
 
         try
         {
@@ -91,7 +105,7 @@ public static class AudioFileUtils
         return GetDefaultCover();
     }
 
-    public static BitmapSource GetCoverFromAudio(string path)
+    public static BitmapSource GetCoverFromAudio(string? path)
     {
         var id = GetAudioFileId(path);
         var coverPath = Path.Join(ProgramConstants.AudioCoverCacheDirPath, id + ".png");
@@ -99,6 +113,8 @@ public static class AudioFileUtils
         {
             return ReadImageFromPath(coverPath);
         }
+
+        if (path == null) return GetDefaultCover();
 
         try
         {
@@ -210,9 +226,11 @@ public static class AudioFileUtils
 
     public static BitmapSource GetDefaultCover()
     {
+        if (DefaultCover != null) return DefaultCover;
         var uri = new Uri("pack://application:,,,/Orchidic;component/Assets/default-cover.png");
         var bitmap = new BitmapImage(uri);
         bitmap.Freeze();
+        DefaultCover = bitmap;
         return bitmap;
     }
 

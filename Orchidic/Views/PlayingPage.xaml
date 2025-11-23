@@ -59,7 +59,8 @@
                     UseLayoutRounding="True"
                     RenderOptions.BitmapScalingMode="HighQuality"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center"
+                    >
                     <b:Interaction.Behaviors>
                       <utils:ImageFadeBehavior Source="{Binding AudioQueueService.CurrentCover}" />
                     </b:Interaction.Behaviors>

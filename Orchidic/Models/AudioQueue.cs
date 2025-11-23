@@ -12,17 +12,17 @@ public class AudioQueue : ReactiveObject
     public ObservableCollection<AudioFile> AudioFiles { get; }
 
 
-    private int _currentIndex;
+    private int? _currentIndex;
 
-    public int CurrentIndex
+    public int? CurrentIndex
     {
         get => _currentIndex;
         set
         {
-            int newValue;
-            if (value == -1)
+            int? newValue;
+            if (value == null)
             {
-                newValue = -1; // -1 标识没有歌曲正在播放
+                newValue = null; // null 标识没有歌曲正在播放
             }
             else if (value >= AudioFiles.Count)
                 newValue = 0;
@@ -40,8 +40,9 @@ public class AudioQueue : ReactiveObject
     {
         get
         {
+            if (CurrentIndex == null) return null;
             if (CurrentIndex >= AudioFiles.Count || CurrentIndex < 0) return null;
-            return AudioFiles[CurrentIndex];
+            return AudioFiles[CurrentIndex.Value];
         }
     }
 
@@ -49,7 +50,7 @@ public class AudioQueue : ReactiveObject
     {
         if (audioFile == null)
         {
-            CurrentIndex = -1;
+            CurrentIndex = null;
         }
         else
         {
@@ -66,7 +67,7 @@ public class AudioQueue : ReactiveObject
     {
         if (audioFilePath == null)
         {
-            CurrentIndex = -1;
+            CurrentIndex = null;
         }
         else
         {
@@ -109,6 +110,6 @@ public class AudioQueue : ReactiveObject
     {
         AudioFiles.Clear();
         AudioFiles.AddRange(audioList.AudioFilePaths.Select(p => new AudioFile(p)));
-        CurrentIndex = audioList.AudioFilePaths.Count > 0 ? 0 : -1;
+        CurrentIndex = audioList.AudioFilePaths.Count > 0 ? 0 : null;
     }
 }

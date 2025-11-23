@@ -63,6 +63,7 @@
                    VerticalAlignment="Center" />
         <TextBox Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  FontSize="16"
+                 ContextMenu="{x:Null}"
                  Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
 
       </Grid>
@@ -172,8 +173,14 @@
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
 
+
                   <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0"
-                         Width="30" />
+                         Width="30">
+                    <Image.Clip>
+                      <RectangleGeometry RadiusX="5" RadiusY="5"
+                                         Rect="0,0,30,30" />
+                    </Image.Clip>
+                  </Image>
 
                   <TextBlock Grid.Column="1" Text="{Binding  Name}"
                              Margin="5 0 10 0"

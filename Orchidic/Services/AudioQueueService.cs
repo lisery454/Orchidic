@@ -15,31 +15,15 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
     {
         _settingManager = settingManager;
         AudioQueue = new AudioQueue(_settingManager.CurrentSetting.QueuePaths.Select(x => new AudioFile(x)).ToList());
-        _currentCover = AudioQueue.CurrentAudioFile != null
-            ? AudioFileUtils.GetCoverFromAudio(AudioQueue.CurrentAudioFile.Path)
-            : AudioFileUtils.GetDefaultCover();
-        Task.Run(async () =>
-        {
-            var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, AudioQueue.CurrentAudioFile?.Path);
-            App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
-        });
+
+        UpdateCover(AudioQueue.CurrentAudioFile);
 
         AudioQueue.TrySetCurrentAudioFile(settingManager.CurrentSetting.CurrentAudioPath);
 
 
         AudioQueue.WhenAnyValue(x => x.CurrentAudioFile).Subscribe(currentAudioFile =>
         {
-            Task.Run(async () =>
-            {
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    CurrentCover = currentAudioFile != null
-                        ? AudioFileUtils.GetCoverFromAudio(currentAudioFile.Path)
-                        : AudioFileUtils.GetDefaultCover();
-                });
-                var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, currentAudioFile?.Path);
-                App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
-            });
+            UpdateCover(currentAudioFile);
 
             _settingManager.CurrentSetting.CurrentAudioPath = currentAudioFile?.Path;
         });
@@ -47,14 +31,28 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
         AudioQueue.AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;
     }
 
+    private void UpdateCover(AudioFile? currentAudioFile)
+    {
+        Task.Run(async () =>
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                CurrentCover =
+                    AudioFileUtils.GetCoverFromAudio(currentAudioFile?.Path);
+            });
+            var image = await AudioFileUtils.GetBlurCoverFromCover(CurrentCover, currentAudioFile?.Path);
+            App.Current.Dispatcher.Invoke(() => { CurrentBlurCover = image; });
+        });
+    }
+
     private void AudioFilesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         _settingManager.CurrentSetting.QueuePaths = AudioQueue.AudioFiles.Select(x => x.Path).ToList();
     }
 
-    private BitmapSource _currentCover;
+    private BitmapSource? _currentCover;
 
-    public BitmapSource CurrentCover
+    public BitmapSource? CurrentCover
     {
         get => _currentCover;
         private set => this.RaiseAndSetIfChanged(ref _currentCover, value);
