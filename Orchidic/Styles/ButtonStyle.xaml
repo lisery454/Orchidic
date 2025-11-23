@@ -94,7 +94,7 @@
                                       CornerRadius="8">
               <utils:SuperellipseBorder.Fill>
                 <SolidColorBrush x:Name="BorderBrush"
-                                 Color="{DynamicResource WindowCloseBtnFillColor}" />
+                                 Color="{DynamicResource DangerFillColor}" />
               </utils:SuperellipseBorder.Fill>
 
               <ContentPresenter HorizontalAlignment="Center"
@@ -108,7 +108,7 @@
                   <Storyboard>
                     <ColorAnimation Storyboard.TargetName="BorderBrush"
                                     Storyboard.TargetProperty="Color"
-                                    To="{DynamicResource WindowCloseBtnHoverColor}"
+                                    To="{DynamicResource DangerHoverColor}"
                                     Duration="0:0:0.15" />
                   </Storyboard>
                 </VisualState>
@@ -116,7 +116,7 @@
                   <Storyboard>
                     <ColorAnimation Storyboard.TargetName="BorderBrush"
                                     Storyboard.TargetProperty="Color"
-                                    To="{DynamicResource WindowCloseBtnPressedColor}"
+                                    To="{DynamicResource DangerPressedColor}"
                                     Duration="0:0:0.15" />
                     <DoubleAnimation Storyboard.TargetName="Root"
                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"

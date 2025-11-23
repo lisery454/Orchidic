@@ -3,10 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:utils="clr-namespace:Orchidic.Utils"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:models="clr-namespace:Orchidic.Models"
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
+             xmlns:components="clr-namespace:Orchidic.Views.Components"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:ListPageViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -42,11 +41,17 @@
       <Grid Grid.Row="1" Margin="0,0,0,15">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" FontSize="16" Text="搜索" Margin="0,0,15,0" HorizontalAlignment="Stretch"
+        <components:SvgIcon Grid.Column="0" Height="20" Width="20"
+                            Margin="0,0,15,0"
+                            Fill="{StaticResource SecondaryBrush}"
+                            Geometry="{StaticResource SearchIcon2Geometry}">
+        </components:SvgIcon>
+        <TextBlock Grid.Column="1" FontSize="16" Text="搜索" Margin="0,0,15,0" HorizontalAlignment="Stretch"
                    VerticalAlignment="Center" />
-        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+        <TextBox Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                  FontSize="16"
                  Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
 
@@ -74,7 +79,6 @@
           <Style TargetType="ListBoxItem">
             <Setter Property="Margin" Value="0 2" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Template">
               <Setter.Value>
@@ -128,20 +132,13 @@
             <Grid Margin="0">
               <Border CornerRadius="10" Padding="10,10" Height="60" Margin="0,0,0,0"
                       HorizontalAlignment="Stretch" Background="{StaticResource MenuBGBrush}">
-                <b:Interaction.Triggers>
-                  <b:EventTrigger EventName="MouseLeftButtonUp">
-                    <b:InvokeCommandAction
-                      Command="{Binding DataContext.LoadListCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
-                      CommandParameter="{Binding}" />
-                  </b:EventTrigger>
-                </b:Interaction.Triggers>
-
+                
                 <Grid d:DataContext="{d:DesignInstance Type=models:AudioList}">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <!-- <ColumnDefinition Width="Auto" /> -->
+                    <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
 
                   <TextBlock Grid.Column="1"
@@ -159,14 +156,22 @@
                     </TextBlock.Style>
                   </TextBlock>
 
-                  <Grid Grid.Column="2">
-                    <Button Height="30" Width="30" Style="{DynamicResource AnimatedButton}"
-                            Command="{Binding DataContext.RemoveListCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
-                            CommandParameter="{Binding}">
-                      <utils:SuperellipseBorder Height="30" Width="30" CornerRadius="10" Power="8"
-                                                Fill="{DynamicResource SecondaryBrush}" />
-                    </Button>
-                  </Grid>
+
+                  <components:SvgIconButton Grid.Column="2" Height="20" Width="20" Margin="0,0,10,0"
+                                            IconData="{StaticResource PlayIcon2Geometry}"
+                                            IconBrush="{StaticResource SecondaryBrush}"
+                                            HoverBrush="{StaticResource LightSecondaryBrush}"
+                                            PressedBrush="{StaticResource DarkSecondaryBrush}"
+                                            Command="{Binding DataContext.LoadListCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                                            CommandParameter="{Binding}" />
+                  <components:SvgIconButton Grid.Column="3" Height="20" Width="20" Margin="0,0,10,0"
+                                            IconData="{StaticResource DeleteIconGeometry}"
+                                            IconBrush="{StaticResource SecondaryBrush}"
+                                            HoverBrush="{StaticResource DangerHoverBrush}"
+                                            PressedBrush="{StaticResource DangerPressedBrush}"
+                                            Command="{Binding DataContext.RemoveListCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                                            CommandParameter="{Binding}" />
+
                 </Grid>
 
               </Border>

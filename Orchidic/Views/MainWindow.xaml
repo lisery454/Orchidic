@@ -172,8 +172,8 @@
                                     WindowChrome.IsHitTestVisibleInChrome="True"
                                     IconBrush="{StaticResource SecondaryBrush}"
                                     IconData="{StaticResource CloseWindowIconGeometry}"
-                                    HoverBrush="{StaticResource WindowCloseBtnHoverBrush}"
-                                    PressedBrush="{StaticResource WindowCloseBtnPressedBrush}"
+                                    HoverBrush="{StaticResource DangerHoverBrush}"
+                                    PressedBrush="{StaticResource DangerPressedBrush}"
                                     Command="{Binding CloseCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
           </components:SvgIconButton>

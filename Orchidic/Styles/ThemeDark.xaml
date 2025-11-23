@@ -9,12 +9,12 @@
   <SolidColorBrush x:Key="MenuBGHighlightBrush" Color="{DynamicResource MenuBGHighlightColor}" />
   <Color x:Key="TitleColor">#989898</Color>
   <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource TitleColor}" />
-  <Color x:Key="WindowCloseBtnFillColor">#ba4444</Color>
-  <SolidColorBrush x:Key="WindowCloseBtnFillBrush" Color="{DynamicResource WindowCloseBtnFillColor}" />
-  <Color x:Key="WindowCloseBtnHoverColor">#c65757</Color>
-  <SolidColorBrush x:Key="WindowCloseBtnHoverBrush" Color="{DynamicResource WindowCloseBtnHoverColor}" />
-  <Color x:Key="WindowCloseBtnPressedColor">#a13535</Color>
-  <SolidColorBrush x:Key="WindowCloseBtnPressedBrush" Color="{DynamicResource WindowCloseBtnPressedColor}" />
+  <Color x:Key="DangerFillColor">#ba4444</Color>
+  <SolidColorBrush x:Key="DangerFillBrush" Color="{DynamicResource DangerFillColor}" />
+  <Color x:Key="DangerHoverColor">#c65757</Color>
+  <SolidColorBrush x:Key="DangerHoverBrush" Color="{DynamicResource DangerHoverColor}" />
+  <Color x:Key="DangerPressedColor">#a13535</Color>
+  <SolidColorBrush x:Key="DangerPressedBrush" Color="{DynamicResource DangerPressedColor}" />
   <Color x:Key="WindowCtrlBtnFillColor">#676767</Color>
   <SolidColorBrush x:Key="WindowCtrlBtnFillBrush" Color="{DynamicResource WindowCtrlBtnFillColor}" />
   <Color x:Key="WindowCtrlBtnHoverColor">#606060</Color>
