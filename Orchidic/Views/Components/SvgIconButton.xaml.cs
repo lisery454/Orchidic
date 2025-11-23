@@ -7,12 +7,24 @@ public partial class SvgIconButton
         InitializeComponent();
     }
 
+    // size
+    public double Size
+    {
+        get => (double)GetValue(SizeProperty);
+        set => SetValue(SizeProperty, value);
+    }
+
+    public static readonly DependencyProperty SizeProperty =
+        DependencyProperty.Register(nameof(Size), typeof(double), typeof(SvgIconButton),
+            new FrameworkPropertyMetadata(1.0));
+
     // ▶ 图标 Geometry
     public Geometry IconData
     {
         get => (Geometry)GetValue(IconDataProperty);
         set => SetValue(IconDataProperty, value);
     }
+
     public static readonly DependencyProperty IconDataProperty =
         DependencyProperty.Register(nameof(IconData), typeof(Geometry), typeof(SvgIconButton));
 
@@ -22,6 +34,7 @@ public partial class SvgIconButton
         get => (Brush)GetValue(IconBrushProperty);
         set => SetValue(IconBrushProperty, value);
     }
+
     public static readonly DependencyProperty IconBrushProperty =
         DependencyProperty.Register(nameof(IconBrush), typeof(Brush), typeof(SvgIconButton));
 
@@ -31,6 +44,7 @@ public partial class SvgIconButton
         get => (Brush)GetValue(HoverBrushProperty);
         set => SetValue(HoverBrushProperty, value);
     }
+
     public static readonly DependencyProperty HoverBrushProperty =
         DependencyProperty.Register(nameof(HoverBrush), typeof(Brush), typeof(SvgIconButton));
 
@@ -40,6 +54,7 @@ public partial class SvgIconButton
         get => (Brush)GetValue(PressedBrushProperty);
         set => SetValue(PressedBrushProperty, value);
     }
+
     public static readonly DependencyProperty PressedBrushProperty =
         DependencyProperty.Register(nameof(PressedBrush), typeof(Brush), typeof(SvgIconButton));
 
@@ -50,6 +65,7 @@ public partial class SvgIconButton
         get => (ICommand)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
+
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(SvgIconButton));
 
@@ -59,6 +75,7 @@ public partial class SvgIconButton
         get => GetValue(CommandParameterProperty);
         set => SetValue(CommandParameterProperty, value);
     }
+
     public static readonly DependencyProperty CommandParameterProperty =
         DependencyProperty.Register(nameof(CommandParameter), typeof(object), typeof(SvgIconButton));
 }

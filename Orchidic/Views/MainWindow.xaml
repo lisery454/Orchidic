@@ -91,15 +91,92 @@
     <!-- title bar -->
     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="50"
           Background="Transparent">
-      <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
-        <Grid Height="50" Width="30" Margin="8,0,0,0">
-          <Button Style="{StaticResource WindowCloseButton}" Click="CloseButton_OnClick" />
-        </Grid>
+      <Grid.Style>
+        <Style TargetType="Grid">
+          <Setter Property="Opacity" Value="0" />
+          <Setter Property="Visibility" Value="Collapsed" />
+
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding GlobalService.IsZenMode}" Value="False">
+              <Setter Property="Opacity" Value="1" />
+              <Setter Property="Visibility" Value="Visible" />
+              <DataTrigger.EnterActions>
+                <BeginStoryboard>
+                  <Storyboard>
+                    <DoubleAnimation
+                      Storyboard.TargetProperty="Opacity"
+                      From="0" To="1"
+                      Duration="0:0:0.15" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.EnterActions>
+            </DataTrigger>
+            
+            <DataTrigger Binding="{Binding GlobalService.IsZenMode}" Value="True">
+              <Setter Property="Opacity" Value="0" />
+              <Setter Property="Visibility" Value="Collapsed" />
+              <DataTrigger.EnterActions>
+                <BeginStoryboard x:Name="FadeOutStoryboard">
+                  <Storyboard>
+                    <DoubleAnimation
+                      Storyboard.TargetProperty="Opacity"
+                      From="1" To="0"
+                      Duration="0:0:0.15"
+                      FillBehavior="Stop" />
+                  </Storyboard>
+                </BeginStoryboard>
+              </DataTrigger.EnterActions>
+            </DataTrigger>
+
+          </Style.Triggers>
+        </Style>
+
+      </Grid.Style>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
         <Grid Height="50" Width="30">
-          <Button Style="{StaticResource WindowControlButton}" Click="MaxButton_OnClick" />
+          <components:SvgIconButton Width="20" Height="20"
+                                    WindowChrome.IsHitTestVisibleInChrome="True"
+                                    Size="0.7"
+                                    IconBrush="{StaticResource SecondaryBrush}"
+                                    IconData="{StaticResource MinWindowIconGeometry}"
+                                    HoverBrush="{StaticResource LightSecondaryBrush}"
+                                    PressedBrush="{StaticResource DarkSecondaryBrush}"
+                                    Command="{Binding MinimizeCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+          </components:SvgIconButton>
         </Grid>
+
         <Grid Height="50" Width="30">
-          <Button Style="{StaticResource WindowControlButton}" Click="MinButton_OnClick" />
+          <components:SvgIconButton Width="20" Height="20"
+                                    Size="0.7"
+                                    WindowChrome.IsHitTestVisibleInChrome="True"
+                                    IconBrush="{StaticResource SecondaryBrush}"
+                                    HoverBrush="{StaticResource LightSecondaryBrush}"
+                                    PressedBrush="{StaticResource DarkSecondaryBrush}"
+                                    Command="{Binding ToggleMaximizeCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+            <components:SvgIconButton.IconData>
+              <MultiBinding Converter="{StaticResource ConditionConverter}">
+                <Binding Path="WindowState" RelativeSource="{RelativeSource AncestorType=Window}"
+                         Converter="{StaticResource IsWindowStateMaximizedConverter}" />
+                <Binding Source="{StaticResource MaxWindowIcon2Geometry}" />
+                <Binding Source="{StaticResource MaxWindowIconGeometry}" />
+              </MultiBinding>
+            </components:SvgIconButton.IconData>
+          </components:SvgIconButton>
+        </Grid>
+
+        <Grid Height="50" Width="30" Margin="0,0,8,0">
+          <components:SvgIconButton Width="20" Height="20"
+                                    Size="0.7"
+                                    WindowChrome.IsHitTestVisibleInChrome="True"
+                                    IconBrush="{StaticResource SecondaryBrush}"
+                                    IconData="{StaticResource CloseWindowIconGeometry}"
+                                    HoverBrush="{StaticResource LightSecondaryBrush}"
+                                    PressedBrush="{StaticResource DarkSecondaryBrush}"
+                                    Command="{Binding CloseCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+          </components:SvgIconButton>
         </Grid>
       </StackPanel>
     </Grid>

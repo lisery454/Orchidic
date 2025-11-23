@@ -6,4 +6,5 @@
   <converters:WindowStateToMarginConverter x:Key="StateToMargin" />
   <converters:ViewModelToViewConverter x:Key="ViewModelToViewConverter" />
   <converters:ConditionConverter x:Key="ConditionConverter" />
+  <converters:IsWindowStateMaximizedConverter x:Key="IsWindowStateMaximizedConverter" />
 </ResourceDictionary>

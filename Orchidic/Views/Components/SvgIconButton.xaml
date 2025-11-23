@@ -19,13 +19,20 @@
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="Button">
-            <Grid Background="Transparent" 
+            <Grid Background="Transparent"
                   Height="{TemplateBinding Height}"
                   Width="{TemplateBinding Width}">
               <Path x:Name="Icon"
+                    Height="{TemplateBinding Height}"
+                    Width="{TemplateBinding Width}"
                     Data="{Binding IconData, ElementName=root}"
                     Fill="{Binding IconBrush, ElementName=root}"
-                    Stretch="Uniform" />
+                    Stretch="Uniform"
+                    RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                  <ScaleTransform ScaleX="{Binding Size, ElementName=root}" ScaleY="{Binding Size, ElementName=root}"></ScaleTransform>
+                </Path.RenderTransform>
+              </Path>
             </Grid>
 
             <ControlTemplate.Triggers>

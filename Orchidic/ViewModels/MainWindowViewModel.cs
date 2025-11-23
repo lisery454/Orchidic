@@ -15,6 +15,10 @@ public class MainWindowViewModel : ViewModelBase
     public IAudioQueueService AudioQueueService { get; }
     public IGlobalService GlobalService { get; }
 
+    public ICommand MinimizeCommand { get; }
+    public ICommand ToggleMaximizeCommand { get; }
+    public ICommand CloseCommand { get; }
+
 
     public MainWindowViewModel(IAudioQueueService audioQueueService, IGlobalService globalService)
     {
@@ -35,5 +39,14 @@ public class MainWindowViewModel : ViewModelBase
                     _ => App.Current.Services.GetRequiredService<PlayingPageViewModel>()
                 };
             }).ToProperty(this, x => x.CurrentPageViewModel);
+
+        MinimizeCommand = ReactiveCommand.Create<Window>(window => { window.WindowState = WindowState.Minimized; });
+        ToggleMaximizeCommand = ReactiveCommand.Create<Window>(window =>
+        {
+            window.WindowState = window.WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized;
+        });
+        CloseCommand = ReactiveCommand.Create<Window>(window => { window.Close(); });
     }
 }

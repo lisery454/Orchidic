@@ -17,26 +17,6 @@ public partial class MainWindow
     {
         WindowAnimRestorer.AddAnimTo(this);
     }
-
-    private void ToggleMaximize()
-    {
-        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-    }
-
-    private void MinButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
-
-    private void MaxButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        ToggleMaximize();
-    }
-
-    private void CloseButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        Close();
-    }
 }
 
 public class MenuWidthConverter : IValueConverter
