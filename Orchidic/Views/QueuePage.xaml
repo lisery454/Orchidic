@@ -7,7 +7,6 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:models="clr-namespace:Orchidic.Models"
              xmlns:utils="clr-namespace:Orchidic.Utils"
-             xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              Loaded="QueuePage_OnLoaded"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"

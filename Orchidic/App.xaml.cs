@@ -32,6 +32,7 @@ public partial class App
         services.AddSingleton<ISettingManager, SettingManager>();
         
         services.AddSingleton<IGlobalService, GlobalService>();
+        services.AddSingleton<IAudioListService, AudioListService>();
         services.AddSingleton<IAudioQueueService, AudioQueueService>();
         services.AddSingleton<IPlayerService, PlayerService>();
 

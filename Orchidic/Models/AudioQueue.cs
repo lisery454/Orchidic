@@ -104,4 +104,11 @@ public class AudioQueue : ReactiveObject
         AudioFiles.AddRange(audioFiles);
         CurrentIndex = count;
     }
+
+    public void Load(AudioList audioList)
+    {
+        AudioFiles.Clear();
+        AudioFiles.AddRange(audioList.AudioFilePaths.Select(p => new AudioFile(p)));
+        CurrentIndex = audioList.AudioFilePaths.Count > 0 ? 0 : -1;
+    }
 }
