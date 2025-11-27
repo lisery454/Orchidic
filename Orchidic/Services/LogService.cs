@@ -1,12 +1,15 @@
-namespace Orchidic.Utils.LogManager;
+using Orchidic.Services.Interfaces;
+using Orchidic.Utils;
 
-public class LogManager : ILogManager
+namespace Orchidic.Services;
+
+public class LogService : ILogService
 {
     private readonly Logger _logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo
         .File(ProgramConstants.LogPath)
         .CreateLogger();
 
-    public LogManager()
+    public LogService()
     {
         Info("Create LogManager Success");
     }

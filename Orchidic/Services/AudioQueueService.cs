@@ -1,7 +1,6 @@
 ﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
-using Orchidic.Utils.SettingManager;
 
 namespace Orchidic.Services;
 
@@ -9,23 +8,23 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
 {
     public AudioQueue AudioQueue { get; }
 
-    private ISettingManager _settingManager;
+    private ISettingService _settingService;
 
-    public AudioQueueService(ISettingManager settingManager)
+    public AudioQueueService(ISettingService settingService)
     {
-        _settingManager = settingManager;
-        AudioQueue = new AudioQueue(_settingManager.CurrentSetting.QueuePaths.Select(x => new AudioFile(x)).ToList());
+        _settingService = settingService;
+        AudioQueue = new AudioQueue(_settingService.CurrentSetting.QueuePaths.Select(x => new AudioFile(x)).ToList());
 
         UpdateCover(AudioQueue.CurrentAudioFile);
 
-        AudioQueue.TrySetCurrentAudioFile(settingManager.CurrentSetting.CurrentAudioPath);
+        AudioQueue.TrySetCurrentAudioFile(settingService.CurrentSetting.CurrentAudioPath);
 
 
         AudioQueue.WhenAnyValue(x => x.CurrentAudioFile).Subscribe(currentAudioFile =>
         {
             UpdateCover(currentAudioFile);
 
-            _settingManager.CurrentSetting.CurrentAudioPath = currentAudioFile?.Path;
+            _settingService.CurrentSetting.CurrentAudioPath = currentAudioFile?.Path;
         });
 
         AudioQueue.AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;
@@ -47,7 +46,7 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
 
     private void AudioFilesOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _settingManager.CurrentSetting.QueuePaths = AudioQueue.AudioFiles.Select(x => x.Path).ToList();
+        _settingService.CurrentSetting.QueuePaths = AudioQueue.AudioFiles.Select(x => x.Path).ToList();
     }
 
     private BitmapSource? _currentCover;

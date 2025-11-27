@@ -1,6 +1,5 @@
 ﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
-using Orchidic.Utils.SettingManager;
 
 namespace Orchidic.Services;
 
@@ -14,7 +13,7 @@ public class PlayerService : ReactiveObject, IPlayerService
     private WaveOutEvent? _outputDevice;
     private AudioFileReader? _audioFileReader;
 
-    private ISettingManager _settingManager;
+    private ISettingService _settingService;
 
     #endregion
 
@@ -87,7 +86,7 @@ public class PlayerService : ReactiveObject, IPlayerService
                 _audioFileReader.Volume = value;
 
             // 保存设置
-            _settingManager.CurrentSetting.Volume = value;
+            _settingService.CurrentSetting.Volume = value;
         }
     }
 
@@ -95,10 +94,10 @@ public class PlayerService : ReactiveObject, IPlayerService
 
     #region constructors
 
-    public PlayerService(ISettingManager settingManager)
+    public PlayerService(ISettingService settingService)
     {
-        _settingManager = settingManager;
-        _volume = settingManager.CurrentSetting.Volume;
+        _settingService = settingService;
+        _volume = settingService.CurrentSetting.Volume;
 
 
         CurrentTimeObservable

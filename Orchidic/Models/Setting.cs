@@ -1,4 +1,4 @@
-namespace Orchidic.Utils.SettingManager;
+namespace Orchidic.Models;
 
 public class Setting
 {

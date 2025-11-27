@@ -1,9 +1,6 @@
 ﻿using Orchidic.Services;
 using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
-using Orchidic.Utils.LogManager;
-using Orchidic.Utils.SettingManager;
-using Orchidic.Utils.STAManager;
 using Orchidic.ViewModels;
 using Orchidic.Views;
 
@@ -24,18 +21,15 @@ public partial class App
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<ISerializer, Serializer>();
-        services.AddSingleton<IDeserializer, Deserializer>();
-
-        services.AddSingleton<ILogManager, LogManager>();
-        services.AddSingleton<ISTAManager, STAManager>();
-        services.AddSingleton<ISettingManager, SettingManager>();
-        
+        // services
+        services.AddSingleton<ILogService, LogService>();
+        services.AddSingleton<ISettingService, SettingService>();
         services.AddSingleton<IGlobalService, GlobalService>();
         services.AddSingleton<IAudioListService, AudioListService>();
         services.AddSingleton<IAudioQueueService, AudioQueueService>();
         services.AddSingleton<IPlayerService, PlayerService>();
 
+        // view-models
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<PlayingPageViewModel>();
         services.AddSingleton<QueuePageViewModel>();
@@ -45,6 +39,7 @@ public partial class App
         services.AddSingleton<ToolsPageViewModel>();
         services.AddSingleton<SettingsPageViewModel>();
 
+        // view
         services.AddSingleton<MainWindow>();
         services.AddSingleton<PlayingPage>();
         services.AddSingleton<QueuePage>();
@@ -60,12 +55,12 @@ public partial class App
     protected override void OnExit(ExitEventArgs e)
     {
         // save setting
-        var settingManager = Services.GetService<ISettingManager>();
-        settingManager?.Save();
+        var settingService = Services.GetService<ISettingService>();
+        settingService?.Save();
 
         // log
-        var logManager = Services.GetService<ILogManager>();
-        logManager?.Info("Application Exit.");
+        var logService = Services.GetService<ILogService>();
+        logService?.Info("Application Exit.");
         base.OnExit(e);
     }
 
@@ -73,9 +68,9 @@ public partial class App
     {
         base.OnStartup(e);
         // log
-        var logManager = Services.GetService<ILogManager>();
-        logManager?.Info("Application Start Up.");
-        
+        var logService = Services.GetService<ILogService>();
+        logService?.Info("Application Start Up.");
+
         // start window
         var mainWindow = Services.GetService<MainWindow>();
         mainWindow!.Show();

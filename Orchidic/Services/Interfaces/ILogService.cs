@@ -1,6 +1,6 @@
-namespace Orchidic.Utils.LogManager;
+namespace Orchidic.Services.Interfaces;
 
-public interface ILogManager
+public interface ILogService
 {
     void Info(string message);
     void Warning(string message);

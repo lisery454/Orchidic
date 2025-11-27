@@ -1,8 +1,10 @@
-using Orchidic.Utils.LogManager;
+using Orchidic.Models;
+using Orchidic.Services.Interfaces;
+using Orchidic.Utils;
 
-namespace Orchidic.Utils.SettingManager;
+namespace Orchidic.Services;
 
-public class SettingManager : ISettingManager
+public class SettingService : ISettingService
 {
     private Setting _currentSetting;
 
@@ -18,25 +20,25 @@ public class SettingManager : ISettingManager
 
     private readonly ISerializer _serializer;
     private readonly IDeserializer _deserializer;
-    private readonly ILogManager _logManager;
+    private readonly ILogService _logService;
 
-    public SettingManager(ISerializer serializer, IDeserializer deserializer, ILogManager logManager)
+    public SettingService(ILogService logService)
     {
-        _serializer = serializer;
-        _deserializer = deserializer;
-        _logManager = logManager;
+        _serializer = new Serializer();
+        _deserializer = new Deserializer();
+        _logService = logService;
 
         CheckIfSettingFileExists();
         try
         {
             _currentSetting = _deserializer.Deserialize<Setting>(File.ReadAllText(ProgramConstants.SettingPath));
-            _logManager.Info("Load Setting Success.");
+            _logService.Info("Load Setting Success.");
         }
         catch (Exception e)
         {
-            _logManager.Warning($"Load Setting Fail. Exception: {e}");
+            _logService.Warning($"Load Setting Fail. Exception: {e}");
             _currentSetting = new Setting();
-            _logManager.Info("Create Default Setting.");
+            _logService.Info("Create Default Setting.");
             Save();
         }
     }
@@ -47,7 +49,7 @@ public class SettingManager : ISettingManager
         var serialize = _serializer.Serialize(CurrentSetting);
         using var sw = new StreamWriter(ProgramConstants.SettingPath);
         sw.WriteLine(serialize);
-        _logManager.Info("Save Setting Success.");
+        _logService.Info("Save Setting Success.");
     }
 
     private void CheckIfSettingFileExists()
