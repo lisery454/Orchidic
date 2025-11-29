@@ -21,8 +21,12 @@
   <SolidColorBrush x:Key="LightSecondaryBrush" Color="{DynamicResource LightSecondaryColor}" />
   <Color x:Key="DarkSecondaryColor">#4B585858</Color>
   <SolidColorBrush x:Key="DarkSecondaryBrush" Color="{DynamicResource DarkSecondaryColor}" />
-  <Color x:Key="PrimaryColor">#4BECECEC</Color>
+  <Color x:Key="PrimaryColor">#ab917bff</Color>
   <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />
+  <Color x:Key="LightPrimaryColor">#ab9d8cf0</Color>
+  <SolidColorBrush x:Key="LightPrimaryBrush" Color="{DynamicResource LightPrimaryColor}" />
+  <Color x:Key="DarkPrimaryColor">#ab7962e9</Color>
+  <SolidColorBrush x:Key="DarkPrimaryBrush" Color="{DynamicResource DarkPrimaryColor}" />
   <Color x:Key="FontColor">#aaa</Color>
   <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}" />
   <Color x:Key="HighlightFontColor">#eee</Color>

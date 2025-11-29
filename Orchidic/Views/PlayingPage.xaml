@@ -59,8 +59,7 @@
                     UseLayoutRounding="True"
                     RenderOptions.BitmapScalingMode="HighQuality"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    >
+                    VerticalAlignment="Center">
                     <b:Interaction.Behaviors>
                       <utils:ImageFadeBehavior Source="{Binding AudioQueueService.CurrentCover}" />
                     </b:Interaction.Behaviors>
@@ -153,10 +152,29 @@
               Height="20"
               Margin="18,0,18,0"
               IconData="{StaticResource EyeIconGeometry}"
-              IconBrush="{StaticResource SecondaryBrush}"
-              HoverBrush="{StaticResource LightSecondaryBrush}"
-              PressedBrush="{StaticResource DarkSecondaryBrush}"
-              Command="{Binding SetZenModeCommand}" />
+              Command="{Binding SetZenModeCommand}">
+              <components:SvgIconButton.IconBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="GlobalService.IsZenMode" />
+                  <Binding Source="{StaticResource PrimaryBrush}" />
+                  <Binding Source="{StaticResource SecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.IconBrush>
+              <components:SvgIconButton.HoverBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="GlobalService.IsZenMode" />
+                  <Binding Source="{StaticResource LightPrimaryBrush}" />
+                  <Binding Source="{StaticResource LightSecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.HoverBrush>
+              <components:SvgIconButton.PressedBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="GlobalService.IsZenMode" />
+                  <Binding Source="{StaticResource DarkPrimaryBrush}" />
+                  <Binding Source="{StaticResource DarkSecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.PressedBrush>
+            </components:SvgIconButton>
             <components:SvgIconButton
               Width="36"
               Height="36"

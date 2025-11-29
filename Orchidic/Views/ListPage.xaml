@@ -140,9 +140,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
 
-                  <Image Grid.Column="0" Source="{Binding Thumbnails}" 
+                  <Image Grid.Column="0" Source="{Binding Thumbnails}"
                          Margin="5 0 10 0"
                          Width="30">
                     <Image.Clip>
@@ -166,15 +167,25 @@
                     </TextBlock.Style>
                   </TextBlock>
 
+                  <TextBlock Grid.Column="2"
+                             Text="{Binding AudioFilePaths.Count}"
+                             Margin="5 0 10 0"
+                             TextTrimming="CharacterEllipsis"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center">
+                  </TextBlock>
 
-                  <components:SvgIconButton Grid.Column="2" Height="20" Width="20" Margin="0,0,10,0"
+
+                  <components:SvgIconButton Grid.Column="3" Height="20" Width="20" Margin="0,0,10,0"
                                             IconData="{StaticResource PlayIcon2Geometry}"
                                             IconBrush="{StaticResource SecondaryBrush}"
                                             HoverBrush="{StaticResource LightSecondaryBrush}"
                                             PressedBrush="{StaticResource DarkSecondaryBrush}"
                                             Command="{Binding DataContext.LoadListCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
                                             CommandParameter="{Binding}" />
-                  <components:SvgIconButton Grid.Column="3" Height="20" Width="20" Margin="0,0,10,0"
+                  <components:SvgIconButton Grid.Column="4" Height="20" Width="20" Margin="0,0,10,0"
                                             IconData="{StaticResource DeleteIconGeometry}"
                                             IconBrush="{StaticResource SecondaryBrush}"
                                             HoverBrush="{StaticResource DangerHoverBrush}"

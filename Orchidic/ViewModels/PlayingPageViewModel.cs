@@ -10,6 +10,7 @@ public class PlayingPageViewModel : ViewModelBase
 
     public IPlayerService PlayerService { get; }
     public IAudioQueueService AudioQueueService { get; }
+    public IGlobalService GlobalService { get; }
 
     public ICommand NextAudioCommand { get; }
     public ICommand PrevAudioCommand { get; }
@@ -25,6 +26,7 @@ public class PlayingPageViewModel : ViewModelBase
     {
         PlayerService = playerService;
         AudioQueueService = audioQueueService;
+        GlobalService = globalService;
 
         var canPlay = AudioQueueService.AudioQueue
             .WhenAnyValue(x => x.CurrentAudioFile)

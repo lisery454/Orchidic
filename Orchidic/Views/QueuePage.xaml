@@ -203,7 +203,7 @@
                                 <Binding />
                               </MultiBinding>
                             </DataTrigger.Binding>
-                            <Setter Property="Foreground" Value="{StaticResource HighlightFontBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
 
                           </DataTrigger>
                         </Style.Triggers>

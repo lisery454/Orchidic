@@ -208,7 +208,7 @@
         <!-- title -->
         <Grid Height="100">
           <TextBlock FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"
-                     Foreground="{DynamicResource TitleBrush}" FontWeight="Bold"
+                     Foreground="{DynamicResource PrimaryBrush}" FontWeight="Bold"
                      Text="{x:Static utils:ProgramConstants.AppName}" />
         </Grid>
 

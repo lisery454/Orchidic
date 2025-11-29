@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Orchidic.Views.Components"
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels.Components"
-             xmlns:utils="clr-namespace:Orchidic.Utils"
              d:DataContext="{d:DesignInstance Type=viewModels:SideMenuViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -61,17 +60,22 @@
                                    Height="20" Width="20"
                                    Geometry="{Binding Path='.', Converter={StaticResource PageIconConverter}}">
                       <local:SvgIcon.Fill>
-                        <SolidColorBrush Color="{StaticResource SecondaryColor}"></SolidColorBrush>
+                        <SolidColorBrush Color="{StaticResource SecondaryColor}" />
                       </local:SvgIcon.Fill>
 
                     </local:SvgIcon>
 
 
                     <TextBlock Grid.Column="2"
+                               x:Name="Text"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontSize="16"
-                               Text="{Binding Path='.', Converter={StaticResource PageTitleConverter}}" />
+                               Text="{Binding Path='.', Converter={StaticResource PageTitleConverter}}">
+                      <TextBlock.Foreground>
+                        <SolidColorBrush Color="{StaticResource FontColor}" />
+                      </TextBlock.Foreground>
+                    </TextBlock>
                   </Grid>
 
                   <!-- VisualStateManager 管理动画 -->
@@ -85,6 +89,11 @@
                                           To="{DynamicResource SecondaryColor}"
                                           Duration="0:0:0.15"
                                           EasingFunction="{StaticResource QuadraticEaseInOut}" />
+                          <ColorAnimation Storyboard.TargetName="Text"
+                                          Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                          To="{DynamicResource FontColor}"
+                                          Duration="0:0:0.15"
+                                          EasingFunction="{StaticResource QuadraticEaseInOut}" />
                         </Storyboard>
                       </VisualState>
 
@@ -96,6 +105,11 @@
                         <Storyboard>
                           <ColorAnimation Storyboard.TargetName="SvgIcon"
                                           Storyboard.TargetProperty="(local:SvgIcon.Fill).(SolidColorBrush.Color)"
+                                          To="{DynamicResource PrimaryColor}"
+                                          Duration="0:0:0.15"
+                                          EasingFunction="{StaticResource QuadraticEaseInOut}" />
+                          <ColorAnimation Storyboard.TargetName="Text"
+                                          Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
                                           To="{DynamicResource PrimaryColor}"
                                           Duration="0:0:0.15"
                                           EasingFunction="{StaticResource QuadraticEaseInOut}" />
