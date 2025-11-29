@@ -7,7 +7,7 @@ public class AudioListService : IAudioListService
 {
     public ObservableCollection<AudioList> AudioLists { get; }
 
-    private ISettingService _settingService;
+    private readonly ISettingService _settingService;
 
 
     public AudioListService(ISettingService settingService)
@@ -15,23 +15,23 @@ public class AudioListService : IAudioListService
         _settingService = settingService;
 
         AudioLists = [];
-        foreach (var (name, paths) in settingService.CurrentSetting.AudioListInfo)
+        foreach (var setting in settingService.CurrentSetting.AudioListInfo)
         {
-            AudioLists.Add(new AudioList(name, paths));
+            AudioLists.Add(new AudioList(setting.Name, setting.Path));
         }
     }
 
-    public void AddAudioList(string name, string[] paths)
+    public void AddAudioList(string name, string path)
     {
-        AudioLists.Add(new AudioList(name, paths));
+        AudioLists.Add(new AudioList(name, path));
         _settingService.CurrentSetting.AudioListInfo =
-            AudioLists.Select(list => (list.Name, list.AudioFilePaths.ToArray())).ToArray();
+            AudioLists.Select(list => new AudioListSetting(list.Name, list.DirectoryPath)).ToArray();
     }
 
     public void RemoveAudioList(AudioList audioList)
     {
         AudioLists.Remove(audioList);
         _settingService.CurrentSetting.AudioListInfo =
-            AudioLists.Select(list => (list.Name, list.AudioFilePaths.ToArray())).ToArray();
+            AudioLists.Select(list => new AudioListSetting(list.Name, list.DirectoryPath)).ToArray();
     }
 }

@@ -5,7 +5,7 @@
     <Setter Property="FontWeight" Value="Normal"></Setter>
     <Setter Property="FontSize" Value="20"></Setter>
     <Setter Property="Foreground" Value="{DynamicResource FontBrush}"></Setter>
-    <Setter Property="Background" Value="{DynamicResource MenuBGBrush}"></Setter>
+    <Setter Property="Background" Value="{DynamicResource ContainerBrush}"></Setter>
     <Setter Property="Padding" Value="15,10" />
     <Setter Property="CaretBrush" Value="{DynamicResource PrimaryBrush}" />
     <Setter Property="BorderThickness" Value="0" />

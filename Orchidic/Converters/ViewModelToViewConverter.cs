@@ -16,7 +16,6 @@ public class ViewModelToViewConverter : IValueConverter
             PlayingPageViewModel => App.Current.Services.GetService<PlayingPage>(),
             QueuePageViewModel => App.Current.Services.GetService<QueuePage>(),
             ListPageViewModel => App.Current.Services.GetService<ListPage>(),
-            SearchPageViewModel => App.Current.Services.GetService<SearchPage>(),
             StatisticsPageViewModel => App.Current.Services.GetService<StatisticsPage>(),
             ToolsPageViewModel => App.Current.Services.GetService<ToolsPage>(),
             SettingsPageViewModel => App.Current.Services.GetService<SettingsPage>(),

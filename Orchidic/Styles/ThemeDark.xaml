@@ -3,10 +3,12 @@
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
   <Color x:Key="BGColor">#ff131313</Color>
   <SolidColorBrush x:Key="BGBrush" Color="{DynamicResource BGColor}" />
-  <Color x:Key="MenuBGColor">#22000000</Color>
-  <SolidColorBrush x:Key="MenuBGBrush" Color="{DynamicResource MenuBGColor}" />
-  <Color x:Key="MenuBGHighlightColor">#22cccccc</Color>
-  <SolidColorBrush x:Key="MenuBGHighlightBrush" Color="{DynamicResource MenuBGHighlightColor}" />
+  <Color x:Key="ContainerColor">#22000000</Color>
+  <SolidColorBrush x:Key="ContainerBrush" Color="{DynamicResource ContainerColor}" />
+  <Color x:Key="ContainerLightColor">#22cccccc</Color>
+  <SolidColorBrush x:Key="ContainerLightBrush" Color="{DynamicResource ContainerLightColor}" />
+  <Color x:Key="ContainerDarkColor">#33000000</Color>
+  <SolidColorBrush x:Key="ContainerDarkBrush" Color="{DynamicResource ContainerDarkColor}" />
   <Color x:Key="TitleColor">#989898</Color>
   <SolidColorBrush x:Key="TitleBrush" Color="{DynamicResource TitleColor}" />
   <Color x:Key="DangerFillColor">#ba4444</Color>
@@ -19,7 +21,7 @@
   <SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource SecondaryColor}" />
   <Color x:Key="LightSecondaryColor">#8dffffff</Color>
   <SolidColorBrush x:Key="LightSecondaryBrush" Color="{DynamicResource LightSecondaryColor}" />
-  <Color x:Key="DarkSecondaryColor">#4B585858</Color>
+  <Color x:Key="DarkSecondaryColor">#8d585858</Color>
   <SolidColorBrush x:Key="DarkSecondaryBrush" Color="{DynamicResource DarkSecondaryColor}" />
   <Color x:Key="PrimaryColor">#ab917bff</Color>
   <SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />

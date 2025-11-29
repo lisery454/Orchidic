@@ -29,12 +29,19 @@
       <Grid Grid.Row="0" Margin="0,0,0,10">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" FontSize="16"
+                   VerticalAlignment="Center"
                    Margin="0,0,15,0"
                    Text="{Binding AudioListService.AudioLists.Count, Converter={StaticResource AudioListCountTextConverter }}">
         </TextBlock>
+        <Button Grid.Column="2" Style="{StaticResource SimplePrimaryButton}" Command="{Binding CreateListCommand}">
+          <Button.Content>
+            <TextBlock FontSize="16" Text="创建" />
+          </Button.Content>
+        </Button>
       </Grid>
 
 
@@ -132,13 +139,14 @@
           <DataTemplate>
             <Grid Margin="0">
               <Border CornerRadius="10" Padding="10,10" Height="60" Margin="0,0,0,0"
-                      HorizontalAlignment="Stretch" Background="{StaticResource MenuBGBrush}">
+                      HorizontalAlignment="Stretch" Background="{StaticResource ContainerBrush}">
 
                 <Grid d:DataContext="{d:DesignInstance Type=models:AudioList}">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
@@ -168,6 +176,16 @@
                   </TextBlock>
 
                   <TextBlock Grid.Column="2"
+                             Text="{Binding DirectoryPath}"
+                             Margin="5 0 10 0"
+                             TextTrimming="CharacterEllipsis"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center">
+                  </TextBlock>
+
+                  <TextBlock Grid.Column="3"
                              Text="{Binding AudioFilePaths.Count}"
                              Margin="5 0 10 0"
                              TextTrimming="CharacterEllipsis"
@@ -178,14 +196,14 @@
                   </TextBlock>
 
 
-                  <components:SvgIconButton Grid.Column="3" Height="20" Width="20" Margin="0,0,10,0"
+                  <components:SvgIconButton Grid.Column="4" Height="20" Width="20" Margin="0,0,10,0"
                                             IconData="{StaticResource PlayIcon2Geometry}"
                                             IconBrush="{StaticResource SecondaryBrush}"
                                             HoverBrush="{StaticResource LightSecondaryBrush}"
                                             PressedBrush="{StaticResource DarkSecondaryBrush}"
                                             Command="{Binding DataContext.LoadListCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
                                             CommandParameter="{Binding}" />
-                  <components:SvgIconButton Grid.Column="4" Height="20" Width="20" Margin="0,0,10,0"
+                  <components:SvgIconButton Grid.Column="5" Height="20" Width="20" Margin="0,0,10,0"
                                             IconData="{StaticResource DeleteIconGeometry}"
                                             IconBrush="{StaticResource SecondaryBrush}"
                                             HoverBrush="{StaticResource DangerHoverBrush}"

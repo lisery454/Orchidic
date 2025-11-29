@@ -13,7 +13,6 @@ public class PageIconConverter : IValueConverter
                 PageType.Playing => Application.Current.Resources["MusicIconGeometry"] as Geometry,
                 PageType.Queue => Application.Current.Resources["QueueIconGeometry"] as Geometry,
                 PageType.List => Application.Current.Resources["ListIconGeometry"] as Geometry,
-                PageType.Search => Application.Current.Resources["SearchIconGeometry"] as Geometry,
                 PageType.Statistics => Application.Current.Resources["StatisticsIconGeometry"] as Geometry,
                 PageType.Tools => Application.Current.Resources["ToolIconGeometry"] as Geometry,
                 PageType.Settings => Application.Current.Resources["SettingIconGeometry"] as Geometry,

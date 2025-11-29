@@ -6,7 +6,7 @@ public interface IAudioListService
 {
     public ObservableCollection<AudioList> AudioLists { get; }
 
-    void AddAudioList(string name, string[] paths);
+    void AddAudioList(string name, string path);
 
     void RemoveAudioList(AudioList audioList);
 }

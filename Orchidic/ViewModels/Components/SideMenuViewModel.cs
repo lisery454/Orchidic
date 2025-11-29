@@ -31,7 +31,6 @@ public class SideMenuViewModel : ViewModelBase
             PageType.Playing,
             PageType.Queue,
             PageType.List,
-            PageType.Search,
             PageType.Statistics,
             PageType.Tools,
             PageType.Settings,

@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
              xmlns:models="clr-namespace:Orchidic.Models"
              xmlns:components="clr-namespace:Orchidic.Views.Components"
+             xmlns:utils="clr-namespace:Orchidic.Utils"
              Loaded="QueuePage_OnLoaded"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:QueuePageViewModel}"
@@ -32,19 +33,32 @@
       <Grid Grid.Row="0" Margin="0,0,0,10">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" FontSize="16"
+                   VerticalAlignment="Center"
                    Margin="0,0,15,0"
                    Text="{Binding AudioQueueService.AudioQueue.AudioFiles.Count, Converter={StaticResource AudioCountTextConverter }}">
         </TextBlock>
-        <components:SvgIconButton Grid.Column="1" Height="20" Width="20"
-                                  IconData="{StaticResource LocateIconGeometry}"
-                                  IconBrush="{StaticResource SecondaryBrush}"
-                                  HoverBrush="{StaticResource LightSecondaryBrush}"
-                                  PressedBrush="{StaticResource DarkSecondaryBrush}"
-                                  Command="{Binding LocateCommand}"
-                                  CommandParameter="{Binding ElementName=AudioListBox}" />
+        <Button Grid.Column="2" Style="{StaticResource SimplePrimaryButton}"
+                Command="{Binding LocateCommand}"
+                CommandParameter="{Binding ElementName=AudioListBox}">
+          <Button.Content>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <components:SvgIcon Grid.Column="0" Height="20" Width="20"
+                                  Geometry="{StaticResource LocateIconGeometry}"
+                                  Fill="{StaticResource FontBrush}" />
+              <TextBlock Grid.Column="1" FontSize="16" Text="定位" Margin="10,0,0,0" />
+            </Grid>
+
+          </Button.Content>
+        </Button>
+
       </Grid>
 
 
@@ -147,7 +161,7 @@
                       HorizontalAlignment="Stretch">
                 <Border.Style>
                   <Style TargetType="Border">
-                    <Setter Property="Background" Value="{StaticResource MenuBGBrush}" />
+                    <Setter Property="Background" Value="{StaticResource ContainerBrush}" />
                     <Style.Triggers>
                       <DataTrigger Value="True">
                         <DataTrigger.Binding>
@@ -158,21 +172,23 @@
                           </MultiBinding>
                         </DataTrigger.Binding>
 
-                        <Setter Property="Background" Value="{StaticResource MenuBGHighlightBrush}" />
+                        <Setter Property="Background" Value="{StaticResource ContainerLightBrush}" />
 
                       </DataTrigger>
                     </Style.Triggers>
                   </Style>
                 </Border.Style>
 
-                <Grid d:DataContext="{d:DesignInstance Type=models:AudioFile}">
+                <Grid d:DataContext="{d:DesignInstance Type=models:AudioFile}"
+                      Background="Transparent"
+                      utils:DoubleClickBehavior.Command="{Binding DataContext.PlayCommand, RelativeSource={RelativeSource AncestorType=UserControl }}"
+                      utils:DoubleClickBehavior.CommandParameter="{Binding}">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
-
 
                   <Image Grid.Column="0" Source="{Binding Thumbnails}" Margin="5 0 10 0"
                          Width="30">

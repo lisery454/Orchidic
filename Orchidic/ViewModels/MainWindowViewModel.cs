@@ -32,7 +32,6 @@ public class MainWindowViewModel : ViewModelBase
                     PageType.Playing => App.Current.Services.GetRequiredService<PlayingPageViewModel>(),
                     PageType.Queue => App.Current.Services.GetRequiredService<QueuePageViewModel>(),
                     PageType.List => App.Current.Services.GetRequiredService<ListPageViewModel>(),
-                    PageType.Search => App.Current.Services.GetRequiredService<SearchPageViewModel>(),
                     PageType.Statistics => App.Current.Services.GetRequiredService<StatisticsPageViewModel>(),
                     PageType.Tools => App.Current.Services.GetRequiredService<ToolsPageViewModel>(),
                     PageType.Settings => App.Current.Services.GetRequiredService<SettingsPageViewModel>(),

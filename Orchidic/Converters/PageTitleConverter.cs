@@ -13,7 +13,6 @@ public class PageTitleConverter : IValueConverter
                 PageType.Playing => "正在播放",
                 PageType.Queue => "队列",
                 PageType.List => "列表",
-                PageType.Search => "搜索",
                 PageType.Statistics => "统计",
                 PageType.Tools => "工具",
                 PageType.Settings => "设置",

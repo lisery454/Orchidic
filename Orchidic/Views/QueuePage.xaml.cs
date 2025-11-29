@@ -37,9 +37,9 @@ public partial class QueuePage
     {
         if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             return;
-        
+
         var filePaths = (string[]?)e.Data.GetData(DataFormats.FileDrop) ?? [];
-        
+
         var audioFiles = filePaths
             .Where(f => AudioExtensions.Contains(Path.GetExtension(f).ToLower()))
             .Select(x => new AudioFile(x))
@@ -56,12 +56,16 @@ public partial class QueuePage
 
     private void QueuePage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (DataContext is QueuePageViewModel vm)
-        {
-            if (vm.LocateCommand.CanExecute(AudioListBox))
-            {
-                vm.LocateCommand.Execute(AudioListBox);
-            }
-        }
+        // Dispatcher.BeginInvoke(async () =>
+        // {
+        //     await Task.Delay(150); // 等待 150ms
+        //     if (DataContext is QueuePageViewModel vm)
+        //     {
+        //         if (vm.LocateCommand.CanExecute(AudioListBox))
+        //         {
+        //             vm.LocateCommand.Execute(AudioListBox);
+        //         }
+        //     }
+        // }, DispatcherPriority.Loaded);
     }
 }

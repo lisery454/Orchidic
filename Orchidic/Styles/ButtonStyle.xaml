@@ -332,4 +332,71 @@
     </Setter>
   </Style>
 
+  <!-- SimpleButton -->
+  <Style x:Key="SimpleButton" TargetType="Button">
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="border" Background="{StaticResource ContainerBrush}" CornerRadius="10">
+            <ContentPresenter Margin="14, 6"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <!-- 鼠标悬停 -->
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="border" Property="Background" Value="{StaticResource ContainerLightBrush}" />
+            </Trigger>
+            <!-- 按下 -->
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="border" Property="Background" Value="{StaticResource ContainerDarkBrush}" />
+            </Trigger>
+            <!-- 禁用 -->
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="border" Property="Background" Value="#FFB0BEC5" />
+              <Setter Property="Foreground" Value="#FF78909C" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- SimplePrimaryButton -->
+  <Style x:Key="SimplePrimaryButton" TargetType="Button">
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="border" Background="{StaticResource PrimaryBrush}" CornerRadius="10">
+            <ContentPresenter Margin="14, 6"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Content}" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <!-- 鼠标悬停 -->
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="border" Property="Background" Value="{StaticResource LightPrimaryBrush}" />
+            </Trigger>
+            <!-- 按下 -->
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="border" Property="Background" Value="{StaticResource DarkPrimaryBrush}" />
+            </Trigger>
+            <!-- 禁用 -->
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="border" Property="Background" Value="#FFB0BEC5" />
+              <Setter Property="Foreground" Value="#FF78909C" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

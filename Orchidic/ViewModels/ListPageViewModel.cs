@@ -1,6 +1,7 @@
 ﻿using Orchidic.Models;
 using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
+using Orchidic.Views.Dialogs;
 
 namespace Orchidic.ViewModels;
 
@@ -14,6 +15,8 @@ public class ListPageViewModel : ViewModelBase
 
     public ICommand LoadListCommand { get; }
     public ICommand RemoveListCommand { get; }
+
+    public ICommand CreateListCommand { get; }
 
     private string _filterText;
 
@@ -51,6 +54,18 @@ public class ListPageViewModel : ViewModelBase
         });
 
         RemoveListCommand = ReactiveCommand.Create<AudioList>(list => { AudioListService.RemoveAudioList(list); });
+
+        CreateListCommand = ReactiveCommand.Create(() =>
+        {
+            var dlg = new CreateNewListDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            if (dlg.ShowDialog() != true) return;
+            var (name, dirPath) = dlg.Result!.Value;
+            if (string.IsNullOrWhiteSpace(name) || !Directory.Exists(dirPath)) return;
+            AudioListService.AddAudioList(name, dirPath);
+        });
     }
 
     private bool FilterAudioList(object obj)

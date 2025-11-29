@@ -34,7 +34,6 @@ public partial class App
         services.AddSingleton<PlayingPageViewModel>();
         services.AddSingleton<QueuePageViewModel>();
         services.AddSingleton<ListPageViewModel>();
-        services.AddSingleton<SearchPageViewModel>();
         services.AddSingleton<StatisticsPageViewModel>();
         services.AddSingleton<ToolsPageViewModel>();
         services.AddSingleton<SettingsPageViewModel>();
@@ -44,7 +43,6 @@ public partial class App
         services.AddSingleton<PlayingPage>();
         services.AddSingleton<QueuePage>();
         services.AddSingleton<ListPage>();
-        services.AddSingleton<SearchPage>();
         services.AddSingleton<StatisticsPage>();
         services.AddSingleton<ToolsPage>();
         services.AddSingleton<SettingsPage>();
