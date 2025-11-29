@@ -8,6 +8,7 @@
              xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
              xmlns:components="clr-namespace:Orchidic.Views.Components"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:models="clr-namespace:Orchidic.Models"
              d:DataContext="{d:DesignInstance Type=viewModels:PlayingPageViewModel}"
              mc:Ignorable="d"
              ClipToBounds="False"
@@ -107,9 +108,10 @@
 
         <!-- title -->
         <Grid Grid.Row="0">
-          <TextBlock FontSize="22" Margin="0,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Center"
+          <TextBlock FontSize="22" Margin="30,10,30,10" HorizontalAlignment="Center" VerticalAlignment="Center"
                      Text="{Binding AudioQueueService.AudioQueue.CurrentAudioFile.Name}"
-                     Foreground="{DynamicResource FontBrush}" />
+                     Foreground="{DynamicResource FontBrush}"
+                     MaxWidth="1000" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
         </Grid>
 
         <!-- progress bar -->
@@ -146,7 +148,72 @@
         <!-- button -->
         <Grid Grid.Row="2" HorizontalAlignment="Center" Margin="0,20,0,0">
           <StackPanel Orientation="Horizontal">
-            <Grid Margin="0,0,34,0" Width="100" />
+            <components:SvgIconButton
+              Width="20"
+              Height="20"
+              Margin="18,0,18,0"
+              IconData="{StaticResource PlaySingleIconGeometry}"
+              Command="{Binding  SetIsSingleLoopCommand}">
+              <components:SvgIconButton.IconBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="AudioQueueService.AudioQueue.IsSingleLoop" />
+                  <Binding Source="{StaticResource PrimaryBrush}" />
+                  <Binding Source="{StaticResource SecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.IconBrush>
+              <components:SvgIconButton.HoverBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="AudioQueueService.AudioQueue.PlaybackOrder"
+                           Converter="{StaticResource EqualsConverter}"
+                           ConverterParameter="{x:Static models:PlaybackOrder.Random}" />
+                  <Binding Source="{StaticResource LightPrimaryBrush}" />
+                  <Binding Source="{StaticResource LightSecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.HoverBrush>
+              <components:SvgIconButton.PressedBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="AudioQueueService.AudioQueue.PlaybackOrder"
+                           Converter="{StaticResource EqualsConverter}"
+                           ConverterParameter="{x:Static models:PlaybackOrder.Random}" />
+                  <Binding Source="{StaticResource DarkPrimaryBrush}" />
+                  <Binding Source="{StaticResource DarkSecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.PressedBrush>
+            </components:SvgIconButton>
+            <components:SvgIconButton
+              Width="20"
+              Height="20"
+              Margin="18,0,18,0"
+              IconData="{StaticResource PlayerShuffleIconGeometry}"
+              Command="{Binding  SetShuffleModeCommand}">
+              <components:SvgIconButton.IconBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="AudioQueueService.AudioQueue.PlaybackOrder"
+                           Converter="{StaticResource EqualsConverter}"
+                           ConverterParameter="{x:Static models:PlaybackOrder.Random}" />
+                  <Binding Source="{StaticResource PrimaryBrush}" />
+                  <Binding Source="{StaticResource SecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.IconBrush>
+              <components:SvgIconButton.HoverBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="AudioQueueService.AudioQueue.PlaybackOrder"
+                           Converter="{StaticResource EqualsConverter}"
+                           ConverterParameter="{x:Static models:PlaybackOrder.Random}" />
+                  <Binding Source="{StaticResource LightPrimaryBrush}" />
+                  <Binding Source="{StaticResource LightSecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.HoverBrush>
+              <components:SvgIconButton.PressedBrush>
+                <MultiBinding Converter="{StaticResource ConditionConverter}">
+                  <Binding Path="AudioQueueService.AudioQueue.PlaybackOrder"
+                           Converter="{StaticResource EqualsConverter}"
+                           ConverterParameter="{x:Static models:PlaybackOrder.Random}" />
+                  <Binding Source="{StaticResource DarkPrimaryBrush}" />
+                  <Binding Source="{StaticResource DarkSecondaryBrush}" />
+                </MultiBinding>
+              </components:SvgIconButton.PressedBrush>
+            </components:SvgIconButton>
             <components:SvgIconButton
               Width="20"
               Height="20"

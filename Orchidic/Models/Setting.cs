@@ -29,4 +29,8 @@ public class Setting
     public string? CurrentAudioPath { get; set; }
 
     public AudioListSetting[] AudioListInfo { get; set; } = [];
+
+    public PlaybackOrder PlaybackOrder { get; set; } = PlaybackOrder.Normal;
+    
+    public bool IsSingleLoop { get; set; } = false;
 }

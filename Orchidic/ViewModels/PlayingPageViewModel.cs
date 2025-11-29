@@ -1,4 +1,5 @@
-﻿using Orchidic.Services.Interfaces;
+﻿using Orchidic.Models;
+using Orchidic.Services.Interfaces;
 using Orchidic.Utils;
 
 
@@ -15,8 +16,9 @@ public class PlayingPageViewModel : ViewModelBase
     public ICommand NextAudioCommand { get; }
     public ICommand PrevAudioCommand { get; }
     public ICommand PlayOrPauseCommand { get; }
-
     public ICommand SetZenModeCommand { get; }
+    public ICommand SetShuffleModeCommand { get; }
+    public ICommand SetIsSingleLoopCommand { get; }
 
     #endregion
 
@@ -41,7 +43,7 @@ public class PlayingPageViewModel : ViewModelBase
         }, canPlay);
         NextAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            AudioQueueService.AudioQueue.CurrentIndex += 1;
+            AudioQueueService.AudioQueue.Next();
             var currentAudioFile = AudioQueueService.AudioQueue.CurrentAudioFile;
             if (currentAudioFile != null)
             {
@@ -50,7 +52,7 @@ public class PlayingPageViewModel : ViewModelBase
         }, canPlay);
         PrevAudioCommand = ReactiveCommand.CreateFromTask(async () =>
         {
-            AudioQueueService.AudioQueue.CurrentIndex -= 1;
+            AudioQueueService.AudioQueue.Prev();
             var currentAudioFile = AudioQueueService.AudioQueue.CurrentAudioFile;
             if (currentAudioFile != null)
             {
@@ -59,6 +61,17 @@ public class PlayingPageViewModel : ViewModelBase
             }
         }, canPlay);
         SetZenModeCommand = ReactiveCommand.Create(() => { globalService.IsZenMode = !globalService.IsZenMode; });
+        SetShuffleModeCommand = ReactiveCommand.Create(() =>
+        {
+            audioQueueService.AudioQueue.PlaybackOrder =
+                audioQueueService.AudioQueue.PlaybackOrder == PlaybackOrder.Normal
+                    ? PlaybackOrder.Random
+                    : PlaybackOrder.Normal;
+        });
+        SetIsSingleLoopCommand = ReactiveCommand.Create(() =>
+        {
+            audioQueueService.AudioQueue.IsSingleLoop = !audioQueueService.AudioQueue.IsSingleLoop;
+        });
 
         PlayerService.PlaybackEnded += (_, _) => { NextAudioCommand.Execute(null); };
 

@@ -1,20 +1,59 @@
-﻿namespace Orchidic.Models;
+﻿using Orchidic.Utils;
+
+namespace Orchidic.Models;
 
 public class AudioQueue : ReactiveObject
 {
-    public AudioQueue(List<AudioFile> audioFiles)
+    private int[] _randomNextQueue;
+    private int[] _randomPrevQueue;
+
+    public AudioQueue(List<AudioFile> audioFiles, PlaybackOrder playbackOrder, bool isSingleLoop)
     {
         _currentIndex = 0;
+        _playbackOrder = playbackOrder;
         AudioFiles = [];
         AudioFiles = new ObservableCollection<AudioFile>(audioFiles);
+        _randomNextQueue = [];
+        _randomPrevQueue = [];
+        _isSingleLoop = isSingleLoop;
+
+        ShuffleUtils.GenerateRandomCycle(AudioFiles.Count, out _randomNextQueue, out _randomPrevQueue);
+        AudioFiles.CollectionChanged += (_, _) =>
+        {
+            ShuffleUtils.GenerateRandomCycle(AudioFiles.Count, out _randomNextQueue, out _randomPrevQueue);
+        };
+        this.WhenAnyValue(x => x.PlaybackOrder)
+            .Subscribe(newValue =>
+            {
+                if (newValue == PlaybackOrder.Random)
+                {
+                    ShuffleUtils.GenerateRandomCycle(AudioFiles.Count, out _randomNextQueue, out _randomPrevQueue);
+                }
+            });
     }
 
     public ObservableCollection<AudioFile> AudioFiles { get; }
 
+    private PlaybackOrder _playbackOrder;
+
+    public PlaybackOrder PlaybackOrder
+    {
+        get => _playbackOrder;
+        set => this.RaiseAndSetIfChanged(ref _playbackOrder, value);
+    }
+
+    private bool _isSingleLoop;
+
+    public bool IsSingleLoop
+    {
+        get => _isSingleLoop;
+        set => this.RaiseAndSetIfChanged(ref _isSingleLoop, value);
+    }
+
 
     private int? _currentIndex;
 
-    public int? CurrentIndex
+    private int? CurrentIndex
     {
         get => _currentIndex;
         set
@@ -33,6 +72,32 @@ public class AudioQueue : ReactiveObject
 
             this.RaiseAndSetIfChanged(ref _currentIndex, newValue);
             this.RaisePropertyChanged(nameof(CurrentAudioFile));
+        }
+    }
+
+    public void Next()
+    {
+        if (CurrentIndex != null)
+        {
+            if (IsSingleLoop) return;
+
+            if (_playbackOrder == PlaybackOrder.Normal)
+                CurrentIndex += 1;
+            else
+                CurrentIndex = _randomNextQueue[CurrentIndex.Value];
+        }
+    }
+
+    public void Prev()
+    {
+        if (CurrentIndex != null)
+        {
+            if (IsSingleLoop) return;
+            
+            if (_playbackOrder == PlaybackOrder.Normal)
+                CurrentIndex -= 1;
+            else
+                CurrentIndex = _randomPrevQueue[CurrentIndex.Value];
         }
     }
 

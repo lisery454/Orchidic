@@ -8,12 +8,14 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
 {
     public AudioQueue AudioQueue { get; }
 
-    private ISettingService _settingService;
+    private readonly ISettingService _settingService;
+
 
     public AudioQueueService(ISettingService settingService)
     {
         _settingService = settingService;
-        AudioQueue = new AudioQueue(_settingService.CurrentSetting.QueuePaths.Select(x => new AudioFile(x)).ToList());
+        AudioQueue = new AudioQueue(_settingService.CurrentSetting.QueuePaths.Select(x => new AudioFile(x)).ToList(),
+            _settingService.CurrentSetting.PlaybackOrder, _settingService.CurrentSetting.IsSingleLoop);
 
         UpdateCover(AudioQueue.CurrentAudioFile);
 
@@ -23,8 +25,17 @@ public class AudioQueueService : ReactiveObject, IAudioQueueService
         AudioQueue.WhenAnyValue(x => x.CurrentAudioFile).Subscribe(currentAudioFile =>
         {
             UpdateCover(currentAudioFile);
-
             _settingService.CurrentSetting.CurrentAudioPath = currentAudioFile?.Path;
+        });
+
+        AudioQueue.WhenAnyValue(x => x.PlaybackOrder).Subscribe(order =>
+        {
+            _settingService.CurrentSetting.PlaybackOrder = order;
+        });
+
+        AudioQueue.WhenAnyValue(x => x.IsSingleLoop).Subscribe(isSingleLoop =>
+        {
+            _settingService.CurrentSetting.IsSingleLoop = isSingleLoop;
         });
 
         AudioQueue.AudioFiles.CollectionChanged += AudioFilesOnCollectionChanged;

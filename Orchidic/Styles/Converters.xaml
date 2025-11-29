@@ -7,4 +7,5 @@
   <converters:ViewModelToViewConverter x:Key="ViewModelToViewConverter" />
   <converters:ConditionConverter x:Key="ConditionConverter" />
   <converters:IsWindowStateMaximizedConverter x:Key="IsWindowStateMaximizedConverter" />
+  <converters:EqualsConverter x:Key="EqualsConverter" />
 </ResourceDictionary>
