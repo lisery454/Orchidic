@@ -24,6 +24,7 @@ public partial class App
         // services
         services.AddSingleton<ILogService, LogService>();
         services.AddSingleton<ISettingService, SettingService>();
+        services.AddSingleton<IStatisticsService, StatisticsService>();
         services.AddSingleton<IGlobalService, GlobalService>();
         services.AddSingleton<IAudioListService, AudioListService>();
         services.AddSingleton<IAudioQueueService, AudioQueueService>();
@@ -52,9 +53,11 @@ public partial class App
 
     protected override void OnExit(ExitEventArgs e)
     {
-        // save setting
+        // save
         var settingService = Services.GetService<ISettingService>();
         settingService?.Save();
+        var statisticsService = Services.GetService<IStatisticsService>();
+        statisticsService?.Save();
 
         // log
         var logService = Services.GetService<ILogService>();

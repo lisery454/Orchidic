@@ -13,7 +13,8 @@ public class PlayerService : ReactiveObject, IPlayerService
     private WaveOutEvent? _outputDevice;
     private AudioFileReader? _audioFileReader;
 
-    private ISettingService _settingService;
+    private readonly ISettingService _settingService;
+    private readonly IStatisticsService _statisticsService;
 
     #endregion
 
@@ -94,9 +95,10 @@ public class PlayerService : ReactiveObject, IPlayerService
 
     #region constructors
 
-    public PlayerService(ISettingService settingService)
+    public PlayerService(ISettingService settingService, IStatisticsService statisticsService)
     {
         _settingService = settingService;
+        _statisticsService = statisticsService;
         _volume = settingService.CurrentSetting.Volume;
 
 
@@ -143,7 +145,12 @@ public class PlayerService : ReactiveObject, IPlayerService
                 {
                     IsPlaying = false;
                     if ((CurrentTime - TotalTime).TotalMilliseconds + 500 >= 0)
+                    {
                         PlaybackEnded?.Invoke(this, EventArgs.Empty);
+                        _statisticsService.CurrentStatistics.TotalTime += TotalTime;
+                        if (!_statisticsService.CurrentStatistics.CountMap.TryAdd(audioFile.Path, 1))
+                            _statisticsService.CurrentStatistics.CountMap[audioFile.Path]++;
+                    }
                 };
                 _outputDevice.Play();
                 IsPlaying = true;

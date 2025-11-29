@@ -29,6 +29,7 @@ public static class ProgramConstants
     public static string AudioCoverCacheDirPath => Path.Combine(AppDataLocalPath, "CoverCache");
 
     public static string SettingPath => Path.Combine(ApplicationPath, "setting.yaml");
+    public static string StatisticsPath => Path.Combine(ApplicationPath, "statistics.yaml");
 
     public static string LogPath => Path.Combine(ApplicationPath, "log.txt");
 }
