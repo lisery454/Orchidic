@@ -35,6 +35,7 @@
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" FontSize="16"
                    VerticalAlignment="Center"
@@ -42,6 +43,7 @@
                    Text="{Binding AudioQueueService.AudioQueue.AudioFiles.Count, Converter={StaticResource AudioCountTextConverter }}">
         </TextBlock>
         <Button Grid.Column="2" Style="{StaticResource SimplePrimaryButton}"
+                Margin="0,0,10,0"
                 Command="{Binding LocateCommand}"
                 CommandParameter="{Binding ElementName=AudioListBox}">
           <Button.Content>
@@ -53,7 +55,23 @@
               <components:SvgIcon Grid.Column="0" Height="20" Width="20"
                                   Geometry="{StaticResource LocateIconGeometry}"
                                   Fill="{StaticResource FontBrush}" />
-              <TextBlock Grid.Column="1" FontSize="16" Text="定位" Margin="10,0,0,0" />
+              <TextBlock Grid.Column="1" FontSize="16" Text="定位" Margin="5,0,0,0" />
+            </Grid>
+
+          </Button.Content>
+        </Button>
+        <Button Grid.Column="3" Style="{StaticResource SimplePrimaryButton}"
+                Command="{Binding ClearQueueCommand}">
+          <Button.Content>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <components:SvgIcon Grid.Column="0" Height="20" Width="20"
+                                  Geometry="{StaticResource DeleteIconGeometry}"
+                                  Fill="{StaticResource FontBrush}" />
+              <TextBlock Grid.Column="1" FontSize="16" Text="清空队列" Margin="5,0,0,0" />
             </Grid>
 
           </Button.Content>

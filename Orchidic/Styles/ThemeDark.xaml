@@ -33,6 +33,10 @@
   <SolidColorBrush x:Key="FontBrush" Color="{DynamicResource FontColor}" />
   <Color x:Key="HighlightFontColor">#eee</Color>
   <SolidColorBrush x:Key="HighlightFontBrush" Color="{DynamicResource HighlightFontColor}" />
+  <Color x:Key="DisabledBackgroundColor">#2B858585</Color>
+  <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="{DynamicResource DisabledBackgroundColor}" />
+  <Color x:Key="DisabledForegroundColor">#22aaaaaa</Color>
+  <SolidColorBrush x:Key="DisabledForegroundBrush" Color="{DynamicResource DisabledForegroundColor}" />
   <Color x:Key="MenuItemIndicatorColor">#77050505</Color>
   <SolidColorBrush x:Key="MenuItemIndicatorBrush" Color="{DynamicResource MenuItemIndicatorColor}" />
   <RadialGradientBrush x:Key="CoverMaskBrush" Center="0.5,0.5"

@@ -101,6 +101,12 @@ public class AudioQueue : ReactiveObject
         }
     }
 
+    public void Clear()
+    {
+        CurrentIndex = null;
+        AudioFiles.Clear();
+    }
+
     public AudioFile? CurrentAudioFile
     {
         get

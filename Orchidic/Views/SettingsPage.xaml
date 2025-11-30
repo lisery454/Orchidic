@@ -7,9 +7,41 @@
              d:DataContext="{d:DesignInstance Type=viewModels:SettingsPageViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <viewModels:CacheSizeToStringConverter x:Key="CacheSizeToStringConverter" />
+  </UserControl.Resources>
 
-  <Grid HorizontalAlignment="Center" Margin="0,100,0,100" Width="400" VerticalAlignment="Stretch">
-    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Setting" />
+  <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch" MaxHeight="1000">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="5*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid Grid.Column="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left"
+                 Text="{Binding FolderSizeReadable, Converter={StaticResource CacheSizeToStringConverter}}" />
+
+      <Grid Grid.Row="0" Grid.Column="2">
+        <Button Style="{StaticResource SimplePrimaryButton}" HorizontalAlignment="Left"
+                Command="{Binding ClearCacheCommand}">
+          <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16">
+            清空缓存
+          </TextBlock>
+        </Button>
+      </Grid>
+
+    </Grid>
   </Grid>
 
 </UserControl>

@@ -13,6 +13,8 @@ public class QueuePageViewModel : ViewModelBase
     public ICommand PlayCommand { get; }
 
     public ICommand LocateCommand { get; }
+    
+    public ICommand ClearQueueCommand { get; }
 
     public ICollectionView AudioFilesView { get; }
 
@@ -83,6 +85,12 @@ public class QueuePageViewModel : ViewModelBase
             FilterText = "";
             listbox.ScrollIntoView(AudioQueueService.AudioQueue.CurrentAudioFile);
         }, canLocate);
+
+        ClearQueueCommand = ReactiveCommand.Create(() =>
+        {
+            AudioQueueService.AudioQueue.Clear();
+            playerService.Stop();
+        });
 
         _filterText = "";
 
