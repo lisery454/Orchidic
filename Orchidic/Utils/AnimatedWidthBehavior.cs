@@ -32,6 +32,13 @@ public static class AnimatedWidthBehavior
                 EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
             };
 
+            animation.Completed += (_, _) =>
+            {
+                element.Width = newWidth;
+                element.BeginAnimation(FrameworkElement.WidthProperty, null); // 停止动画对属性的影响
+            };
+
+
             element.BeginAnimation(FrameworkElement.WidthProperty, animation, HandoffBehavior.SnapshotAndReplace);
         }
     }
