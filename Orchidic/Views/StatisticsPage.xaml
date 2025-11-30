@@ -3,10 +3,187 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Orchidic.Views"
+             xmlns:viewModels="clr-namespace:Orchidic.ViewModels"
+             xmlns:models="clr-namespace:Orchidic.Models"
+             d:DataContext="{d:DesignInstance Type=viewModels:StatisticsPageViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
-  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Statistics" />
+  <UserControl.Resources>
+    <viewModels:StatisticsTotalTimeToStringConverter x:Key="StatisticsTotalTimeToStringConverter" />
+  </UserControl.Resources>
+
+  <Grid HorizontalAlignment="Stretch" Margin="0,100,0,100" VerticalAlignment="Stretch" MaxHeight="1000">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="5*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <TextBlock FontSize="16"
+                 Margin="0,0,0,10"
+                 Text="{Binding StatisticsService.CurrentStatistics.TotalTimeBindable, Converter={StaticResource StatisticsTotalTimeToStringConverter}}" />
+      <Separator Grid.Row="1" Margin="0,0,0,10"
+                 Background="{StaticResource SecondaryBrush}"
+                 Height="1" />
+      <Grid Grid.Row="2" Margin="0,0,0,10">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="3*" />
+          <ColumnDefinition Width="4*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Width="30" />
+        <TextBlock Grid.Column="1" FontSize="16" Text="标题" />
+        <TextBlock Grid.Column="2" FontSize="16" Text="路径" />
+        <TextBlock Grid.Column="3" FontSize="16" Text="次数" />
+      </Grid>
+
+
+      <ListBox
+        Grid.Row="3"
+        ItemsSource="{Binding AudioItems}"
+        Background="Transparent"
+        HorizontalAlignment="Stretch"
+        BorderThickness="0"
+        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        ScrollViewer.VerticalScrollBarVisibility="Auto"
+        FocusVisualStyle="{x:Null}"
+        AllowDrop="True"
+        ScrollViewer.CanContentScroll="True">
+
+        <ListBox.ItemsPanel>
+          <ItemsPanelTemplate>
+            <VirtualizingStackPanel />
+          </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBox.Resources>
+          <Style TargetType="ListBoxItem">
+            <Setter Property="Margin" Value="0 2" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                  <Border x:Name="Border"
+                          HorizontalAlignment="Stretch"
+                          Background="Transparent"
+                          Padding="0,0,5,5">
+                    <ContentPresenter HorizontalAlignment="Stretch" />
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter Property="Background" Value="{StaticResource SecondaryBrush}"></Setter>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+          </Style>
+
+          <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                  <Grid>
+                    <Track x:Name="PART_Track" IsDirectionReversed="True">
+                      <Track.DecreaseRepeatButton>
+                        <RepeatButton
+                          Style="{x:Null}" Background="Transparent" BorderBrush="Transparent"
+                          OverridesDefaultStyle="True" FocusVisualStyle="{x:Null}" />
+                      </Track.DecreaseRepeatButton>
+                      <Track.Thumb>
+                        <Thumb x:Name="Thumb" Style="{StaticResource CustomThumb}" />
+                      </Track.Thumb>
+                      <Track.IncreaseRepeatButton>
+                        <RepeatButton
+                          Style="{x:Null}" Background="Transparent" BorderBrush="Transparent"
+                          OverridesDefaultStyle="True" FocusVisualStyle="{x:Null}" />
+                      </Track.IncreaseRepeatButton>
+                    </Track>
+                  </Grid>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+          </Style>
+        </ListBox.Resources>
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <Grid Margin="0">
+              <Border CornerRadius="10" Padding="10,10" Height="60" Margin="0,0,0,0"
+                      HorizontalAlignment="Stretch" Background="{StaticResource ContainerBrush}">
+
+                <Grid d:DataContext="{d:DesignInstance Type=models:AudioFileWithCount}">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <Image Grid.Column="0" Source="{Binding File.Thumbnails}"
+                         Margin="5 0 10 0"
+                         Width="30">
+                    <Image.Clip>
+                      <RectangleGeometry RadiusX="5" RadiusY="5"
+                                         Rect="0,0,30,30" />
+                    </Image.Clip>
+                  </Image>
+
+                  <TextBlock Grid.Column="1"
+                             Text="{Binding  File.Name}"
+                             Margin="5 0 10 0"
+                             TextTrimming="CharacterEllipsis"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center">
+                    <TextBlock.Style>
+                      <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+                        <Setter Property="Foreground" Value="{StaticResource FontBrush}" />
+                      </Style>
+                    </TextBlock.Style>
+                  </TextBlock>
+
+                  <TextBlock Grid.Column="2"
+                             Text="{Binding File.Path}"
+                             Margin="5 0 10 0"
+                             TextTrimming="CharacterEllipsis"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center">
+                  </TextBlock>
+
+                  <TextBlock Grid.Column="3"
+                             Text="{Binding Count}"
+                             Margin="5 0 10 0"
+                             TextTrimming="CharacterEllipsis"
+                             FontSize="16"
+                             TextWrapping="Wrap"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center">
+                  </TextBlock>
+                </Grid>
+
+              </Border>
+            </Grid>
+
+
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+
+      </ListBox>
+    </Grid>
+  </Grid>
 
 </UserControl>

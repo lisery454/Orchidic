@@ -147,9 +147,12 @@ public class PlayerService : ReactiveObject, IPlayerService
                     if ((CurrentTime - TotalTime).TotalMilliseconds + 500 >= 0)
                     {
                         PlaybackEnded?.Invoke(this, EventArgs.Empty);
-                        _statisticsService.CurrentStatistics.TotalTime += TotalTime;
+                        _statisticsService.CurrentStatistics.TotalTimeBindable += TotalTime;
                         if (!_statisticsService.CurrentStatistics.CountMap.TryAdd(audioFile.Path, 1))
+                        {
                             _statisticsService.CurrentStatistics.CountMap[audioFile.Path]++;
+                        }
+                        _statisticsService.CurrentStatistics.NotifyCountMapChanged();
                     }
                 };
                 _outputDevice.Play();

@@ -4,7 +4,7 @@ using Orchidic.Utils;
 
 namespace Orchidic.Services;
 
-public class StatisticsService : IStatisticsService
+public class StatisticsService : ReactiveObject, IStatisticsService
 {
     private Statistics _currentStatistics;
 
