@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Ookii.Dialogs.Wpf;
-using Orchidic.Utils;
+﻿using Orchidic.Utils;
 
 namespace Orchidic.Views.Dialogs;
 

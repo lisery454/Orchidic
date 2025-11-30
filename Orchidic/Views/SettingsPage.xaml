@@ -33,7 +33,7 @@
                  Text="{Binding FolderSizeReadable, Converter={StaticResource CacheSizeToStringConverter}}" />
 
       <Grid Grid.Row="0" Grid.Column="2">
-        <Button Style="{StaticResource SimplePrimaryButton}" HorizontalAlignment="Left"
+        <Button Style="{StaticResource SimplePrimaryButton}" HorizontalAlignment="Right"
                 Command="{Binding ClearCacheCommand}">
           <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16">
             清空缓存

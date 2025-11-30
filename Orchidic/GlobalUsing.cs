@@ -31,3 +31,6 @@ global using System.Reactive.Subjects;
 global using System.ComponentModel;
 global using System.Collections.Specialized;
 global using Microsoft.Xaml.Behaviors;
+global using System.Runtime.CompilerServices;
+global using Ookii.Dialogs.Wpf;
+global using Microsoft.Win32;
