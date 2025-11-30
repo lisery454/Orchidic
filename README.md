@@ -1,4 +1,4 @@
-# <img src="./README/logo.svg" alt="logo" style="zoom: 25%; height: 300px" /> Orchidic 
+# <img src="./README/logo.svg" alt="logo" style="zoom: 25%; height: 100px" /> Orchidic 
 
 一个的本地音乐播放器。WPF的练手项目，可能有很多问题或TODO没有做，只实现了音乐的播放的基本功能。
 
