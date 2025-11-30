@@ -8,6 +8,7 @@ public partial class MainWindow
     public MainWindow()
     {
         Loaded += Window_Loaded;
+        Activated += Window_Activated;
         WindowCornerRestorer.ApplyRoundCorner(this);
         DataContext = App.Current.Services.GetService<MainWindowViewModel>();
         InitializeComponent();
@@ -16,6 +17,25 @@ public partial class MainWindow
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         WindowAnimRestorer.AddAnimTo(this);
+    }
+    
+    private void ForceRefresh()
+    {
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            if (hwndSource?.CompositionTarget != null)
+            {
+                // 强制渲染目标更新
+                hwndSource.CompositionTarget.RootVisual = null;
+                hwndSource.CompositionTarget.RootVisual = this;
+            }
+        }), DispatcherPriority.Render);
+    }
+
+    private void Window_Activated(object? sender, EventArgs e)
+    {
+        ForceRefresh();
     }
 }
 
